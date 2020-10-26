@@ -12,6 +12,8 @@
       <router-link to="/">Home</router-link>
       <router-link to="/profile">Profile</router-link>
       <router-link to="/map">Map</router-link>
+      <router-link to="/search">Search</router-link>
+      <router-link to="/login">Login</router-link>
     </div>
 
     <div class="content">
@@ -25,15 +27,85 @@
 </div>
 </template>
 <script>
-// Functionality
-// 1) Search bar (See: https://codepen.io/trevoreyre/pen/JjGxLEm)
-//    - Dropdown with suggestions?
-//    - Get link to restaurant page
-// 2) Carousel with Links + Pull Image/Caption/etc. from Firebase
-// 3) Logged In vs Non-Logged In state trigger
+import firebase from '../firebase.js'
+const database = firebase.firestore();
+const storage = firebase.storage();
 
 export default {
-  
+  data() {
+    return {
+      merchantInfo: {
+        imgURL: null
+      },
+      merchant_id: 1, // Should be passed as a prop from Login Page. Upon Log In, Auth should return user_id and update parent before passing to profile
+      loaded: false, // Triggered when data has sucessfully been pulled after Vue app is mounted
+      uploadPct: 0,
+      imageData: null,
+    }
+  },
+  methods: {
+    // 1) Pull profile information from Firebase
+    fetchMerchant: function() {
+      database.collection('merchants').where("merchant_id", "==", this.merchant_id).get().then((querySnapShot) => {
+        querySnapShot.forEach(doc=>{
+          console.log("Merchant data =>", doc.data());
+          // Document ID
+          this.doc_id = doc.id;
+          // Merchant Profile Data
+          this.merchantInfo.merchant_name = doc.data().merchant_name;
+          this.merchantInfo.address = doc.data().address;
+          this.merchantInfo.merchant_rating = doc.data().merchant_rating;
+          // Operating Info 
+          this.merchantInfo.opening_hours = doc.data().opening_hours;
+          this.merchantInfo.closing_hours = doc.data().closing_hours;
+          // Profile Image URL
+          this.merchantInfo.carousel_imgURL = doc.data().carousel_imgURL;
+          // Data loaded sucessfully
+          this.loaded = true;
+        })
+      }).catch(function(error) {
+        console.log("Error getting documents: ", error);
+    });
+    },
+    // THIS SECTION SHOULD EVENTUALLY GO INTO RESTAURANT BACKEND !!!
+    updateMerchantProfile: function() {
+      database.collection('merchants').doc(this.doc_id).update(
+        this.merchantInfo
+        ).then(function() {
+          console.log("Merchant information successfully updated!")
+        }).catch(function(error) {
+          console.log("Error updating Merchant information: ", error);
+        })
+    },
+    setMerchantImage: function() {
+        let uploadTask = storage.ref(`${this.imageData.name}`).put(this.imageData);
+        uploadTask.on('state_changed', 
+        snapshot => {
+          this.uploadPct = (snapshot.bytesTransferred/snapshot.totalBytes)*100;
+        },
+        error => {
+          console.log("Error uploading Merchant picture ", error);
+        },
+        () => {
+          this.uploadPct = 100;
+          uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+            this.merchantInfo.carousel_imgURL = downloadURL; // Profile Info has image URL and can directly pull with img tag
+            this.updateProfile(); // Call on update profile to update downloadURL
+            console.log("New Merchant image available at: ", downloadURL);
+          })
+        }
+      )
+    },
+    inputImage(event) {
+      this.uploadValue=0;
+      this.picture=null;
+      this.imageData = event.target.files[0];
+    },
+  },
+  // Lifecycle Hooks 
+  created() {
+    this.fetchMerchant()
+  }
 }
 </script>
 
@@ -80,7 +152,6 @@ div.content {
   height: 1000px;
   background-image: linear-gradient( rgb(78, 223, 78), rgb(85, 199, 228));
 }
-
 
 </style>
 

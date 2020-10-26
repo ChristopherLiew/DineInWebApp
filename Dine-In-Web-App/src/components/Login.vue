@@ -17,21 +17,55 @@
     </div>
 
     <div class="content">
-      <h2>Map Page</h2>
-      <p>This example use media queries to transform the sidebar to a top navigation bar when the screen size is 700px or less.</p>
-      <p>We have also added a media query for screens that are 400px or less, which will vertically stack and center the navigation links.</p>
-      <h3>Resize the browser window to see the effect.</h3>
+      <h2>Login Page</h2>
+      <h3>Please enter the following:</h3>
+      <input type="text" v-model="email" placeholder="Email Address">
+      <br>
+      <input type="text" v-model="password" placeholder="Password">
+      <br>
+      <button @click="logInUser()">Log In</button>
     </div>
   </body>
 
 </div>
 </template>
 <script>
+// Logging In:
+// 1) Key in email and password and submit
+// 2) At the same time keep the email and password updated by using v-model for the input fields 
+// 3) On hitting the submit button, trigger the logInUser function
+
+import firebase from '../firebase.js'
 
 export default {
+  data() {
+    return {
+      email: null,
+      password: null
+    }
+  },
+  methods: {
+    // Test with logged in progile and check profile.vue also
+    logInUser: function() {
+      firebase.auth().signInWithEmailAndPassword(this.email, this.password).catch(function(error) {
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      if (errorCode === 'auth/wrong-password') {
+            alert('Wrong password.');
+        } else {
+            alert(errorMessage);
+        }
+          console.log(error);
+      });
+    }
+  },
+  // Lifecycle Hooks 
+  created() {
     
+  }
 }
 </script>
+
 <style>
 body {
   margin: 0;
@@ -75,7 +109,6 @@ div.content {
   height: 1000px;
   background-image: linear-gradient( rgb(78, 223, 78), rgb(85, 199, 228));
 }
-
 
 </style>
 

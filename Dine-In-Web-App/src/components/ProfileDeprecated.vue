@@ -55,23 +55,13 @@ export default {
       profileInfo: {
         imgURL: null
       },
-      user_id: null, // user_id refers to the authenticated unique user id
+      user_id: 1, // Should be passed as a prop from Login Page. Upon Log In, Auth should return user_id and update parent before passing to profile
       loaded: false, // Triggered when data has sucessfully been pulled after Vue app is mounted
       uploadPct: 0,
       imageData: null,
     }
   },
   methods: {
-    updateUserID: function() {
-      var user = firebase.auth().currentUser; // Use authenticated User object to get details
-      if (user) {
-        this.user_id = user.uid;
-        console.log("User signed in")
-      }
-      else {
-        alert("Please sign in!")
-      }
-    },
     // 1) Pull profile information from Firebase
     fetchProfile: function() {
       database.collection('users').where("user_id", "==", this.user_id).get().then((querySnapShot) => {
@@ -144,8 +134,7 @@ export default {
   // https://www.digitalocean.com/community/tutorials/vuejs-component-lifecycle
   // before rendering
   created() {
-    this.updateUserID();
-    this.fetchProfile();
+    this.fetchProfile()
   }
 }
 </script>

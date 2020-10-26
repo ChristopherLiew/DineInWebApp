@@ -19,6 +19,10 @@ npm run build
 ```
 npm run lint
 ```
-
+### Firebase Authentication
+Please install the firebaseui dependency for user authentication on the app.
+```
+$ npm install firebaseui --save
+```
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
