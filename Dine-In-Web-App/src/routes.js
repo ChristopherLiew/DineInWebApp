@@ -3,6 +3,7 @@ import Profile from './components/Profile.vue'
 import Map from './components/Map.vue'
 import SearchBar from './components/SearchBar.vue'
 import Login from './components/Login.vue'
+import Restaurant from './components/Resto.vue'
 
 export default[
     {
@@ -24,5 +25,9 @@ export default[
     {
         path:'/login',
         component: Login
+    },
+    {
+        path:'/restaurant',
+        component: Restaurant
     }
 ]

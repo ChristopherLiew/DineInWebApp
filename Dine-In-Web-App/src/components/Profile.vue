@@ -14,6 +14,7 @@
       <router-link to="/map">Map</router-link>
       <router-link to="/search">Search</router-link>
       <router-link to="/login">Login</router-link>
+      <router-link to="/restaurant">Restaurant</router-link>
     </div>
 
     <div class="content">
