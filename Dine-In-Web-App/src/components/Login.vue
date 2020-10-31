@@ -24,6 +24,7 @@
       <input type="text" v-model="password" placeholder="Password">
       <br>
       <button @click="logInUser()">Log In</button>
+      <button @click="signUpUser()">Sign Up</button> <!-- Link to registration page to fill in details -->
     </div>
   </body>
 
@@ -52,6 +53,18 @@ export default {
       var errorMessage = error.message;
       if (errorCode === 'auth/wrong-password') {
             alert('Wrong password.');
+        } else {
+            alert(errorMessage);
+        }
+          console.log(error);
+      });
+    },
+    signUpUser: function() { 
+      firebase.auth().createUserWithEmailAndPassword(this.email, this.password).catch(function(error) {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        if (errorCode === 'auth/email-already-exists') {
+            alert('Email already exists.');
         } else {
             alert(errorMessage);
         }

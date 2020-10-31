@@ -145,6 +145,8 @@ export default {
   // before rendering
   created() {
     this.updateUserID();
+  },
+  mounted() {
     this.fetchProfile();
   }
 }
