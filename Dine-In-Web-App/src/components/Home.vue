@@ -15,10 +15,21 @@
     </div>
 
     <div class="content">
-      <h2>Home Page</h2>
-      <p>This example use media queries to transform the sidebar to a top navigation bar when the screen size is 700px or less.</p>
-      <p>We have also added a media query for screens that are 400px or less, which will vertically stack and center the navigation links.</p>
-      <h3>Resize the browser window to see the effect.</h3>
+      <div class="overallcontainer">
+        <div class="headerimage">
+          <p>image goes here</p>
+        </div>
+        <div class="carousel">
+          <div class="restaurantcard">
+          </div>
+        </div>
+        <div class="carousel">
+          <p>image goes here</p>
+        </div>
+        <div class="carousel">
+          <p>image goes here</p>
+        </div>
+      </div>
     </div>
   </body>
 
@@ -78,9 +89,30 @@ div.content {
   margin-left: 200px;
   padding: 1px 16px;
   height: 1000px;
-  background-image: linear-gradient( rgb(78, 223, 78), rgb(85, 199, 228));
+  /*background-image: linear-gradient( rgb(78, 223, 78), rgb(85, 199, 228));*/
 }
 
+.overallcontainer {
+  grid-template-columns: 40px 50px auto;
+  grid-template-rows: 25% 1400 px auto;
+}
+
+.restaurantcard {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  padding: 5px;
+  text-align: center;
+  background-color: #444;
+  color: white;
+}
+
+.headerimage{
+  outline-color: coral;
+  background-image:'url(https://vuejs.org/images/logo.png)';
+}
+
+.carousel{
+  outline-color: coral;
+}
 
 </style>
 
