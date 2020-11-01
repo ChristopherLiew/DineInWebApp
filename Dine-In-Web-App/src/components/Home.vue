@@ -1,57 +1,157 @@
 <template>
-<div>
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  </head>
+  <div>
+    <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    </head>
 
-  <body>
-    <div class="sidebar">
-      <div class="icon">
-        <h2>Dinein</h2>
-      </div>
-      <router-link to="/">Home</router-link>
-      <router-link to="/profile">Profile</router-link>
-      <router-link to="/map">Map</router-link>
-    </div>
-
-    <div class="content">
-      <div class="overallcontainer">
-        <div class="headerimage">
-          <p>image goes here</p>
+    <body>
+      <div class="sidebar">
+        <div class="icon">
+          <h2>Dinein</h2>
         </div>
-        <div class="carousel">
-          <div class="restaurantcard">
+        <router-link to="/">Home</router-link>
+        <router-link to="/profile">Profile</router-link>
+        <router-link to="/map">Map</router-link>
+      </div>
+
+      <div class="content">
+        <div
+          class="info"
+          :style="{
+            'background-image': 'url(https://vuejs.org/images/logo.png)',
+          }"
+        >
+          <h1>What shall we explore today?</h1>
+        </div>
+        <div class="row">
+          <h1>Japanese Food</h1>
+          <div class="cards">
+            <div class="card">
+              <img
+                class="card-img-top"
+                src="https://placekitten.com/g/200/200"
+                alt="Card image cap"
+                height="100"
+                width="100"
+                style="border-radius: 0.6rem"
+              />
+              <div class="card-block">
+                <h4 class="card-title">Name</h4>
+                <p class="card-text">Some quick example text to build</p>
+                <a href="#" class="btn btn-primary">Go somewhere</a>
+              </div>
+            </div>
+            <div class="card">
+              <img
+                class="card-img-top"
+                src="https://placekitten.com/g/200/200"
+                alt="Card image cap"
+                height="100"
+                width="100"
+                style="border-radius: 0.6rem"
+              />
+              <div class="card-block">
+                <h4 class="card-title">Name</h4>
+                <p class="card-text">Some quick example text to build</p>
+                <a href="#" class="btn btn-primary">Go somewhere</a>
+              </div>
+            </div>
+            <div class="card">
+              <img
+                class="card-img-top"
+                src="https://placekitten.com/g/200/200"
+                alt="Card image cap"
+                height="100"
+                width="100"
+                style="border-radius: 0.6rem"
+              />
+              <div class="card-block">
+                <h4 class="card-title">Name</h4>
+                <p class="card-text">Some quick example text to build</p>
+                <a href="#" class="btn btn-primary">Go somewhere</a>
+              </div>
+            </div>
+            <div class="card">
+              <img
+                class="card-img-top"
+                src="https://placekitten.com/g/200/200"
+                alt="Card image cap"
+                height="100"
+                width="100"
+                style="border-radius: 0.6rem"
+              />
+              <div class="card-block">
+                <h4 class="card-title">Name</h4>
+                <p class="card-text">Some quick example text to build</p>
+                <a href="#" class="btn btn-primary">Go somewhere</a>
+              </div>
+            </div>
+            <div class="card">
+              <img
+                class="card-img-top"
+                src="https://placekitten.com/g/200/200"
+                alt="Card image cap"
+                height="100"
+                width="100"
+                style="border-radius: 0.6rem"
+              />
+              <div class="card-block">
+                <h4 class="card-title">Name</h4>
+                <p class="card-text">Some quick example text to build</p>
+                <a href="#" class="btn btn-primary">Go somewhere</a>
+              </div>
+            </div>
+            <div class="card">
+              <img
+                class="card-img-top"
+                src="https://placekitten.com/g/200/200"
+                alt="Card image cap"
+                height="100"
+                width="100"
+                style="border-radius: 0.6rem"
+              />
+              <div class="card-block">
+                <h4 class="card-title">Name</h4>
+                <p class="card-text">Some quick example text to build</p>
+                <a href="#" class="btn btn-primary">Go somewhere</a>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="carousel">
-          <p>image goes here</p>
-        </div>
-        <div class="carousel">
-          <p>image goes here</p>
+        <div class="row">
+          <h1>Japanese Food</h1>
         </div>
       </div>
-    </div>
-  </body>
-
-</div>
+    </body>
+  </div>
 </template>
-<script>
-// Functionality
-// 1) Search bar (See: https://codepen.io/trevoreyre/pen/JjGxLEm)
-//    - Dropdown with suggestions?
-//    - Get link to restaurant page
-// 2) Carousel with Links + Pull Image/Caption/etc. from Firebase
-// 3) Logged In vs Non-Logged In state trigger
 
-export default {
-  
-}
+<script>
+// import QuantityCounter from '../components/QuantityCounter.vue'
+
+export default {};
 </script>
 
 <style>
 body {
   margin: 0;
   font-family: "Lato", sans-serif;
+}
+
+.iconDetails {
+  float: left;
+  height: 70px;
+  width: 70px;
+}
+
+.info {
+  background-image: restopic1;
+  background: rgba(0, 0, 0, 0.5);
+  color: #f1f1f1;
+  width: 100%;
+  height: 10%;
+  padding: 80px;
+  text-align: center;
 }
 
 .icon {
@@ -74,9 +174,9 @@ body {
   padding: 16px;
   text-decoration: none;
 }
- 
+
 .sidebar a.active {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
 }
 
@@ -86,33 +186,83 @@ body {
 }
 
 div.content {
-  margin-left: 200px;
-  padding: 1px 16px;
-  height: 1000px;
-  /*background-image: linear-gradient( rgb(78, 223, 78), rgb(85, 199, 228));*/
+  height: auto;
+  background-image: linear-gradient(rgb(78, 223, 78), rgb(85, 199, 228));
 }
 
-.overallcontainer {
-  grid-template-columns: 40px 50px auto;
-  grid-template-rows: 25% 1400 px auto;
+.stati:hover {
+  -moz-box-shadow: 0px 0.4em 0.5em rgb(0, 0, 0, 0.8);
+  -webkit-box-shadow: 0px 0.4em 0.5em rgb(0, 0, 0, 0.8);
+  box-shadow: 0px 0.4em 0.5em rgb(0, 0, 0, 0.8);
 }
 
-.restaurantcard {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  padding: 5px;
-  text-align: center;
-  background-color: #444;
+.stati div {
+  display: block;
+}
+.stati div b {
+  font-size: 2em;
+  width: 100%;
+  float: right;
+  text-align: right;
+  display: block;
+}
+.stati div span {
+  font-size: 1.2em;
+  width: 100%;
+  color: rgb(0, 0, 0, 0.8);
+  display: block;
+  float: right;
+  text-align: right;
+}
+
+.stati.bg-turquoise {
+  background: rgb(26, 188, 156);
   color: white;
 }
 
-.headerimage{
-  outline-color: coral;
-  background-image:'url(https://vuejs.org/images/logo.png)';
+.* {
+  box-sizing: border-box;
 }
 
-.carousel{
-  outline-color: coral;
+/* Float four columns side by side */
+
+.column2 {
+  float: left;
+  width: 35%;
+  padding: 0 5px;
+  margin-left: 20px;
 }
 
+/* Clear floats after the columns */
+
+/* Responsive columns */
+@media screen and (max-width: 600px) {
+  .column {
+    width: 100%;
+    display: block;
+    margin-bottom: 10px;
+  }
+}
+
+/* Style the counter cards */
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  padding: 5px;
+  text-align: center;
+  background-color: white;
+  width: 20rem;
+  display: inline-block;
+}
+
+.cards {
+  padding: 16px;
+  overflow: scroll;
+  white-space: nowrap;
+}
+
+::-webkit-scrollbar {
+  width: 0px; /* Remove scrollbar space */
+  background: transparent; /* Optional: just make scrollbar invisible */
+}
 </style>
 

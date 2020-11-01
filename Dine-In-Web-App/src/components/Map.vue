@@ -1,33 +1,52 @@
 <template>
-<div>
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  </head>
+  <div>
+    <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    </head>
 
-  <body>
-    <div class="sidebar">
-      <div class="icon">
-        <h2>Dinein</h2>
+    <body>
+      <div class="sidebar">
+        <div class="icon">
+          <h2>Dinein</h2>
+        </div>
+        <router-link to="/">Home</router-link>
+        <router-link to="/profile">Profile</router-link>
+        <router-link to="/map">Map</router-link>
       </div>
-      <router-link to="/">Home</router-link>
-      <router-link to="/profile">Profile</router-link>
-      <router-link to="/map">Map</router-link>
-    </div>
 
-    <div class="content">
-
-    </div>
-  </body>
-
-</div>
+      <div class="content">
+        <div id="map"></div>
+      </div>
+    </body>
+  </div>
 </template>
 <script>
 // Functionality
 // 1) ??? TBD ??? Entirely via maps API?
 
 export default {
-    
-}
+  name: "GMap",
+  data() {
+    return {
+      lat: 1.352,
+      lng: 103.812507,
+    };
+  },
+  // methods: {
+  //   renderMap() {
+  //     new google.maps.Map(document.getElementById("map"), {
+  //       center: { lat: this.lat, lng: this.lng },
+  //       zoom: 12,
+  //       maxZoom: 15,
+  //       minZoom: 3,
+  //       streetViewControl: false,
+  //     });
+  //   },
+  // },
+  // mounted() {
+  //   this.renderMap();
+  // },
+};
 </script>
 <style>
 body {
@@ -55,9 +74,9 @@ body {
   padding: 16px;
   text-decoration: none;
 }
- 
+
 .sidebar a.active {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
 }
 
@@ -70,9 +89,7 @@ div.content {
   margin-left: 200px;
   padding: 1px 16px;
   height: 1000px;
-  background-image: linear-gradient( rgb(78, 223, 78), rgb(85, 199, 228));
+  background-image: linear-gradient(rgb(78, 223, 78), rgb(85, 199, 228));
 }
-
-
 </style>
 
