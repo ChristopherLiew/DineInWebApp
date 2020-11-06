@@ -200,41 +200,53 @@
           --> 
         </div>
         
+        <!-- Reservation Form -->
         <div class="column right">
           <div class="forms">
             <form action="/action_page.php">
               <h1>Reserve</h1>
-              <label for="fname">Name</label>
-              <input
-                type="text"
-                id="fname"
-                name="firstname"
-                placeholder="Your name.."
-              />
+              <label for="name">Name</label>
+              <input type="text" id="name" name="name" placeholder="Your name"/>
+              <br/>
+              <br/>
 
-              <label for="lname">Number of People</label>
-              <input
-                type="text"
-                id="lname"
-                name="lastname"
-                placeholder="Your last name.."
-              />
+              <label for="pax">Expected number of people</label>
+              <select id="pax" name="pax">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+              <br/>
+              <br/>
 
-              <label for="birthday">Birthday:</label>
-              <input type="date" id="birthday" name="birthday" />
-              <br />
-              <br />
+              <label for="reservation">Reservation Date </label>
+              <input type="date" id="reservation" name="reservation" />
+              <br/>
+              <br/>
 
+              <label for="contactnumber">Contact </label>
+              <input type="number" id="contactnumber" name="contactnumber" placeholder="Your phone number"/>
+              <br/>
+              <br/>
+
+              <label for="seats">Desired seat types</label>
+              <select id="seats" name="seats">
+                <option value="1">One-seater</option>
+                <option value="2">Two-seater</option>
+                <option value="3">Three-seater</option>
+                <option value="4">Four-seater</option>
+                <option value="5">Five-seater</option>
+              </select>
+              <br/>
+              <br/>
+
+      <!--
               <img :src="seats" />
               <br />
               <br />
-
-              <label for="country">Seats</label>
-              <select id="country" name="country">
-                <option value="A">A</option>
-                <option value="B">B</option>
-                <option value="C">C</option>
-              </select>
+      -->
 
               <input type="submit" value="Submit" />
             </form>
