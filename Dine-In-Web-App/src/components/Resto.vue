@@ -18,21 +18,23 @@
     </div>
 
     <div class="content">
+      <!-- Restaurant Info Card -->
       <div class="info" :style="{'background-image': 'url(https://vuejs.org/images/logo.png)',}">
-        <h1>Common Man</h1>
-        <p>Address:</p>
-        <p>Phone No:</p>
-        <p>Opening Hours:</p>
+        <h1>{{ merchant_info.merchant_name }}</h1>
+        <p>Address: {{ merchant_info.address }}</p>
+        <p>Phone No: {{ merchant_info.contact }}</p>
+        <p>Operating Hours: {{ merchant_info.opening_hours }} to {{ merchant_info.closing_hours }}</p>
       </div>
 
+      <!-- Capacity and Rating Cards -->
       <div class="row">
         <div class="column left">
           <div class="stati turquoise">
             <div>
               <img :src="vacancy" alt="..." class="iconDetails" />
               <div style="display: inline-block">
-                <b>0</b>
-                <span>Percentage</span>
+                <b>5/{{ capacity.total }}</b>
+                <span>Seats</span>
               </div>
             </div>
           </div>
@@ -40,111 +42,74 @@
             <div>
               <img :src="vacancy" alt="..." class="iconDetails" />
               <div style="display: inline-block">
-                <b>0</b>
-                <span>Percentage</span>
+                <b>{{ getOverallRating }}/5</b>
+                <span>Rating</span>
               </div>
             </div>
           </div>
-          <div class="stati turquoise">
-            <div>
-              <img :src="vacancy" alt="..." class="iconDetails" />
-              <div style="display: inline-block">
-                <b>0</b>
-                <span>Percentage</span>
-              </div>
-            </div>
-          </div>
-          <div class="stati turquoise">
-            <div>
-              <img :src="vacancy" alt="..." class="iconDetails" />
-              <div style="display: inline-block">
-                <b>0</b>
-                <span>Percentage</span>
-              </div>
-            </div>
-          </div>
+
+          <!-- Detailed Seats Card -->
           <div class="row">
             <div class="column left1">
               <div class="card">
                 <p><i class="fa fa-user"></i></p>
-                <h3>11+</h3>
-                <p>Partners</p>
+                <p>One-seaters: {{ capacity.one_seater }}</p>
               </div>
-
               <div class="card">
                 <p><i class="fa fa-check"></i></p>
-                <h3>55+</h3>
-                <p>Projects</p>
+                <p>Two-seaters: {{ capacity.two_seater }}</p>
               </div>
-
               <div class="card">
                 <p><i class="fa fa-smile-o"></i></p>
-                <h3>100+</h3>
-                <p>Happy Clients</p>
+                <p>Three-seaters: {{ capacity.three_seater }}</p>
               </div>
-
               <div class="card">
                 <p><i class="fa fa-smile-o"></i></p>
-                <h3>100+</h3>
-                <p>Happy Clients</p>
+                <p>Four-seaters: {{ capacity.four_seater }}</p>
+              </div>
+              <div class="card">
+                <p><i class="fa fa-smile-o"></i></p>
+                <p>Five-seaters: {{ capacity.five_seater }}</p>
               </div>
             </div>
 
+            <!-- Safety Measures Card -->
+            <div class="column left1">
+              <div class="card" v-if="this.safety.masks == true">
+                <p><i class="fa fa-user"></i></p>
+                <p>Enforces masks</p>
+              </div>
+              <div class="card" v-if="this.safety.contact_trace == true">
+                <p><i class="fa fa-check"></i></p>
+                <p>Contact tracing</p>
+              </div>
+              <div class="card" v-if="this.safety.temp_screen == true">
+                <p><i class="fa fa-smile-o"></i></p>
+                <p>Temperature screening</p>
+              </div>
+              <div class="card" v-if="this.safety.safe_distance == true">
+                <p><i class="fa fa-smile-o"></i></p>
+                <p>Safe distancing</p>
+              </div>
+
+            </div>
+
+            <!-- Table of Reviews -->
             <div class="column right1">
-              <div class="ex3">
-                <div class="testimonials">
-                  <div class="iconDetails">
-                    <img :src="person2" />
-                  </div>
+              <div class="ex3" id="reviews_table">
+                <div class="testimonials" v-for="review in reviewslist" :key="review.number">
+                  <div class="iconDetails"><img :src="person2"/></div>
                   <div>
-                    <p><span>Chris Fox.</span> CEO at Mighty Schools.</p>
-                    <p>John Doe saved us from a web disaster.</p>
-                  </div>
-                </div>
-
-                <div class="testimonials">
-                  <div class="iconDetails">
-                    <img :src="person2" />
-                  </div>
-                  <div>
-                    <p><span>Rebecca Flex</span> CEO at Schools.</p>
-                    <p>No one is better than John Doe.</p>
-                  </div>
-                </div>
-
-                <div class="testimonials">
-                  <div class="iconDetails">
-                    <img :src="person2" />
-                  </div>
-                  <div>
-                    <p><span>Rebecca Flex</span> CEO at Schools.</p>
-                    <p>No one is better than John Doe.</p>
-                  </div>
-                </div>
-
-                <div class="testimonials">
-                  <div class="iconDetails">
-                    <img :src="person2" />
-                  </div>
-                  <div>
-                    <p><span>Rebecca Flex</span> CEO at Schools.</p>
-                    <p>No one is better than John Doe.</p>
-                  </div>
-                </div>
-
-                <div class="testimonials">
-                  <div class="iconDetails">
-                    <img :src="person2" />
-                  </div>
-                  <div>
-                    <p><span>Michele Yiew</span> Student.</p>
-                    <p>No one is better than John Doe.</p>
+                    <p>{{ review.user_name }} rated {{ review.rating }}/5 stars.</p>
+                    <p>{{ review.date }}</p>
+                    <p>{{ review.review_text }}</p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
+    <!--
           <div class="row">
             <div class="tablescroll">
               <table>
@@ -232,8 +197,9 @@
               </table>
             </div>
           </div>
+          --> 
         </div>
-
+        
         <div class="column right">
           <div class="forms">
             <form action="/action_page.php">
@@ -281,9 +247,116 @@
 </template>
 
 <script>
-//import firebase from '../firebase.js'
+import firebase from '../firebase.js'
+const db = firebase.firestore();
 
 export default {
+  data() {
+    return {
+      merchant_id: "1HUVGeQ9pEcXfUhEBv8nhYaT1fn2", //need to figure out how to fix this such that i get the uid of the person logged in
+      merchant_info: {
+        merchant_name: "",
+        address: "",
+        contact: null,
+        opening_hours: "",
+        closing_houurs: ""
+      },
+      capacity: {},
+      safety: {
+        masks: false,
+        contact_trace: false,
+        temp_screen: false,
+        safe_distance: false
+      },
+      reviewslist: [],
+      summed_rating: null,
+      num_reviewers: null,
+    }
+  },
+
+  methods: {
+
+    //ensure it's the merchant, else ask them to log in
+    updateMerchantID: function() {
+      var mer = firebase.auth().currentUser;
+      if (mer) {
+        console.log("merchant is logged in");
+        this.merchant_id = mer.uid;
+      } else {
+        alert("Please sign in!");
+      }
+    },
+
+    //get merchant information from firestore, then update all merchant-related info
+    fetchMerchantInfo: function() {
+      db.collection("merchants")
+      .where("merchant_id", "==", this.merchant_id)
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach(doc => {
+          console.log("Merchant =>", doc.data());
+          //Restaurant Info Page
+          this.merchant_info.merchant_name = doc.data().merchant_name;
+          this.merchant_info.address = doc.data().address;
+          this.merchant_info.contact = doc.data().contact;
+          this.merchant_info.opening_hours = doc.data().operating_hours.opening;
+          this.merchant_info.closing_hours = doc.data().operating_hours.closing;
+          //Capacities
+          this.capacity.total = doc.data().capacity.total_seats;
+          this.capacity.one_seater = doc.data().capacity.one_seater;
+          this.capacity.two_seater = doc.data().capacity.two_seater;
+          this.capacity.three_seater = doc.data().capacity.three_seater;
+          this.capacity.four_seater = doc.data().capacity.four_seater;
+          this.capacity.five_seater = doc.data().capacity.five_seater;
+          //Safety Measures
+          this.safety.masks = doc.data().safety.masks;
+          this.safety.contact_trace = doc.data().safety.contact_trace;
+          this.safety.temp_screen = doc.data().safety.temperature_screening;
+          this.safety.safe_distance = doc.data().safety.safe_distancing;
+        })
+      })
+
+      //Reviews and Ratings
+      db.collection("reviews")
+      .where("merchant_id", "==", this.merchant_id)
+      .get()
+      .then((querySnapshot) => {
+        this.num_reviewers = querySnapshot.size;
+        querySnapshot.forEach(doc => {
+          console.log("Review =>", doc.data());
+          var review = {};
+
+          db.collection("users")
+          .where("user_id", "==", doc.data().user_id)
+          .get()
+          .then((querySnapshot) => {
+            querySnapshot.forEach(user => {
+              review["user_name"] = user.data().user_name;
+              review["rating"] = doc.data().rating;
+              review["review_text"] = doc.data().review;
+              review["date"] = doc.data().date_reviewed.toDate().toDateString();
+              console.log(review["date"]);
+              this.reviewslist.push(review);
+              
+              this.summed_rating += review["rating"];
+            })
+          })
+        })
+      })
+    },
+  },
+
+  computed: {
+    //Calculate overall rating out of 5
+    getOverallRating: function() {
+      return Number(this.summed_rating / this.num_reviewers).toFixed(1);
+    }
+  },
+  
+  mounted() {
+    this.fetchMerchantInfo();
+  },
+
   props: {
     vacancy: {
       type: String,
@@ -309,9 +382,9 @@ export default {
       type: String,
       default: "img/restimage/restopic1.jpg",
       description: "vacancy",
-    },
-  },
-};
+    }
+  }
+}
 </script>
 
 <style>
