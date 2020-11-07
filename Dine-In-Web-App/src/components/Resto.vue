@@ -109,19 +109,6 @@
           <div class="forms">
             <form @submit.prevent="checkReservationForm">
               <h1>Reserve</h1>
-
-              <!--
-              <label for="pax">Expected number of people</label>
-              <select id="pax" name="pax" v-model="pax">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-              </select>
-              <br/>
-              <br/> -->
-
               <label for="reservation">Reservation Date and Time </label>
               <input type="datetime-local" id="reservation" name="reservation" v-model="reservation_datetime"/>
               <br/>
@@ -212,11 +199,6 @@ export default {
           this.capacity.three_seater = doc.data().capacity.three_seater;
           this.capacity.four_seater = doc.data().capacity.four_seater;
           this.capacity.five_seater = doc.data().capacity.five_seater;
-          //Safety Measures
-          this.safety.masks = doc.data().safety.masks;
-          this.safety.contact_trace = doc.data().safety.contact_trace;
-          this.safety.temp_screen = doc.data().safety.temperature_screening;
-          this.safety.safe_distance = doc.data().safety.safe_distancing;
         })
       })
 
@@ -228,7 +210,7 @@ export default {
         this.num_reviewers = querySnapshot.size;
         querySnapshot.forEach(doc => {
           console.log("Review =>", doc.data());
-          var review = {};
+          let review = {};
 
           db.collection("users")
           .where("user_id", "==", doc.data().user_id)
@@ -236,27 +218,17 @@ export default {
           .then((querySnapshot) => {
             querySnapshot.forEach(user => {
               review["user_name"] = user.data().user_name;
-              review["rating"] = doc.data().rating;
-              review["review_text"] = doc.data().review;
-              review["date"] = doc.data().date_reviewed.toDate().toDateString();
-              this.reviewslist.push(review);
-              
-              this.summed_rating += review["rating"];
             })
           })
+
+          review["rating"] = doc.data().rating;
+          review["review_text"] = doc.data().review;
+          review["date"] = doc.data().date_reviewed.toDate().toDateString();
+          this.reviewslist.push(review);
+          
+          this.summed_rating += review["rating"];
         })
       })
-
-      //Reservations
-      //db.collection("reservations")
-      //.where("merchant_id", "==", this.merchant_id)
-      //.get()
-      //.then((querySnapshot) => {
-      // querySnapshot.forEach(doc => {
-          //get total pax so far; where status = ongoing and current timestamp >= date_reserved
-
-      //  })
-      //})
     },
 
     //Validate reservation form and save data to firestore if valid
@@ -277,14 +249,29 @@ export default {
         } else {
           console.log("Chosen date and seat: ", chosen_date, " and ", this.seat_type_chosen);
           console.log("Max date: ", max_date);
+
+          let reserver_name = "";
+
+          db.collection("users")
+          .where("user_id", "==", this.user_id)
+          .get()
+          .then((querySnapshot) => {
+            querySnapshot.forEach(user => {
+              reserver_name = user.data().user_name;
+              console.log("reserver name: ", reserver_name);
+            })
+          });
+
           db.collection("reservations")
           .add({
             date_reserved: chosen_date,
             pax: Number(this.seat_type_chosen),
-            status: "confirmed",
             merchant_id: this.merchant_id,
             user_id: this.user_id,
-          })
+            merchant_name: this.merchant_info.merchant_name,
+            user_name: reserver_name
+          });
+          alert("Reservation successful! Be there or be square :)");
         }
       }
     },
@@ -306,11 +293,6 @@ export default {
     getTotalSeatCapacity: function() {
       return Number(this.capacity.one_seater + this.capacity.two_seater * 2 + this.capacity.three_seater * 3 + this.capacity.four_seater * 4 + this.capacity.five_seater * 5);
     },
-
-    //Calculate remaining availability of seats
-    //getRemainingAvailability: function() {
-    //  return
-    //}
   },
 
   created() {
