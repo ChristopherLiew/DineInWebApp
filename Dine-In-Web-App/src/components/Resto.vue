@@ -7,7 +7,7 @@
   <body>
     <div class="sidebar">
       <div class="icon">
-        <h2>Dinein</h2>
+        <h2>DineIn</h2>
       </div>
       <router-link to="/">Home</router-link>
       <router-link to="/profile">Profile</router-link>
@@ -33,7 +33,7 @@
             <div>
               <img :src="vacancy" alt="..." class="iconDetails" />
               <div style="display: inline-block">
-                <b>5/{{ capacity.total }}</b>
+                <b>/{{ getTotalSeatCapacity }}</b>
                 <span>Seats</span>
               </div>
             </div>
@@ -53,23 +53,23 @@
             <div class="column left1">
               <div class="card">
                 <p><i class="fa fa-user"></i></p>
-                <p>One-seaters: {{ capacity.one_seater }}</p>
+                <p>One-seaters: /{{ capacity.one_seater }}</p>
               </div>
               <div class="card">
                 <p><i class="fa fa-check"></i></p>
-                <p>Two-seaters: {{ capacity.two_seater }}</p>
+                <p>Two-seaters: /{{ capacity.two_seater }}</p>
               </div>
               <div class="card">
                 <p><i class="fa fa-smile-o"></i></p>
-                <p>Three-seaters: {{ capacity.three_seater }}</p>
+                <p>Three-seaters: /{{ capacity.three_seater }}</p>
               </div>
               <div class="card">
                 <p><i class="fa fa-smile-o"></i></p>
-                <p>Four-seaters: {{ capacity.four_seater }}</p>
+                <p>Four-seaters: /{{ capacity.four_seater }}</p>
               </div>
               <div class="card">
                 <p><i class="fa fa-smile-o"></i></p>
-                <p>Five-seaters: {{ capacity.five_seater }}</p>
+                <p>Five-seaters: /{{ capacity.five_seater }}</p>
               </div>
             </div>
 
@@ -109,109 +109,17 @@
             </div>
           </div>
 
-    <!--
-          <div class="row">
-            <div class="tablescroll">
-              <table>
-                <tr>
-                  <th>Date</th>
-                  <th>Name</th>
-                  <th>Safety1</th>
-                  <th>Safety2</th>
-                  <th>Safety3</th>
-                  <th>Safety4</th>
-                </tr>
-                <tr>
-                  <td>17/10/20</td>
-                  <td>Griffin</td>
-                  <td>Yes</td>
-                  <td>Yes</td>
-                  <td>Yes</td>
-                  <td>Yes</td>
-                </tr>
-                <tr>
-                  <td>17/10/20</td>
-                  <td>Louis</td>
-                  <td>Yes</td>
-                  <td>Yes</td>
-                  <td>Yes</td>
-                  <td>Yes</td>
-                </tr>
-                <tr>
-                  <td>17/10/20</td>
-                  <td>Joes</td>
-                  <td>Yes</td>
-                  <td>Yes</td>
-                  <td>Yes</td>
-                  <td>Yes</td>
-                </tr>
-                <tr>
-                  <td>17/10/20</td>
-                  <td>Cleveland</td>
-                  <td>Yes</td>
-                  <td>Yes</td>
-                  <td>Yes</td>
-                  <td>Yes</td>
-                </tr>
-
-                <tr>
-                  <td>17/10/20</td>
-                  <td>Cleveland</td>
-                  <td>Yes</td>
-                  <td>Yes</td>
-                  <td>Yes</td>
-                  <td>Yes</td>
-                </tr>
-                <tr>
-                  <td>17/10/20</td>
-                  <td>Cleveland</td>
-                  <td>Yes</td>
-                  <td>Yes</td>
-                  <td>Yes</td>
-                  <td>Yes</td>
-                </tr>
-                <tr>
-                  <td>17/10/20</td>
-                  <td>Cleveland</td>
-                  <td>Yes</td>
-                  <td>Yes</td>
-                  <td>Yes</td>
-                  <td>Yes</td>
-                </tr>
-                <tr>
-                  <td>17/10/20</td>
-                  <td>Cleveland</td>
-                  <td>Yes</td>
-                  <td>Yes</td>
-                  <td>Yes</td>
-                  <td>Yes</td>
-                </tr>
-                <tr>
-                  <td>17/10/20</td>
-                  <td>Cleveland</td>
-                  <td>Yes</td>
-                  <td>Yes</td>
-                  <td>Yes</td>
-                  <td>Yes</td>
-                </tr>
-              </table>
-            </div>
-          </div>
-          --> 
         </div>
         
         <!-- Reservation Form -->
         <div class="column right">
           <div class="forms">
-            <form action="/action_page.php">
+            <form @submit.prevent="checkReservationForm">
               <h1>Reserve</h1>
-              <label for="name">Name</label>
-              <input type="text" id="name" name="name" placeholder="Your name"/>
-              <br/>
-              <br/>
 
+              <!--
               <label for="pax">Expected number of people</label>
-              <select id="pax" name="pax">
+              <select id="pax" name="pax" v-model="pax">
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -219,20 +127,15 @@
                 <option value="5">5</option>
               </select>
               <br/>
-              <br/>
+              <br/> -->
 
-              <label for="reservation">Reservation Date </label>
-              <input type="date" id="reservation" name="reservation" />
-              <br/>
-              <br/>
-
-              <label for="contactnumber">Contact </label>
-              <input type="number" id="contactnumber" name="contactnumber" placeholder="Your phone number"/>
+              <label for="reservation">Reservation Date and Time </label>
+              <input type="datetime-local" id="reservation" name="reservation" v-model="reservation_datetime"/>
               <br/>
               <br/>
 
               <label for="seats">Desired seat types</label>
-              <select id="seats" name="seats">
+              <select id="seats" name="seats" v-model="seat_type_chosen">
                 <option value="1">One-seater</option>
                 <option value="2">Two-seater</option>
                 <option value="3">Three-seater</option>
@@ -242,13 +145,7 @@
               <br/>
               <br/>
 
-      <!--
-              <img :src="seats" />
-              <br />
-              <br />
-      -->
-
-              <input type="submit" value="Submit" />
+              <input type="submit" value="Submit"/>
             </form>
           </div>
         </div>
@@ -265,7 +162,10 @@ const db = firebase.firestore();
 export default {
   data() {
     return {
-      merchant_id: "1HUVGeQ9pEcXfUhEBv8nhYaT1fn2", //need to figure out how to fix this such that i get the uid of the person logged in
+      //Authenticated user
+      user_id: null,
+      //Merchant information to be displayed
+      merchant_id: "XSUFuBfW2LhMy5RcQIxZ9uiSvS73", //need to figure out how to pull this from the search page, i.e. when user clicks on the merchant from the filter page
       merchant_info: {
         merchant_name: "",
         address: "",
@@ -273,7 +173,13 @@ export default {
         opening_hours: "",
         closing_houurs: ""
       },
-      capacity: {},
+      capacity: {
+        one_seater: null,
+        two_seater: null,
+        three_seater: null,
+        four_seater: null,
+        five_seater: null
+      },
       safety: {
         masks: false,
         contact_trace: false,
@@ -281,25 +187,29 @@ export default {
         safe_distance: false
       },
       reviewslist: [],
+      //Computed values
       summed_rating: null,
       num_reviewers: null,
+      //Reservation form
+      reservation_datetime: null,
+      seat_type_chosen: null
     }
   },
 
   methods: {
 
-    //ensure it's the merchant, else ask them to log in
-    updateMerchantID: function() {
-      var mer = firebase.auth().currentUser;
-      if (mer) {
-        console.log("merchant is logged in");
-        this.merchant_id = mer.uid;
+    //Ensure it's the user, else ask them to log in //how come i'm signed in after clicking away and going back again lmao
+    updateUserID: function() {
+      var user = firebase.auth().currentUser;
+      if (user) {
+        this.user_id = user.uid;
+        console.log("user is logged in: ", this.user_id);
       } else {
         alert("Please sign in!");
       }
     },
 
-    //get merchant information from firestore, then update all merchant-related info
+    //Get merchant information from firestore, then update all merchant-related info
     fetchMerchantInfo: function() {
       db.collection("merchants")
       .where("merchant_id", "==", this.merchant_id)
@@ -347,7 +257,6 @@ export default {
               review["rating"] = doc.data().rating;
               review["review_text"] = doc.data().review;
               review["date"] = doc.data().date_reviewed.toDate().toDateString();
-              console.log(review["date"]);
               this.reviewslist.push(review);
               
               this.summed_rating += review["rating"];
@@ -355,14 +264,75 @@ export default {
           })
         })
       })
+
+      //Reservations
+      //db.collection("reservations")
+      //.where("merchant_id", "==", this.merchant_id)
+      //.get()
+      //.then((querySnapshot) => {
+      // querySnapshot.forEach(doc => {
+          //get total pax so far; where status = ongoing and current timestamp >= date_reserved
+
+      //  })
+      //})
     },
+
+    //Valid reservation form and save data to firestore if valid
+    checkReservationForm: function() {
+      if (!this.seat_type_chosen) {
+        alert("Please tell us which seats you'd like")
+      }
+      if (!this.reservation_datetime) {
+        alert("Please tell us when you're coming")
+      } else {
+        var chosen_date = new Date(this.reservation_datetime);
+        var today = new Date();
+        var max_date = this.addDays(today, 14);
+        if (chosen_date < today || chosen_date > max_date) {
+          console.log("Max date: ", max_date);
+          alert("Please choose a valid reservation date, in between today and two weeks from now");
+        } else {
+          console.log("Chosen date and seat: ", chosen_date, " and ", this.seat_type_chosen);
+          console.log("Max date: ", max_date);
+          db.collection("reservations")
+          .add({
+            date_reserved: chosen_date,
+            pax: Number(this.seat_type_chosen),
+            status: "confirmed",
+            merchant_id: this.merchant_id,
+            user_id: this.user_id,
+          })
+          return true
+        }
+      }
+    },
+
+    addDays: function(date, days) {
+      var result = new Date(date);
+      result.setDate(result.getDate() + days);
+      return result;
+    }
   },
 
   computed: {
     //Calculate overall rating out of 5
     getOverallRating: function() {
       return Number(this.summed_rating / this.num_reviewers).toFixed(1);
-    }
+    },
+
+    //Calculate sum of seat capacities possible
+    getTotalSeatCapacity: function() {
+      return Number(this.capacity.one_seater + this.capacity.two_seater * 2 + this.capacity.three_seater * 3 + this.capacity.four_seater * 4 + this.capacity.five_seater * 5);
+    },
+
+    //Calculate remaining availability of seats
+    //getRemainingAvailability: function() {
+    //  return
+    //}
+  },
+
+  created() {
+    this.updateUserID();
   },
   
   mounted() {
