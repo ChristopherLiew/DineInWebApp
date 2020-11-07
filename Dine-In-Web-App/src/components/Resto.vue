@@ -19,96 +19,89 @@
 
     <div class="content">
       <!-- Restaurant Info Card -->
-      <div class="info" :style="{'background-image': 'url(https://vuejs.org/images/logo.png)',}">
+      <div class="headerbar" :style="{'background-image': 'url(https://vuejs.org/images/logo.png)',}">
         <h1>{{ merchant_info.merchant_name }}</h1>
         <p>Address: {{ merchant_info.address }}</p>
         <p>Phone No: {{ merchant_info.contact }}</p>
         <p>Operating Hours: {{ merchant_info.opening_hours }} to {{ merchant_info.closing_hours }}</p>
       </div>
 
-      <!-- Capacity and Rating Cards -->
       <div class="row">
         <div class="column left">
-          <div class="stati turquoise">
-            <div>
-              <img :src="vacancy" alt="..." class="iconDetails" />
-              <div style="display: inline-block">
-                <b>/{{ getTotalSeatCapacity }}</b>
-                <span>Seats</span>
-              </div>
-            </div>
-          </div>
-          <div class="stati turquoise">
-            <div>
-              <img :src="vacancy" alt="..." class="iconDetails" />
-              <div style="display: inline-block">
-                <b>{{ getOverallRating }}/5</b>
-                <span>Rating</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Detailed Seats Card -->
           <div class="row">
             <div class="column left1">
-              <div class="card">
-                <p><i class="fa fa-user"></i></p>
-                <p>One-seaters: /{{ capacity.one_seater }}</p>
+              
+              <!-- Overall Rating Card -->
+              <div class="stati turquoise">
+                <div style="display: inline-block">
+                  <b>{{ getOverallRating }}/5</b>
+                  <span>Avg Rating</span>
+                </div>
               </div>
-              <div class="card">
-                <p><i class="fa fa-check"></i></p>
-                <p>Two-seaters: /{{ capacity.two_seater }}</p>
+              <div class="stati turquoise">
+                <div style="display: inline-block">
+                  <b>{{ num_reviewers }}</b>
+                  <span>No. of Reviewers</span>
+                </div>
               </div>
-              <div class="card">
-                <p><i class="fa fa-smile-o"></i></p>
-                <p>Three-seaters: /{{ capacity.three_seater }}</p>
-              </div>
-              <div class="card">
-                <p><i class="fa fa-smile-o"></i></p>
-                <p>Four-seaters: /{{ capacity.four_seater }}</p>
-              </div>
-              <div class="card">
-                <p><i class="fa fa-smile-o"></i></p>
-                <p>Five-seaters: /{{ capacity.five_seater }}</p>
-              </div>
-            </div>
 
-            <!-- Safety Measures Card -->
-            <div class="column left1">
+              <!-- Safety Measures Cards -->
               <div class="card" v-if="this.safety.masks == true">
-                <p><i class="fa fa-user"></i></p>
                 <p>Enforces masks</p>
               </div>
               <div class="card" v-if="this.safety.contact_trace == true">
-                <p><i class="fa fa-check"></i></p>
                 <p>Contact tracing</p>
               </div>
               <div class="card" v-if="this.safety.temp_screen == true">
-                <p><i class="fa fa-smile-o"></i></p>
                 <p>Temperature screening</p>
               </div>
               <div class="card" v-if="this.safety.safe_distance == true">
-                <p><i class="fa fa-smile-o"></i></p>
                 <p>Safe distancing</p>
               </div>
 
             </div>
-
-            <!-- Table of Reviews -->
+            
             <div class="column right1">
-              <div class="ex3" id="reviews_table">
-                <div class="testimonials" v-for="review in reviewslist" :key="review.number">
-                  <div class="iconDetails"><img :src="person2"/></div>
-                  <div>
-                    <p>{{ review.user_name }} rated {{ review.rating }}/5 stars.</p>
-                    <p>{{ review.date }}</p>
-                    <p>{{ review.review_text }}</p>
-                  </div>
+
+              <div class="stati turquoise">
+                <div style="display: inline-block">
+                  <b>/{{ getTotalSeatCapacity }}</b>
+                  <span>Seats Available Now</span>
+                </div>
+              </div>
+
+              <!-- Detailed Seats Card -->
+              <div class="card">
+                <p>One-seaters: /{{ capacity.one_seater }}</p>
+              </div>
+              <div class="card">
+                <p>Two-seaters: /{{ capacity.two_seater }}</p>
+              </div>
+              <div class="card">
+                <p>Three-seaters: /{{ capacity.three_seater }}</p>
+              </div>
+              <div class="card">
+                <p>Four-seaters: /{{ capacity.four_seater }}</p>
+              </div>
+              <div class="card">
+                <p>Five-seaters: /{{ capacity.five_seater }}</p>
+              </div>
+            </div>           
+          </div>
+
+          <div class="row">
+            <!-- Table of Reviews -->
+            <div class="ex3" id="reviews_table">
+              <div class="testimonials" v-for="review in reviewslist" :key="review.number">
+                <div class="iconDetails"><img :src="person2"/></div>
+                <div>
+                  <p>{{ review.user_name }} rated {{ review.rating }}/5 stars.</p>
+                  <p>{{ review.date }}</p>
+                  <p>{{ review.review_text }}</p>
                 </div>
               </div>
             </div>
           </div>
-
         </div>
         
         <!-- Reservation Form -->
@@ -266,7 +259,7 @@ export default {
       //})
     },
 
-    //Valid reservation form and save data to firestore if valid
+    //Validate reservation form and save data to firestore if valid
     checkReservationForm: function() {
       if (!this.seat_type_chosen) {
         alert("Please tell us which seats you'd like")
@@ -277,6 +270,7 @@ export default {
         var chosen_date = new Date(this.reservation_datetime);
         var today = new Date();
         var max_date = this.addDays(today, 14);
+
         if (chosen_date < today || chosen_date > max_date) {
           console.log("Max date: ", max_date);
           alert("Please choose a valid reservation date, in between today and two weeks from now");
@@ -421,7 +415,7 @@ body {
   width: 70px;
 }
 
-.info {
+.headerbar {
   background-image: restopic1;
   background: rgba(0, 0, 0, 0.5);
   color: #f1f1f1;
@@ -556,7 +550,7 @@ div.content {
 /* Clear floats after the columns */
 
 /* Responsive columns */
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 300px) {
   .column {
     width: 100%;
     display: block;
@@ -566,23 +560,11 @@ div.content {
 
 /* Style the counter cards */
 .card {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  padding: 5px;
+  box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.2);
+  padding: 4px;
   text-align: center;
   background-color: #444;
   color: white;
-}
-
-.cards {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  padding: 16px;
-
-  background-color: white;
-  color: black;
-}
-
-.fa {
-  font-size: 50px;
 }
 
 table {
