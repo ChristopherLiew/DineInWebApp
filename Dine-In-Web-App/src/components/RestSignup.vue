@@ -25,17 +25,16 @@
 
                 <label for="lname">Address</label>
                 <input type="text" id="lname" name="lastname">
-                <div class="timingrow">
-                    <div class="timing">
-                        <label for="lname">Opening</label>
-                        <input type="text" id="lname" name="lastname" >
-                    </div>
-                    <div class="timing">
-                        <label for="lname">Closing</label>
-                        <input type="text" id="lname" name="lastname" >
-                    </div>
-                </div>
+                <label for="lname">Opening</label>
+                <input type="text" id="lname" name="lastname" >
+                <label for="lname">Closing</label>
+                <input type="text" id="lname" name="lastname" >
+                <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
 
+  <input type="checkbox" id="vehicle2" name="vehicle2" value="Car">
+  <label for="vehicle2"> I have a car</label>
+  <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
+  <label for="vehicle3"> I have a boat</label><br>
 
                 
 
