@@ -196,18 +196,7 @@ export default {
     }
   },
 
-  methods: {
-
-    //Ensure it's the user, else ask them to log in //how come i'm signed in after clicking away and going back again lmao
-    updateUserID: function() {
-      var user = firebase.auth().currentUser;
-      if (user) {
-        this.user_id = user.uid;
-        console.log("user is logged in: ", this.user_id);
-      } else {
-        alert("Please sign in!");
-      }
-    },
+  methods: {  
 
     //Get merchant information from firestore, then update all merchant-related info
     fetchMerchantInfo: function() {
@@ -302,7 +291,6 @@ export default {
             merchant_id: this.merchant_id,
             user_id: this.user_id,
           })
-          return true
         }
       }
     },
@@ -332,7 +320,16 @@ export default {
   },
 
   created() {
-    this.updateUserID();
+    //Ensure it's the user, else ask them to log in //how come i'm signed in after clicking away and going back again lmao
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        console.log(user.uid);
+        this.user_id = user.uid;
+        console.log("User is signed in: ", this.user_id);
+      } else {
+        alert("Please sign in!");
+      }
+    })
   },
   
   mounted() {
