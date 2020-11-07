@@ -9,11 +9,12 @@
       <div class="icon">
         <h2>Dinein</h2>
       </div>
-      <router-link to="/">Home</router-link>
-      <router-link to="/profile">Profile</router-link>
-      <router-link to="/map">Map</router-link>
-      <router-link to="/search">Search</router-link>
-      <router-link to="/login">Login</router-link>
+        <router-link to="/">Home</router-link>
+        <router-link to="/profile">Profile</router-link>
+        <router-link to="/myreservations">My Reservations</router-link>
+        <router-link to="/map">Map</router-link>
+        <router-link to="/login">Login</router-link>
+        <router-link to="/restaurant">Restaurant</router-link>
     </div>
 
     <div class="content">
@@ -48,7 +49,9 @@ export default {
   methods: {
     // Test with logged in progile and check profile.vue also
     logInUser: function() {
-      firebase.auth().signInWithEmailAndPassword(this.email, this.password).catch(function(error) {
+      firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(function() {
+        alert("Welcome!")
+      }).catch(function(error) {
       var errorCode = error.code;
       var errorMessage = error.message;
       if (errorCode === 'auth/wrong-password') {

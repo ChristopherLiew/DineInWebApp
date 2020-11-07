@@ -3,6 +3,8 @@ import Profile from './components/Profile.vue'
 import Map from './components/Map.vue'
 import SearchBar from './components/SearchBar.vue'
 import Login from './components/Login.vue'
+import Resto from './components/Resto.vue'
+import UserReservations from './components/UserReservations.vue'
 
 export default[
     {
@@ -24,5 +26,14 @@ export default[
     {
         path:'/login',
         component: Login
+    },
+    {
+        name: 'restaurant',
+        path:'/restaurant/:id',
+        component: Resto
+    },
+    {
+        path: '/myreservations',
+        component: UserReservations
     }
 ]

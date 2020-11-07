@@ -1,75 +1,61 @@
 <template>
 <div>
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  </head>
-
-  <body>
-    <div class="sidebar">
-      <div class="icon">
-        <h2>Dinein</h2>
-      </div>
-      <router-link to="/">Home</router-link>
-      <router-link to="/profile">Profile</router-link>
-      <router-link to="/map">Map</router-link>
-      <router-link to="/search">Search</router-link>
-      <router-link to="/login">Login</router-link>
-    </div>
-
-  <div class="content">
-        <p class="description">Search for the restaurant of your dreams lol.</p>
-        <input class="message-type-area" placeholder="Gimme Food!" type="text" v-model="search">
-      <ul>
-        <li v-for="result in filteredMerchants" :key="result.doc_id"> <!-- filteredMerchants is a filtered array of results-->
-          {{result.merchant_id}}. {{result.merchant_name}}
-        </li>
-      </ul>
-  </div>
-  </body>
-
+      <Dropdown
+        :options="options"
+        v-on:selected="getSelection" 
+        v-on:filter="filteredMerchants"
+        :disabled="false"
+        name="dine_in_search"
+        :maxItem="5"
+        placeholder="Find a restaurant">
+      </Dropdown>
 </div>
 </template>
 
-<script>
+<script type="text/javascript">
 import firebase from '../firebase.js'
+import Dropdown from 'vue-simple-search-dropdown';
 const database = firebase.firestore();
 
 export default {
   data() {
     return {
-      search: '',
-      results: [],
+      options : []
     }
   },
+  components: {
+      Dropdown
+    },
   methods: {
       fetchAllMerchants: function() {
       database.collection('merchants').get().then((querySnapShot) => {
-        querySnapShot.forEach(doc=> {
-          // Doc ID
+        querySnapShot.forEach(doc=>{
           let merchant = {}
-          merchant.doc_id = doc.id;
-          merchant.merchant_id = doc.data().merchant_id
-          merchant.merchant_name = doc.data().merchant_name;
-          // Merchant link (TB Refined)
-          // merchant.page_link = doc.merchant_pg_link
-          this.results.push(merchant);
+          merchant.name = doc.data().merchant_name;
+          merchant.id = doc.data().merchant_id;
+          this.options.push(merchant);
         })
-      }).catch(function(error) {
+       }).catch(function(error) {
         console.log("Error loading merchant info: ", error);
-    });
-    }
-  },
-  created() {
-    this.fetchAllMerchants();
-},
-  computed: { // Use computed so that it changes when our search query changes
-    // Filters merchant results array search
-    filteredMerchants: function() {
-      return this.results.filter((merchant) => {
-        return merchant.merchant_name.match(this.search);
+      });
+    },
+
+    getSelection: function(selection) {      
+      console.log(selection.name + ' has been selected');
+      if (selection.name != undefined) {
+        this.$router.push({name: 'restaurant', params: {id: selection.id}})
+      }
+    },
+    filteredMerchants: function(search) { // Filter options array based on search
+      return this.options.filter((x) => {
+        return x.name.match(search);
       })
     }
-  }
+  },
+
+  created() {
+    this.fetchAllMerchants();
+  },
 }
 </script>
 

@@ -9,15 +9,17 @@
         <div class="icon">
             <h2>Dinein</h2>
         </div>
-        <a class="active" href="#home">Home</a>
-        <a href="#news">Profile</a>
-        <a href="#contact">Map</a>
-        <a href="#about">Restaurants</a>
+        <router-link to="/">Home</router-link>
+        <router-link to="/profile">Profile</router-link>
+        <router-link to="/myreservations">My Reservations</router-link>
+        <router-link to="/map">Map</router-link>
+        <router-link to="/login">Login</router-link>
+        <router-link to="/restaurant">Restaurant</router-link>
         </div>
 
         <div class="content">
             <div class="info" :style="{'background-image':'url(https://vuejs.org/images/logo.png)'}">
-                            <h1>Common Man</h1>
+                            <h1>{{restaurant.id}}</h1>
                             <p>Address: </p>
                             <p>Phone No: </p>
                             <p>Opening Hours: </p>
@@ -243,9 +245,6 @@
                     </div>
                     </div>
                   </div>
-                
-
-                    
 
                 <div class="column right">
                     <div class = "forms">
@@ -294,7 +293,13 @@
 // import QuantityCounter from '../components/QuantityCounter.vue'
 
 export default {
-    
+    data() {
+      return {
+        restaurant: {
+          id: null
+        }
+    }
+    },
     props: {
         vacancy: {
         type: String,
@@ -323,6 +328,9 @@ export default {
 
         }
         
+    },
+    created() {
+      this.restaurant.id = this.$route.params.id
     }
  }
 </script>
@@ -513,11 +521,6 @@ box-shadow:0px 0.4em 0.5em rgb(0, 0, 0,0.8);
   
 }
 
-
-
-.* {
-  box-sizing: border-box;
-}
 
 /* Float four columns side by side */
 

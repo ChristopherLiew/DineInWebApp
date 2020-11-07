@@ -9,11 +9,12 @@
       <div class="icon">
         <h2>Dinein</h2>
       </div>
-      <router-link to="/">Home</router-link>
-      <router-link to="/profile">Profile</router-link>
-      <router-link to="/map">Map</router-link>
-      <router-link to="/search">Search</router-link>
-      <router-link to="/login">Login</router-link>
+        <router-link to="/">Home</router-link>
+        <router-link to="/profile">Profile</router-link>
+        <router-link to="/myreservations">My Reservations</router-link>
+        <router-link to="/map">Map</router-link>
+        <router-link to="/login">Login</router-link>
+        <router-link to="/restaurant">Restaurant</router-link>
     </div>
 
     <div class="content">
@@ -45,7 +46,7 @@
 // Functionality
 // 1) Get and Update Profile Information from Firebase
 
-import firebase from '../firebase.js'
+import firebase from '../firebase.js';
 const database = firebase.firestore();
 const storage = firebase.storage();
 
@@ -55,23 +56,13 @@ export default {
       profileInfo: {
         imgURL: null
       },
-      user_id: null, // user_id refers to the authenticated unique user id
       loaded: false, // Triggered when data has sucessfully been pulled after Vue app is mounted
       uploadPct: 0,
       imageData: null,
+      user_id: null
     }
   },
   methods: {
-    updateUserID: function() {
-      var user = firebase.auth().currentUser; // Use authenticated User object to get details
-      if (user) {
-        this.user_id = user.uid;
-        console.log("User signed in")
-      }
-      else {
-        alert("Please sign in!")
-      }
-    },
     // 1) Pull profile information from Firebase
     fetchProfile: function() {
       database.collection('users').where("user_id", "==", this.user_id).get().then((querySnapShot) => {
@@ -134,20 +125,17 @@ export default {
       this.imageData = event.target.files[0];
     },
   },
-  // KIV: Components Vs. Conditional Rendering
-  computed: {
-    firstNameComputed() {
-      return this.profileInfo.name.first_name
-    }
-  },
   // Lifecycle Hooks 
-  // https://www.digitalocean.com/community/tutorials/vuejs-component-lifecycle
-  // before rendering
   created() {
-    this.updateUserID();
-  },
-  mounted() {
-    this.fetchProfile();
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.user_id = user.uid;
+        console.log("Getting signed in user")
+        this.fetchProfile();
+      } else {
+       console.log("Can't get signed in user")
+      }
+    })
   }
 }
 </script>
@@ -200,4 +188,3 @@ img {
     height: auto;
 }
 </style>
-
