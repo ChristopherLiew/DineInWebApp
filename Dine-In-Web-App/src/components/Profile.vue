@@ -15,25 +15,53 @@
     </div>
 
     <div class="content">
-      <h2 v-if="this.loaded == true">Profile page of {{profileInfo.name.first_name}} {{profileInfo.name.last_name}}</h2>
-      <p v-if="this.loaded == true">You have a wallet balance of: ${{profileInfo.wallet_balance}}</p>
-      <h3>Resize the browser window to see the effect.</h3>
-      <br>
-      <div>
-    <div >
-      <p>Upload an image to Firebase:</p>
-      <input type="file" @change="inputImage" accept="image/*" >
-    </div>
-    <div>
-      <p>Progress: {{uploadPct.toFixed()+"%"}}
-      <progress id="progress" :value="uploadPct" max="100" ></progress>  </p>
-    </div>
-      <div v-if="imageData!=null">
-        <button @click="setProfileImage">Upload</button>
+      <div class="pastreservations">
+         <h2>My Reservations</h2>
+          <table class="styled-table">
+          <thead>
+            <tr>
+            <th></th>
+            <th>Restaurant</th>
+            <th>Date</th>
+            <th>Pax</th>
+            <th>Cancel Reservation</th>
+            <th>Leave a Review</th>
+            </tr>
+          </thead>
+            <tbody>
+              <tr v-for="(reservation ,i) in user_reservations" :key="i">
+                <th scope="row">{{i + 1}}</th>  
+                <td>{{ reservation.merchant_name }}</td> 
+                <td>{{ reservation.datetime }}</td> <!-- Format nicely in DOW/ DATE/ TIME -->
+                <td>{{ reservation.pax }}</td>
+                <td><button @click="cancelReservation(reservation.reservation_id)">Cancel</button></td>
+                <td><button>Review</button></td> <!-- Go to review form -->
+              </tr>
+            </tbody>
+          </table>
+      </div>
+      <div class="profilearea">
+        <div class="profilecard">
+          <h2 v-if="this.loaded == true">Profile page of {{profileInfo.name.first_name}} {{profileInfo.name.last_name}}</h2>
+          <p v-if="this.loaded == true">You have a wallet balance of: ${{profileInfo.wallet_balance}}</p>
+          <br>
+          <div>
+        <div >
+          <p>Upload an image to Firebase:</p>
+          <input type="file" @change="inputImage" accept="image/*" >
+        </div>
+        <div>
+          <p>Progress: {{uploadPct.toFixed()+"%"}}
+          <progress id="progress" :value="uploadPct" max="100" ></progress>  </p>
+        </div>
+          <div v-if="imageData!=null">
+            <button @click="setProfileImage">Upload</button>
+          </div>
+        </div>
+        <img v-if="profileInfo.imgURL != null && loaded == true" :src=profileInfo.imgURL alt="Profile Pic">
+        </div>
       </div>
     </div>
-    <img v-if="profileInfo.imgURL != null && loaded == true" :src=profileInfo.imgURL alt="Profile Pic">
-  </div>
   </body>
 
 </div>
@@ -56,10 +84,39 @@ export default {
       user_id: 1, // Should be passed as a prop from Login Page. Upon Log In, Auth should return user_id and update parent before passing to profile
       loaded: false, // Triggered when data has sucessfully been pulled after Vue app is mounted
       uploadPct: 0,
-      imageData: null,
+      user_reservations: [],
+      imageData: null
     }
   },
   methods: {
+    getUserRes: function() {
+        console.log("getUserRes called");
+              database.collection('reservations').get().then((querySnapShot) => {
+              querySnapShot.forEach(doc=> {
+                if (doc.data().user_id == this.user_id) {
+                  let reservation = {};
+                  reservation.reservation_id = doc.id;
+                  reservation.merchant_name = doc.data().merchant_name;
+                  let reservation_date = doc.data().date_reserved.toDate().toDateString();
+                  let reservation_time = new Date(doc.data().date_reserved * 1000).toLocaleTimeString('en-US', {hour: 'numeric', minute: 'numeric', hour12: true}); 
+                  reservation.datetime = reservation_date + " " + reservation_time;
+                  reservation.pax = doc.data().pax;
+                  this.user_reservations.push(reservation);
+                }
+              })
+            }).catch(function(error) {
+              console.log("Error getting documents: ", error);
+            })
+          },
+    cancelReservation: function(res_id){
+        database.collection("reservations").doc(res_id).delete().then(function() {
+            console.log("Document successfully deleted!");
+            alert("Your reservation has been cancelled!")
+            location.reload() // Refresh
+          }).catch(function(error) {
+            console.error("Error deleting reservation: ", error);
+          });
+    },
     // 1) Pull profile information from Firebase
     fetchProfile: function() {
       database.collection('users').where("user_id", "==", this.user_id).get().then((querySnapShot) => {
@@ -180,9 +237,65 @@ div.content {
   background-image: linear-gradient( rgb(78, 223, 78), rgb(85, 199, 228));
 }
 
+.profilearea {
+  width: 30%;
+  float: right;
+  background-color: red;
+}
+
+.pastreservations {
+  width: 70%;
+  float: left;
+  /*background-color: blue;*/
+}
+
 img {
     width: 300px;
     height: auto;
+}
+
+.styled-table {
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.styled-table thead tr {
+    background-color: #009879;
+    color: #ffffff;
+    text-align: left;
+}
+
+.styled-table th,
+.styled-table td {
+    padding: 12px 15px;
+}
+
+.styled-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.styled-table tbody tr:last-of-type {
+    border-bottom: 2px solid #009879;
+}
+
+.styled-table tbody tr.active-row {
+    font-weight: bold;
+    color: #009879;
+}
+
+.profilecard {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  max-width: 300px;
+  margin: auto;
+  text-align: center;
 }
 </style>
 

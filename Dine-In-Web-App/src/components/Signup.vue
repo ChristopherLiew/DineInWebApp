@@ -42,68 +42,8 @@
 </template>
 
 <script>
-import slugify from 'slugify';
-import db from '@/firebase/init';
-import firebase from 'firebase';
-import functions from 'firebase/functions'
 
-export default {
-    name: 'Signup',
-    data(){
-        return{
-            email:null,
-            password:null,
-            alias:null,
-            feedback:null,
-            slug:null
-            
-        }
-    },
-    methods: {
-        signup(){
-            if(this.alias && this.email && this.password){
-                if(this.password.length<8){
-                    this.feedback = "Password length must be 8 characters or more"
-                } else if(this.password.length > 16){
-                    this.feedback= "Password must be no more than 16 characters"
-                } else{
-                this.feedback = null
-                this.slug = slugify(this.alias,{
-                    replacement:'-',
-                    remove: /[$*_+~.()'"!\-:@]/g,
-                    lower:true
-                })
-                let checkAlias = firebase.functions().httpsCallable('checkAlias');
-                checkAlias({slug: this.slug}).then(result => {
-                    console.log(result)
-                    if(!result.data.unique){
-                        this.feedback = 'This alias already exists'
-                    } else {
-                        // //new function
-                        // let createUser = firebase.functions().httpsCallable('createUser');
-                        // createUser({slug: this.slug, email: this.email, password: this.password, alias: this.alias})
-                        // .then(result => {
-                        //     this.$router.push({name: 'AddressBar'})
-                        // })
 
-                        //new try using a new function
-                        firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then(cred => {
-                            let makeUser = firebase.functions().httpsCallable('makeUser');
-                            console.log('Logged in')
-                            makeUser({slug: this.slug, alias: this.alias, user_id: cred.user.uid})
-                        }).then(() => {
-                                this.$router.push({name: 'AddressBar'})
-                            })
-                    }
-                    })
-                }
-            } else {  
-                this.feedback= "You must enter all fields"
-            }
-            
-        }
-    }
-}
 </script>
 
 <style>
