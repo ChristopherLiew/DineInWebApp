@@ -16,15 +16,22 @@
         <router-link to="/signup">Sign Up</router-link>
       </div>
       <div class = "content">
-          <h2>Restaurant Information</h2>
+          <h2>Review</h2>
         <div class="container">
             
             <form action="/action_page.php">
-                <label for="fname">Name of Restaurant</label>
+                <label for="fname">You are writing a review for Name of Restaurant</label>
                 <input type="text" id="fname" name="firstname">
-
-                <label for="lname">Address</label>
-                <input type="text" id="lname" name="lastname">
+                <label for="vehicle1">Adhered to Contact Tracing</label>
+                <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+                <label for="lname">Rating</label>
+                <select id="rating" name="rating">
+                <option value=1>1 Star</option>
+                <option value=2>2 Star</option>
+                <option value=3>3 Star</option>
+                <option value=4>4 Star</option>
+                <option value=5>5 Star</option>
+                </select>
                 <br>
                 <label for="subject">Subject</label>
                 <textarea id="subject" name="subject" placeholder="Write something.." style="height:200px"></textarea>

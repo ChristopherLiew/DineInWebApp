@@ -29,13 +29,30 @@
                 <input type="text" id="lname" name="lastname" >
                 <label for="lname">Closing</label>
                 <input type="text" id="lname" name="lastname" >
+                <label for="lname">Contact Number</label>
+                <input type="text" id="lname" name="lastname">
+                <label for="lname">How many 1-seaters</label>
+                <input type="text" id="lname" name="lastname">
+                <label for="lname">How many 2-seaters</label>
+                <input type="text" id="lname" name="lastname">
+                <label for="lname">How many 3-seaters</label>
+                <input type="text" id="lname" name="lastname">
+                <label for="lname">How many 4-seaters</label>
+                <input type="text" id="lname" name="lastname">
+                <label for="lname">How many 5-seaters</label>
+                <input type="text" id="lname" name="lastname">
+                <label for="cuisine">COVID measures</label>
+                <br><br>
+                <label for="vehicle1">Contact Tracing</label>
                 <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
-
+                <label for="vehicle2">Masks Required</label>              
                 <input type="checkbox" id="vehicle2" name="vehicle2" value="Car">
-                <label for="vehicle2"> I have a car</label>
+                <label for="vehicle3">Safe Distancing</label>
                 <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
-                <label for="vehicle3"> I have a boat</label><br>
-
+                <label for="vehicle3"> I have a boat</label>
+                <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
+                <br>
+                <br>
                 
 
                 <label for="cuisine">Cuisine</label>
@@ -45,8 +62,8 @@
                 <option value="french">French</option>
                 </select>
                 <br>
-                <label for="subject">Subject</label>
-                <textarea id="subject" name="subject" placeholder="Write something.." style="height:200px"></textarea>
+                <label for="subject">Short Description</label>
+                <textarea id="subject" name="subject" placeholder="tell us about your restaurant" style="height:200px"></textarea>
 
                 <input type="submit" value="Submit">
             </form>
@@ -201,6 +218,11 @@ input[type=submit] {
   cursor: pointer;
 }
 
+input[type=checkbox] {
+  margin: 5px 0px;
+  width: 200px;
+}
+
 .timing {
   float: left;
   width: 50%;
@@ -214,9 +236,6 @@ input[type=submit] {
   clear: both;
 }
 
-li{
-
-}
 
 .registerrestaurant {
   float: left;
