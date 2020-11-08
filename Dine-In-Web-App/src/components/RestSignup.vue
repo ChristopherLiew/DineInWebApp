@@ -19,28 +19,32 @@
           <h2>Restaurant Information</h2>
         <div class="container">
             
-            <form action="/action_page.php">
-                <label for="fname">Name of Restaurant</label>
-                <input type="text" id="fname" name="firstname">
+            <form onsubmit="sendrestaurantdetails">
+                <label for="restaurantname">Name of Restaurant</label>
+                <input type="text" id="restaurantname" name="restaurantname">
 
-                <label for="lname">Address</label>
-                <input type="text" id="lname" name="lastname">
-                <label for="lname">Opening</label>
-                <input type="text" id="lname" name="lastname" >
-                <label for="lname">Closing</label>
-                <input type="text" id="lname" name="lastname" >
-                <label for="lname">Contact Number</label>
-                <input type="text" id="lname" name="lastname">
-                <label for="lname">How many 1-seaters</label>
-                <input type="text" id="lname" name="lastname">
-                <label for="lname">How many 2-seaters</label>
-                <input type="text" id="lname" name="lastname">
-                <label for="lname">How many 3-seaters</label>
-                <input type="text" id="lname" name="lastname">
-                <label for="lname">How many 4-seaters</label>
-                <input type="text" id="lname" name="lastname">
-                <label for="lname">How many 5-seaters</label>
-                <input type="text" id="lname" name="lastname">
+                <label for="address">Address</label>
+                <input type="text" id="address" name="address">
+
+                <label for="opening">Opening Time</label>
+                <input type="text" id="opening" name="opening" >
+                <label for="closing">Closing Time</label>
+                <input type="text" id="closing" name="closing" >
+
+                <label for="contact">Contact Number</label>
+                <input type="text" id="contact" name="contact">
+
+                <label for="oneseater">How many 1-seaters</label>
+                <input type="text" id="oneseater" name="oneseater">
+                <label for="twoseater">How many 2-seaters</label>
+                <input type="text" id="twoseater" name="twoseater">
+                <label for="threeseater">How many 3-seaters</label>
+                <input type="text" id="threeseater" name="threeseater">
+                <label for="fourseater">How many 4-seaters</label>
+                <input type="text" id="fourseater" name="fourseater">
+                <label for="fiveseater">How many 5-seaters</label>
+                <input type="text" id="fiveseater" name="fiveseater">
+
                 <label for="cuisine">COVID measures</label>
                 <br><br>
                 <label for="vehicle1">Contact Tracing</label>
@@ -62,10 +66,10 @@
                 <option value="french">French</option>
                 </select>
                 <br>
-                <label for="subject">Short Description</label>
-                <textarea id="subject" name="subject" placeholder="tell us about your restaurant" style="height:200px"></textarea>
+                <label for="description">Short Description</label>
+                <textarea id="description" name="description" placeholder="tell us about your restaurant" style="height:200px"></textarea>
 
-                <input type="submit" value="Submit">
+                <input type="submit" value="Submit" onclick="sendrestaurantdetails">
             </form>
         </div>
       </div>
@@ -76,8 +80,45 @@
 
 <script>
 // import QuantityCounter from '../components/QuantityCounter.vue'
+import firebase from '../firebase.js'
+const database = firebase.firestore();
+//const storage = firebase.storage();
 
-export default {};
+export default {
+  data() {
+      return { //presumes that id is passed
+        user_id: null 
+      }
+    },
+    methods: {
+      sendrestaurantdetails: function() {
+        console.log("make contact");
+        database.collection("merchants").add({
+          merchant_name: document.getElementById('restaurantname').value,
+          address: document.getElementById('address').value,
+          contact: document.getElementById('contact').value,
+          cuisine: document.getElementById('cuisine').value
+        }).catch(function() {
+            console.error("Error writing basic info");
+        });
+        console.log("saved basic info");
+        database.collection("merchants").collection("opening_hours").add({
+          opening: document.getElementById('opening').value,
+          closing: document.getElementById('closing').value
+
+        }).catch(function() {
+            console.error("Error writing to subcollection");
+        });
+        console.log("saved subcollection");
+
+
+
+
+
+      }
+    }
+
+}
 </script>
 
 <style>
