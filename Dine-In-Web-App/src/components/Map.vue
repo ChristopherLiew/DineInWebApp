@@ -1,13 +1,17 @@
 <template>
-<div>
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  </head>
+  <div>
+    <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    </head>
 
-  <body>
-    <div class="sidebar">
-      <div class="icon">
-        <h2>Dinein</h2>
+    <body>
+      <div class="sidebar">
+        <div class="icon">
+          <h2>Dinein</h2>
+        </div>
+        <router-link to="/">Home</router-link>
+        <router-link to="/profile">Profile</router-link>
+        <router-link to="/map">Map</router-link>
       </div>
         <router-link to="/">Home</router-link>
         <router-link to="/profile">Profile</router-link>
@@ -16,22 +20,13 @@
         <router-link to="/login">Login</router-link>
         <router-link to="/restaurant">Restaurant</router-link>
     </div>
-
-    <div class="content">
-      <h2>Map Page</h2>
-      <p>This example use media queries to transform the sidebar to a top navigation bar when the screen size is 700px or less.</p>
-      <p>We have also added a media query for screens that are 400px or less, which will vertically stack and center the navigation links.</p>
-      <h3>Resize the browser window to see the effect.</h3>
-    </div>
-  </body>
-
-</div>
+      <div class="content">
+      </div>
+    </body>
+  </div>
 </template>
 <script>
 
-export default {
-    
-}
 </script>
 <style>
 body {
@@ -59,9 +54,9 @@ body {
   padding: 16px;
   text-decoration: none;
 }
- 
+
 .sidebar a.active {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
 }
 
@@ -74,9 +69,7 @@ div.content {
   margin-left: 200px;
   padding: 1px 16px;
   height: 1000px;
-  background-image: linear-gradient( rgb(78, 223, 78), rgb(85, 199, 228));
+  background-image: linear-gradient(rgb(78, 223, 78), rgb(85, 199, 228));
 }
-
-
 </style>
 

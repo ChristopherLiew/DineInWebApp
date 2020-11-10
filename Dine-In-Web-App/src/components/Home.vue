@@ -8,7 +8,6 @@
       <div class="sidebar">
         <div class="icon">
           <h2>Dinein</h2>
-          <!-- <img src="/img/icon/main_logo.png"> -->
         </div>
         <router-link to="/">Home</router-link>
         <router-link to="/profile">Profile</router-link>
@@ -17,8 +16,12 @@
         <router-link to="/login">Login</router-link>
         <router-link to="/restaurant">Restaurant</router-link>
       </div>
-
+      <div class="accountbar">
+        <button class="login">Login</button>
+        <button class="signup">Sign Up</button>
+      </div>
       <div class="content">
+
         <div
           class="info"
           :style="{
@@ -218,7 +221,6 @@ export default {
 }
 </script>
 
-
 <style>
 body {
   margin: 0;
@@ -307,6 +309,9 @@ div.content {
   color: white;
 }
 
+.* {
+  box-sizing: border-box;
+}
 
 /* Float four columns side by side */
 
@@ -327,7 +332,35 @@ div.content {
     margin-bottom: 10px;
   }
 }
+.accountbar {
+  height: auto;
+}
 
+.login {
+  float: right;
+  background-color: blue; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+.signup {
+  float: right;
+  background-color: blue; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  cursor: pointer;
+}
 /* Style the counter cards */
 .card {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
@@ -349,4 +382,3 @@ div.content {
   background: transparent; /* Optional: just make scrollbar invisible */
 }
 </style>
-
