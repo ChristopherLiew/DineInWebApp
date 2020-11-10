@@ -42,7 +42,7 @@
 </template>
 
 <script>
-
+// Should have indiation if User or Restaurant based on that take them to the User Profile page or the Restaurant Profile page where they will populate info
 
 </script>
 

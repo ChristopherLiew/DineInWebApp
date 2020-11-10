@@ -1,4 +1,4 @@
-<template>
+<template v-if="data_loaded">
   <div>
     <head>
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -18,14 +18,24 @@
       <div class = "content">
           <h2>Review</h2>
         <div class="container">
-            
             <form action="/action_page.php">
-                <label for="fname">You are writing a review for Name of Restaurant</label>
-                <input type="text" id="fname" name="firstname">
-                <label for="vehicle1">Adhered to Contact Tracing</label>
-                <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
-                <label for="lname">Rating</label>
-                <select id="rating" name="rating">
+                <label for="fname"><strong>You are writing a review for:</strong></label>
+                <input type="text" id="fname" name="firstname" v-if="data_loaded" v-model.lazy="review_data.merchant_name">
+                <p><strong>This restaurant adhered to:</strong></p>
+                <!-- Put it safety measures in a table? -->
+                <label for="vehicle1">Contact Tracing</label>
+                <input type="checkbox" id="vehicle1" name="vehicle1" v-if="review_data.safety" v-model.lazy="review_data.safety.contact_trace">
+                <label for="vehicle1">Mask Wearing</label>
+                <input type="checkbox" id="vehicle2" name="vehicle2" v-if="review_data.safety" v-model.lazy="review_data.safety.masks">
+                <br>
+                <label for="vehicle1">Safe Distancing</label>
+                <input type="checkbox" id="vehicle3" name="vehicle3" v-if="review_data.safety" v-model.lazy="review_data.safety.safe_distance">
+                <label for="vehicle1">Temperature Screening</label>
+                <input type="checkbox" id="vehicle4" name="vehicle4" v-if="review_data.safety" v-model.lazy="review_data.safety.temp_screen">
+                <br>
+                <br>
+                <label for="lname"><strong>Rating:</strong></label>
+                <select id="rating" name="rating" v-if="data_loaded" v-model.lazy="review_data.rating">
                 <option value=1>1 Star</option>
                 <option value=2>2 Star</option>
                 <option value=3>3 Star</option>
@@ -33,10 +43,9 @@
                 <option value=5>5 Star</option>
                 </select>
                 <br>
-                <label for="subject">Subject</label>
-                <textarea id="subject" name="subject" placeholder="Write something.." style="height:200px"></textarea>
-
-                <input type="submit" value="Submit">
+                <label for="subject"><strong>Comments:</strong></label>
+                <textarea id="subject" name="subject" placeholder="Write something.." style="height:200px" v-model="review_data.review"></textarea>
+                <input @click="updateReview" type="submit" value="Submit">
             </form>
         </div>
       </div>
@@ -46,9 +55,84 @@
 </template>
 
 <script>
-// import QuantityCounter from '../components/QuantityCounter.vue'
+// Review logic:
+// 1) Get review matching user_id and merchant_id (merchant_id and user_id has to be passed via router to this component)
+// 2) Update doc if review exists else create new review
+import firebase from '../firebase.js'
+const database = firebase.firestore();
 
-export default {};
+export default {
+  data() {
+    return {
+      merchant_id: '',
+      user_id: '',
+      review_id: '',
+      review_data: {
+        date_reviewed: {
+          nanoseconds: 0,
+          seconds: Math.floor(Date.now() / 1000)
+        },
+        merchant_id: '',
+        merchant_name: '', // Should we pull from merchant collection instead seems weird for us to ask the user to input merchant name.
+        rating: '',
+        review: '',
+        safety: {
+          contact_trace: false,
+          masks: false,
+          safe_distance: false,
+          temp_screen: false
+        },
+        user_id: ''
+      },
+      data_loaded: false
+    }
+  },
+  methods: {
+    getReview: function() {
+              console.log("Pulling review data")
+              this.data_loaded = true;
+              database.collection('reviews').where("user_id", "==", this.user_id).where("merchant_id", "==", this.merchant_id).get().then((querySnapShot) => {
+              querySnapShot.forEach(doc=> {
+                  this.review_data = doc.data();
+                  this.review_id = doc.id;
+                  console.log(doc.id, doc.data());
+                }
+              )
+            }).catch(function(error) {
+              console.log("Error getting documents: ", error);
+            })
+          },
+    updateReview: function() { 
+      // Update date_reviewed
+      // Convert rating to interger
+      this.review_data.rating = parseInt(this.review_data.rating);
+      if (this.review_id == '') { // Create if not exists
+      // Set merchant and user ID
+      this.review_data.merchant_id = this.merchant_id;
+      this.review_data.user_id = this.user_id;
+      // TBD add date reviewed
+        database.collection('reviews').doc(this.user_id + Math.floor(Math.random() * 100001)).set(this.review_data)
+        .then(function() {
+          console.log("Document successfully written!");
+          })
+        .catch(function(error) {
+          console.error("Error writing document: ", error);
+          }); 
+        alert("Your review has been submitted successfully!")
+      } else {
+        database.collection('reviews').doc(this.review_id).update(this.review_data);
+        alert("Your review has been submitted successfully!")
+      }
+      this.$router.push({name: "profile"});
+     }
+    },
+    created() {
+      console.log("Hello world");
+      this.merchant_id = this.$route.params.merchant_id;
+      this.user_id = this.$route.params.user_id;
+      this.getReview();
+    }
+  }
 </script>
 
 <style>

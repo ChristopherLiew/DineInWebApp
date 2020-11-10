@@ -35,7 +35,7 @@
                 <td>{{ reservation.datetime }}</td> <!-- Format nicely in DOW/ DATE/ TIME -->
                 <td>{{ reservation.pax }}</td>
                 <td><button @click="cancelReservation(reservation.reservation_id)">Cancel</button></td>
-                <td><button>Review</button></td> <!-- Go to review form -->
+                <td><button @click="goToReview(reservation.merchant_id)">Review</button></td> <!-- Go to review form -->
               </tr>
             </tbody>
           </table>
@@ -81,7 +81,7 @@ export default {
       profileInfo: {
         imgURL: null
       },
-      user_id: 1, // Should be passed as a prop from Login Page. Upon Log In, Auth should return user_id and update parent before passing to profile
+      user_id: "iDROwPH9vlTUMj1DBjwJhooZoDq2", // Should be passed as a prop from Login Page. Upon Log In, Auth should return user_id and update parent before passing to profile -> Pass via router params to Review page via button
       loaded: false, // Triggered when data has sucessfully been pulled after Vue app is mounted
       uploadPct: 0,
       user_reservations: [],
@@ -90,13 +90,13 @@ export default {
   },
   methods: {
     getUserRes: function() {
-        console.log("getUserRes called");
               database.collection('reservations').get().then((querySnapShot) => {
               querySnapShot.forEach(doc=> {
                 if (doc.data().user_id == this.user_id) {
                   let reservation = {};
                   reservation.reservation_id = doc.id;
                   reservation.merchant_name = doc.data().merchant_name;
+                  reservation.merchant_id = doc.data().merchant_id;
                   let reservation_date = doc.data().date_reserved.toDate().toDateString();
                   let reservation_time = new Date(doc.data().date_reserved * 1000).toLocaleTimeString('en-US', {hour: 'numeric', minute: 'numeric', hour12: true}); 
                   reservation.datetime = reservation_date + " " + reservation_time;
@@ -178,6 +178,10 @@ export default {
       this.picture=null;
       this.imageData = event.target.files[0];
     },
+    goToReview: function(merchant_id) {
+      console.log("Going to Review Page")
+      this.$router.push({name:'review', params:{user_id: this.user_id, merchant_id: merchant_id}});
+    }
   },
   // KIV: Components Vs. Conditional Rendering
   computed: {
@@ -189,7 +193,8 @@ export default {
   // https://www.digitalocean.com/community/tutorials/vuejs-component-lifecycle
   // before rendering
   created() {
-    this.fetchProfile()
+    this.fetchProfile();
+    this.getUserRes();
   }
 }
 </script>

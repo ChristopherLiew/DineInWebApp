@@ -14,6 +14,7 @@
         <router-link to="/map">Map</router-link>
         <router-link to="/submitrestaurant">Submit restaurant</router-link>
         <router-link to="/usersignup">Sign Up</router-link>
+        <router-link to="/review">Review</router-link>
       </div>
       <div class="accountbar">
         <button class="login">Login</button>
