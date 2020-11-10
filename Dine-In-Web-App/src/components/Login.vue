@@ -1,3 +1,4 @@
+<template>
 <div>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,10 +11,10 @@
       </div>
         <router-link to="/">Home</router-link>
         <router-link to="/profile">Profile</router-link>
-        <router-link to="/myreservations">My Reservations</router-link>
-        <router-link to="/map">Map</router-link>
         <router-link to="/login">Login</router-link>
         <router-link to="/restaurant">Restaurant</router-link>
+        <router-link to="/submitrestaurant">Submit restaurant</router-link>
+        <router-link to="/usersignup">Sign Up</router-link>
     </div>
 
     <div class="content">

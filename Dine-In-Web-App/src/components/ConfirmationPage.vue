@@ -17,10 +17,6 @@
     
     <div class="content">
     <br/>
-   
-   
-    
-      
                 <div class="center">
                     <div class="white-box">
                         <div style = margin-left:60px>

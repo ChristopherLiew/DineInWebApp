@@ -11,9 +11,10 @@
         </div>
         <router-link to="/">Home</router-link>
         <router-link to="/profile">Profile</router-link>
-        <router-link to="/map">Map</router-link>
+        <router-link to="/login">Login</router-link>
+        <router-link to="/restaurant">Restaurant</router-link>
         <router-link to="/submitrestaurant">Submit restaurant</router-link>
-        <router-link to="/signup">Sign Up</router-link>
+        <router-link to="/usersignup">Sign Up</router-link>
       </div>
       <div class = "content">
           <h2>Review</h2>
