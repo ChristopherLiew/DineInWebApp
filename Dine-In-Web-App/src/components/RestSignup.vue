@@ -13,7 +13,7 @@
         <router-link to="/profile">Profile</router-link>
         <router-link to="/map">Map</router-link>
         <router-link to="/submitrestaurant">Submit restaurant</router-link>
-        <router-link to="/signup">Sign Up</router-link>
+        <router-link to="/usersignup">Sign Up</router-link>
       </div>
       <div class = "content">
           <h2>Restaurant Information</h2>
@@ -48,13 +48,13 @@
                 <label for="cuisine">COVID measures</label>
                 <br><br>
                 <label for="vehicle1">Contact Tracing</label>
-                <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+                <input type="checkbox" id="contacttracing" name="contacttracing" value=True>
                 <label for="vehicle2">Masks Required</label>              
-                <input type="checkbox" id="vehicle2" name="vehicle2" value="Car">
+                <input type="checkbox" id="masks" name="masks" value="Car">
                 <label for="vehicle3">Safe Distancing</label>
-                <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
-                <label for="vehicle3"> I have a boat</label>
-                <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
+                <input type="checkbox" id="safedistancing" name="safedistancing" value="Boat">
+                <label for="vehicle3">temperature screening</label>
+                <input type="checkbox" id="temperaturescreening" name="temperaturescreening" value="monkey">
                 <br>
                 <br>
                 
@@ -69,7 +69,7 @@
                 <label for="description">Short Description</label>
                 <textarea id="description" name="description" placeholder="tell us about your restaurant" style="height:200px"></textarea>
 
-                <input type="submit" value="Submit" onclick="sendrestaurantdetails">
+                <input type="submit" value="Submit" @click="sendrestaurantdetails">
             </form>
         </div>
       </div>
@@ -92,29 +92,35 @@ export default {
     },
     methods: {
       sendrestaurantdetails: function() {
+        //var documentID;
         console.log("make contact");
         database.collection("merchants").add({
           merchant_name: document.getElementById('restaurantname').value,
           address: document.getElementById('address').value,
           contact: document.getElementById('contact').value,
-          cuisine: document.getElementById('cuisine').value
-        }).catch(function() {
-            console.error("Error writing basic info");
+          cuisine: document.getElementById('cuisine').value,
+          operating_hours: {
+            opening: document.getElementById('opening').value,
+            closing: document.getElementById('closing').value
+          },
+          safety_measures: {
+            contact_trace: document.getElementById('contacttracing').value,
+            masks: document.getElementById('masks').value,
+            safe_distance: document.getElementById('safedistancing').value,
+            temp_screening: document.getElementById('temperaturescreening').value
+          }
+          // capacity: {
+          //   one_seater: document.getElementById('oneseater').value
+          // }
+        })
+        //.then(function(doc){
+          //documentID = doc.id;
+          //console.log("save contact");
+        //})
+        .catch(function() {
+           console.log("Error writing basic info");
         });
         console.log("saved basic info");
-        database.collection("merchants").collection("opening_hours").add({
-          opening: document.getElementById('opening').value,
-          closing: document.getElementById('closing').value
-
-        }).catch(function() {
-            console.error("Error writing to subcollection");
-        });
-        console.log("saved subcollection");
-
-
-
-
-
       }
     }
 
