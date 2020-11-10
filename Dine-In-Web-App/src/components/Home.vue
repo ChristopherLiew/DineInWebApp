@@ -17,8 +17,8 @@
         <router-link to="/usersignup">Sign Up</router-link>
       </div>
       <div class="accountbar">
-        <button class="login">Login</button>
-        <button class="signup">Sign Up</button>
+        <button class="login" @click="goToLogin">Login</button>
+        <button class="signup" @click="goToSignUp">Sign Up</button>
       </div>
       <div class="content">
 
@@ -213,6 +213,12 @@ export default {
       this.picture=null;
       this.imageData = event.target.files[0];
     },
+    goToLogin: function() {
+      this.$router.push({name: "login"});
+    },
+    goToSignUp: function() {
+      this.$router.push({name: "usersignup"});
+    }
   },
   // Lifecycle Hooks 
   created() {
