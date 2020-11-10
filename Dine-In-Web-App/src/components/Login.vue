@@ -1,44 +1,128 @@
-<template>
-    <div class="login container">
-        <form  @submit.prevent="login" class="card-panel">
-            <h2 class="center pink-text">Welcome!</h2>
-            <div class="field">
-                <label for="email">Email:</label>
-                <input type="email" name="email" v-model="email">
-            </div>
-            <div class="field">
-                <label for="password">Password:</label>
-                <input type="password" name="password" v-model="password">
-            </div>
+<div>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
 
-            <p v-if="feedback" class="red-text center">{{feedback}}</p>
-            <div class="field center-align">
-                <button class="btn pink">Login</button>
-            </div>
-        </form>
-
-
-
+  <body>
+    <div class="sidebar">
+      <div class="icon">
+        <h2>Dinein</h2>
+      </div>
+        <router-link to="/">Home</router-link>
+        <router-link to="/profile">Profile</router-link>
+        <router-link to="/myreservations">My Reservations</router-link>
+        <router-link to="/map">Map</router-link>
+        <router-link to="/login">Login</router-link>
+        <router-link to="/restaurant">Restaurant</router-link>
     </div>
+
+    <div class="content">
+      <h2>Login Page</h2>
+      <h3>Please enter the following:</h3>
+      <input type="text" v-model="email" placeholder="Email Address">
+      <br>
+      <input type="text" v-model="password" placeholder="Password">
+      <br>
+      <button @click="logInUser()">Log In</button>
+      <button @click="signUpUser()">Sign Up</button> <!-- Link to registration page to fill in details -->
+    </div>
+  </body>
+
+</div>
 </template>
-
-
 <script>
+// Logging In:
+// 1) Key in email and password and submit
+// 2) At the same time keep the email and password updated by using v-model for the input fields 
+// 3) On hitting the submit button, trigger the logInUser function
 
+import firebase from '../firebase.js'
+
+export default {
+  data() {
+    return {
+      email: null,
+      password: null
+    }
+  },
+  methods: {
+    // Test with logged in progile and check profile.vue also
+    logInUser: function() {
+      firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(function() {
+        alert("Welcome!")
+      }).catch(function(error) {
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      if (errorCode === 'auth/wrong-password') {
+            alert('Wrong password.');
+        } else {
+            alert(errorMessage);
+        }
+          console.log(error);
+      });
+    },
+    signUpUser: function() { 
+      firebase.auth().createUserWithEmailAndPassword(this.email, this.password).catch(function(error) {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        if (errorCode === 'auth/email-already-exists') {
+            alert('Email already exists.');
+        } else {
+            alert(errorMessage);
+        }
+          console.log(error);
+      });
+    }
+  },
+  // Lifecycle Hooks 
+  created() {
+    
+  }
+}
 </script>
 
-
 <style>
-.login{
-    max-width:400px;
-    margin-top:60px;
-}
-.login h2{
-    font-size: 2.4em;
+body {
+  margin: 0;
+  font-family: "Lato", sans-serif;
 }
 
-.login .field{
-    margin-bottom: 16px;
+.icon {
+  text-align: center;
+}
+
+.sidebar {
+  margin: 0;
+  padding: 0;
+  width: 200px;
+  background-color: #f1f1f1;
+  position: fixed;
+  height: 100%;
+  overflow: auto;
+}
+
+.sidebar a {
+  display: block;
+  color: black;
+  padding: 16px;
+  text-decoration: none;
+}
+ 
+.sidebar a.active {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.sidebar a:hover:not(.active) {
+  background-color: #555;
+  color: white;
+}
+
+div.content {
+  margin-left: 200px;
+  padding: 1px 16px;
+  height: 1000px;
+  background-image: linear-gradient( rgb(78, 223, 78), rgb(85, 199, 228));
 }
 
 </style>

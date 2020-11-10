@@ -9,9 +9,12 @@
       <div class="icon">
         <h2>Dinein</h2>
       </div>
-      <router-link to="/">Home</router-link>
-      <router-link to="/profile">Profile</router-link>
-      <router-link to="/map">Map</router-link>
+        <router-link to="/">Home</router-link>
+        <router-link to="/profile">Profile</router-link>
+        <router-link to="/myreservations">My Reservations</router-link>
+        <router-link to="/map">Map</router-link>
+        <router-link to="/login">Login</router-link>
+        <router-link to="/restaurant">Restaurant</router-link>
     </div>
 
     <div class="content">
@@ -71,7 +74,7 @@
 // Functionality
 // 1) Get and Update Profile Information from Firebase
 
-import firebase from '../firebase.js'
+import firebase from '../firebase.js';
 const database = firebase.firestore();
 const storage = firebase.storage();
 
@@ -81,11 +84,10 @@ export default {
       profileInfo: {
         imgURL: null
       },
-      user_id: "iDROwPH9vlTUMj1DBjwJhooZoDq2", // Should be passed as a prop from Login Page. Upon Log In, Auth should return user_id and update parent before passing to profile -> Pass via router params to Review page via button
       loaded: false, // Triggered when data has sucessfully been pulled after Vue app is mounted
       uploadPct: 0,
-      user_reservations: [],
-      imageData: null
+      imageData: null,
+      user_id: null
     }
   },
   methods: {
@@ -120,7 +122,7 @@ export default {
     // 1) Pull profile information from Firebase
     fetchProfile: function() {
       database.collection('users').where("user_id", "==", this.user_id).get().then((querySnapShot) => {
-        querySnapShot.forEach(doc=>{
+        querySnapShot.forEach(doc=> {
           console.log("User data =>", doc.data());
           // Document ID
           this.doc_id = doc.id;
@@ -183,16 +185,17 @@ export default {
       this.$router.push({name:'review', params:{user_id: this.user_id, merchant_id: merchant_id}});
     }
   },
-  // KIV: Components Vs. Conditional Rendering
-  computed: {
-    firstNameComputed() {
-      return this.profileInfo.name.first_name
-    }
-  },
   // Lifecycle Hooks 
-  // https://www.digitalocean.com/community/tutorials/vuejs-component-lifecycle
-  // before rendering
   created() {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.user_id = user.uid;
+        console.log("Getting signed in user")
+        this.fetchProfile();
+      } else {
+       console.log("Can't get signed in user")
+      }
+    });
     this.fetchProfile();
     this.getUserRes();
   }
@@ -303,4 +306,3 @@ img {
   text-align: center;
 }
 </style>
-
