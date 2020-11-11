@@ -14,7 +14,7 @@
         <router-link to="/login">Login</router-link>
         <router-link to="/restaurant">Restaurant</router-link>
         <router-link to="/submitrestaurant">Submit restaurant</router-link>
-        <router-link to="/usersignup">Sign Up</router-link>
+        <router-link to="/signup">Sign Up</router-link>
     </div>
 
     <div class="content">
@@ -25,7 +25,7 @@
       <input type="text" v-model="password" placeholder="Password">
       <br>
       <button @click="logInUser()">Log In</button>
-      <button @click="signUpUser()">Sign Up</button> <!-- Link to registration page to fill in details -->
+      <button @click="goToSignUp()">Sign Up</button> <!-- Link to registration page to fill in details -->
     </div>
   </body>
 
@@ -51,6 +51,7 @@ export default {
     logInUser: function() {
       firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(function() {
         alert("Welcome!")
+        // Check user type and route accordingly
       }).catch(function(error) {
       var errorCode = error.code;
       var errorMessage = error.message;
@@ -73,6 +74,9 @@ export default {
         }
           console.log(error);
       });
+    },
+    goToSignUp: function() {
+      this.$router.push({name: 'signup'});
     }
   },
   // Lifecycle Hooks 

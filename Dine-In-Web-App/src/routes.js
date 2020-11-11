@@ -2,7 +2,7 @@ import Home from './components/Home.vue'
 import Profile from './components/Profile.vue'
 import Map from './components/Map.vue'
 import RestSignup from './components/RestSignup.vue'
-import UserSignup from './components/UserSignup.vue'
+import SignUp from './components/SignUp.vue'
 import Review from './components/Review.vue'
 import SearchBar from './components/SearchBar.vue'
 import Login from './components/Login.vue'
@@ -30,9 +30,9 @@ export default[
         component: RestSignup
     },
     {
-        name: 'usersignup',
-        path:'/usersignup',
-        component: UserSignup
+        name: 'signup',
+        path:'/signup',
+        component: SignUp
     },
     {
         name: 'review',
