@@ -20,110 +20,144 @@
           <h2>Restaurant Information</h2>
         <div class="container">
             
-            <form onsubmit="sendrestaurantdetails">
+            <form>
                 <label for="restaurantname">Name of Restaurant</label>
-                <input type="text" id="restaurantname" name="restaurantname">
+                <input type="text" id="restaurantname" name="restaurantname" v-model="merchant_data.merchant_name">
 
                 <label for="address">Address</label>
-                <input type="text" id="address" name="address">
+                <input type="text" id="address" name="address" v-model="merchant_data.address">
 
                 <label for="opening">Opening Time</label>
-                <input type="text" id="opening" name="opening" >
+                <input type="text" id="opening" name="opening" v-model="merchant_data.operating_hours.opening">
                 <label for="closing">Closing Time</label>
-                <input type="text" id="closing" name="closing" >
+                <input type="text" id="closing" name="closing" v-model="merchant_data.operating_hours.closing">
 
                 <label for="contact">Contact Number</label>
-                <input type="text" id="contact" name="contact">
+                <input type="text" id="contact" name="contact" v-model="merchant_data.contact">
 
                 <label for="oneseater">How many 1-seaters</label>
-                <input type="text" id="oneseater" name="oneseater">
+                <input type="text" id="oneseater" name="oneseater" v-model="merchant_data.capacity.one_seater">
                 <label for="twoseater">How many 2-seaters</label>
-                <input type="text" id="twoseater" name="twoseater">
+                <input type="text" id="twoseater" name="twoseater" v-model="merchant_data.capacity.two_seater">
                 <label for="threeseater">How many 3-seaters</label>
-                <input type="text" id="threeseater" name="threeseater">
+                <input type="text" id="threeseater" name="threeseater" v-model="merchant_data.capacity.three_seater">
                 <label for="fourseater">How many 4-seaters</label>
-                <input type="text" id="fourseater" name="fourseater">
+                <input type="text" id="fourseater" name="fourseater" v-model="merchant_data.capacity.four_seater">
                 <label for="fiveseater">How many 5-seaters</label>
-                <input type="text" id="fiveseater" name="fiveseater">
-
-                <label for="cuisine">COVID measures</label>
-                <br><br>
+                <input type="text" id="fiveseater" name="fiveseater" v-model="merchant_data.capacity.five_seater">
+                <br>
+                <label for="cuisine">COVID measures:</label>
+                <hr>
                 <label for="vehicle1">Contact Tracing</label>
-                <input type="checkbox" id="contacttracing" name="contacttracing" value=True>
+                <input type="checkbox" id="contacttracing" name="contacttracing" value=True v-model="merchant_data.safety_measures.contact_trace">
                 <label for="vehicle2">Masks Required</label>              
-                <input type="checkbox" id="masks" name="masks" value="Car">
+                <input type="checkbox" id="masks" name="masks" value="Car" v-model="merchant_data.safety_measures.masks">
+                <br>
                 <label for="vehicle3">Safe Distancing</label>
-                <input type="checkbox" id="safedistancing" name="safedistancing" value="Boat">
+                <input type="checkbox" id="safedistancing" name="safedistancing" value="Boat" v-model="merchant_data.safety_measures.safe_distance">
                 <label for="vehicle3">temperature screening</label>
-                <input type="checkbox" id="temperaturescreening" name="temperaturescreening" value="monkey">
+                <input type="checkbox" id="temperaturescreening" name="temperaturescreening" value="monkey" v-model="merchant_data.safety_measures.temp_screening">
                 <br>
                 <br>
                 
 
                 <label for="cuisine">Cuisine</label>
-                <select id="cuisine" name="cuisine">
+                <select id="cuisine" name="cuisine" v-model="merchant_data.cuisine">
                 <option value="japanese">Japanese</option>
                 <option value="chinese">Chinese</option>
                 <option value="french">French</option>
+                <option value="western">Western</option>
                 </select>
                 <br>
                 <label for="description">Short Description</label>
-                <textarea id="description" name="description" placeholder="tell us about your restaurant" style="height:200px"></textarea>
-
-                <input type="submit" value="Submit" @click="sendrestaurantdetails">
+                <textarea id="description" name="description" placeholder="tell us about your restaurant" style="height:200px" v-model="merchant_data.description"></textarea>
+                <input type="submit" value="Submit" @click="updateResProfile">
             </form>
         </div>
       </div>
-
     </body>
   </div>
 </template>
 
 <script>
-// import QuantityCounter from '../components/QuantityCounter.vue'
 import firebase from '../firebase.js'
 const database = firebase.firestore();
 //const storage = firebase.storage();
 
 export default {
   data() {
-      return { //presumes that id is passed
-        user_id: null 
+      return {  
+        merchant_id: '' , // Test
+        doc_id: null,
+        merchant_data: {
+          merchant_id: null,
+          merchant_name: '',
+          address: '',
+          operating_hours: {
+            closing: '',
+            opening: ''
+          },
+          contact: null,
+          capacity: {
+            five_seater: 0,
+            four_seater: 0,
+            three_seater: 0,
+            two_seater: 0,
+            one_seater: 0,
+            total_seats: 0
+          },
+          safety_measures: {
+            contact_trace: false,
+            masks: false,
+            safe_distance: false,
+            temp_screening: false
+          },
+          cuisine: 'french',
+          description: '',
+        }
       }
     },
     methods: {
-      sendrestaurantdetails: function() {
-        //var documentID;
-        console.log("make contact");
-        database.collection("merchants").add({
-          merchant_name: document.getElementById('restaurantname').value,
-          address: document.getElementById('address').value,
-          contact: document.getElementById('contact').value,
-          cuisine: document.getElementById('cuisine').value,
-          operating_hours: {
-            opening: document.getElementById('opening').value,
-            closing: document.getElementById('closing').value
-          },
-          safety_measures: {
-            contact_trace: document.getElementById('contacttracing').value,
-            masks: document.getElementById('masks').value,
-            safe_distance: document.getElementById('safedistancing').value,
-            temp_screening: document.getElementById('temperaturescreening').value
-          }
-          // capacity: {
-          //   one_seater: document.getElementById('oneseater').value
-          // }
-        })
-        //.then(function(doc){
-          //documentID = doc.id;
-          //console.log("save contact");
-        //})
-        .catch(function() {
-           console.log("Error writing basic info");
+      fetchResProfile: function() {
+        console.log("Pulling restaurant data")
+              this.data_loaded = true;
+              database.collection('merchants').where("merchant_id", "==", this.merchant_id).get().then((querySnapShot) => {
+              querySnapShot.forEach(doc=> {
+                  this.merchant_data = doc.data();
+                  this.doc_id = doc.id;
+                }
+              )
+            }).catch(function(error) {
+              console.log("Error getting documents: ", error);
+            })
+      },
+      updateResProfile: function() { // BUG: can only update when we click on submit with cmd (i.e. open in new tab)
+        this.merchant_data.capacity.five_seater = parseInt(this.merchant_data.capacity.five_seater);
+        this.merchant_data.capacity.four_seater = parseInt(this.merchant_data.capacity.four_seater);
+        this.merchant_data.capacity.three_seater = parseInt(this.merchant_data.capacity.three_seater);
+        this.merchant_data.capacity.two_seater = parseInt(this.merchant_data.capacity.two_seater);
+        this.merchant_data.capacity.one_seater = parseInt(this.merchant_data.capacity.one_seater);
+        this.merchant_data.capacity.total_seats = this.merchant_data.capacity.five_seater + this.merchant_data.capacity.four_seater + this.merchant_data.capacity.three_seater + this.merchant_data.capacity.two_seater + this.merchant_data.capacity.one_seater
+        database.collection('merchants').doc(this.doc_id).update(this.merchant_data)
+        .catch(function(error) {
+          console.log("Error updating profile information: ", error);
         });
-        console.log("saved basic info");
+        alert("Your merchant profile has been updated successfully!");
+        
       }
-    }
+    },
+    created() {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.merchant_id = user.uid;
+        console.log("Getting signed in user")
+        this.fetchResProfile();
+      } else {
+       console.log("Can't get signed in user")
+      }
+    });
+    this.fetchResProfile();
+  }
 
 }
 </script>
