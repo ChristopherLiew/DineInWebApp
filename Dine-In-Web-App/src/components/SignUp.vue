@@ -13,8 +13,9 @@
         <router-link to="/profile">Profile</router-link>
         <router-link to="/login">Login</router-link>
         <router-link to="/restaurant">Restaurant</router-link>
-        <router-link to="/submitrestaurant">Submit restaurant</router-link>
-        <router-link to="/usersignup">Sign Up</router-link>
+        <router-link to="/restdetails">Submit restaurant</router-link>
+        <router-link to="/signup">Sign Up</router-link>
+        <a href="#" @click="logOut()">Log Out</a>
       </div>
       <div class = "content">
         <h2>Create Account</h2>
@@ -32,8 +33,12 @@
                 <div class="field">
                     <span><input type="text" name="username" v-model="username"></span>
                 </div>
-                <br>
-                <button class="register">Sign Up</button> 
+                <label for="lname">Account Type</label>
+                <select id="rating" name="rating" v-model.lazy="acc_type">
+                <option value=User>User</option>
+                <option value=Merchant>Merchant</option>
+                </select>
+                <button @click="signUpUser" class="register">Sign Up</button> 
             </form>
             </div>
         </div>
@@ -44,7 +49,85 @@
 
 <script>
 // Should have indiation if User or Restaurant based on that take them to the User Profile page or the Restaurant Profile page where they will populate info
+import firebase from '../firebase.js'
+const database = firebase.firestore()
 
+export default {
+  data() {
+    return {
+      email: '',
+      username: '',
+      password: '',
+      acc_type: 'User'
+    }
+  },
+  methods: {
+    signUpUser: function() { 
+      var vm = this;
+      firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then(function() {
+        let new_user = {};
+        let uid = firebase.auth().currentUser.uid;
+
+        // Create new user type ref in user_type reference
+          let user_type = {};
+          user_type.user_id = uid;
+          console.log(uid);
+          console.log(vm.acc_type);
+          user_type.user_type = vm.acc_type;
+          database.collection('user_type').doc(uid).set(user_type).then(function() {
+          console.log("user successfully written to users type collection!");
+          })
+        .catch(function(error) {
+          console.error("Error writing new user to user type collection: ", error);
+          });
+
+        if (vm.acc_type == 'User') {
+          new_user.user_id = uid;
+          new_user.email = vm.email;
+          // Create user within user collection
+          database.collection('users').doc(uid).set(new_user).then(function() {
+          console.log("user successfully written to users collection!");
+          })
+        .catch(function(error) {
+          console.error("Error writing new user to users collection: ", error);
+          }); 
+          vm.$router.push({name: "profile"}) // Change to user sign up details page
+
+        } else {
+          new_user.merchant_id = uid;
+          // Create merchant within merchant collection
+          database.collection('merchants').doc(uid).set(new_user).then(function() {
+          console.log("merchant successfully written to merchants collection!");
+          })
+        .catch(function(error) {
+          console.error("Error writing new user to merchant collection: ", error);
+          });
+          vm.$router.push({name: "restsignup"})
+        }
+      }).catch(function(error) {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        if (errorCode === 'auth/email-already-exists') {
+            alert('Email already exists.');
+        } else {
+            alert(errorMessage);
+        }
+          console.log(error);
+      });
+    },
+    logOut: function() {
+      firebase.auth().signOut().then(function() {
+        alert("You have successfully logged out!")
+        }).catch(function(error) {
+          console.log("Error:", error);
+        });
+    }
+  },
+  // Lifecycle Hooks 
+  created() {
+    
+  }
+}
 </script>
 
 <style>
