@@ -15,6 +15,7 @@
         <router-link to="/restaurant">Restaurant</router-link>
         <router-link to="/submitrestaurant">Submit restaurant</router-link>
         <router-link to="/usersignup">Sign Up</router-link>
+        <router-link to="/booking">Make a Booking</router-link>
       </div>
       <div class="accountbar">
         <button class="login" @click="goToLogin">Login</button>

@@ -7,6 +7,7 @@ import Review from './components/Review.vue'
 import SearchBar from './components/SearchBar.vue'
 import Login from './components/Login.vue'
 import Resto from './components/Resto.vue'
+import MakeBooking from './components/MakeBooking.vue'
 
 export default[
     {
@@ -53,5 +54,10 @@ export default[
         name: 'restaurant',
         path:'/restaurant/:id',
         component: Resto
+    },
+    {
+        name: 'booking',
+        path:'/booking',
+        component: MakeBooking
     }
 ]
