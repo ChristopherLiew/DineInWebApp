@@ -13,14 +13,15 @@
         <router-link to="/profile">Profile</router-link>
         <router-link to="/login">Login</router-link>
         <router-link to="/restaurant">Restaurant</router-link>
-        <router-link to="/submitrestaurant">Submit restaurant</router-link>
+        <router-link to="/restdetails">Submit restaurant</router-link>
         <router-link to="/signup">Sign Up</router-link>
+        <a href="#" @click="logOut()">Log Out</a>
       </div>
       <div class = "content">
           <h2>Restaurant Information</h2>
         <div class="container">
             
-            <form>
+            <form v-on:submit.prevent="updateResProfile">
                 <label for="restaurantname">Name of Restaurant</label>
                 <input type="text" id="restaurantname" name="restaurantname" v-model="merchant_data.merchant_name">
 
@@ -71,7 +72,7 @@
                 <br>
                 <label for="description">Short Description</label>
                 <textarea id="description" name="description" placeholder="tell us about your restaurant" style="height:200px" v-model="merchant_data.description"></textarea>
-                <input type="submit" value="Submit" @click="updateResProfile">
+                <input type="submit" value="Submit"/>
             </form>
         </div>
       </div>
@@ -137,14 +138,20 @@ export default {
         this.merchant_data.capacity.three_seater = parseInt(this.merchant_data.capacity.three_seater);
         this.merchant_data.capacity.two_seater = parseInt(this.merchant_data.capacity.two_seater);
         this.merchant_data.capacity.one_seater = parseInt(this.merchant_data.capacity.one_seater);
-        this.merchant_data.capacity.total_seats = this.merchant_data.capacity.five_seater + this.merchant_data.capacity.four_seater + this.merchant_data.capacity.three_seater + this.merchant_data.capacity.two_seater + this.merchant_data.capacity.one_seater
-        database.collection('merchants').doc(this.doc_id).update(this.merchant_data)
+        this.merchant_data.capacity.total_seats = this.merchant_data.capacity.five_seater + this.merchant_data.capacity.four_seater + this.merchant_data.capacity.three_seater + this.merchant_data.capacity.two_seater + this.merchant_data.capacity.one_seater;
+        database.collection('merchants').doc(this.doc_id).update(this.merchant_data).then(function() {console.log("Updated!")})
         .catch(function(error) {
           console.log("Error updating profile information: ", error);
         });
         alert("Your merchant profile has been updated successfully!");
-        
-      }
+      },
+      logOut: function() {
+      firebase.auth().signOut().then(function() {
+        alert("You have successfully logged out!")
+        }).catch(function(error) {
+          console.log("Error:", error);
+        });
+    }
     },
     created() {
     firebase.auth().onAuthStateChanged((user) => {
@@ -156,7 +163,6 @@ export default {
        console.log("Can't get signed in user")
       }
     });
-    this.fetchResProfile();
   }
 
 }

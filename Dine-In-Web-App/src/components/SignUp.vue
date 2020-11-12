@@ -13,8 +13,9 @@
         <router-link to="/profile">Profile</router-link>
         <router-link to="/login">Login</router-link>
         <router-link to="/restaurant">Restaurant</router-link>
-        <router-link to="/submitrestaurant">Submit restaurant</router-link>
+        <router-link to="/restdetails">Submit restaurant</router-link>
         <router-link to="/signup">Sign Up</router-link>
+        <a href="#" @click="logOut()">Log Out</a>
       </div>
       <div class = "content">
         <h2>Create Account</h2>
@@ -113,6 +114,13 @@ export default {
         }
           console.log(error);
       });
+    },
+    logOut: function() {
+      firebase.auth().signOut().then(function() {
+        alert("You have successfully logged out!")
+        }).catch(function(error) {
+          console.log("Error:", error);
+        });
     }
   },
   // Lifecycle Hooks 

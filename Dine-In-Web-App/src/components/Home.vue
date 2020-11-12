@@ -15,6 +15,7 @@
         <router-link to="/restaurant">Restaurant</router-link>
         <router-link to="/submitrestaurant">Submit restaurant</router-link>
         <router-link to="/signup">Sign Up</router-link>
+        <a href="#" @click="logOut()">Log Out</a>
       </div>
       <div class="accountbar">
         <button class="login" @click="goToLogin">Login</button>
@@ -217,7 +218,14 @@ export default {
       this.$router.push({name: "login"});
     },
     goToSignUp: function() {
-      this.$router.push({name: "usersignup"});
+      this.$router.push({name: "signup"});
+    },
+    logOut: function() {
+      firebase.auth().signOut().then(function() {
+        alert("You have successfully logged out!")
+        }).catch(function(error) {
+          console.log("Error:", error);
+        });
     }
   },
   // Lifecycle Hooks 

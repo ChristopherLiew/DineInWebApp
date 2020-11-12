@@ -13,8 +13,9 @@
         <router-link to="/profile">Profile</router-link>
         <router-link to="/login">Login</router-link>
         <router-link to="/restaurant">Restaurant</router-link>
-        <router-link to="/submitrestaurant">Submit restaurant</router-link>
+        <router-link to="/restdetails">Submit restaurant</router-link>
         <router-link to="/signup">Sign Up</router-link>
+        <a href="#" @click="logOut()">Log Out</a>
         </div>
 
         <div class="content">
@@ -291,6 +292,7 @@
 
 <script>
 // import QuantityCounter from '../components/QuantityCounter.vue'
+import firebase from '../firebase.js'
 
 export default {
     data() {
@@ -328,6 +330,15 @@ export default {
 
         }
         
+    },
+    methods: {
+      logOut: function() {
+      firebase.auth().signOut().then(function() {
+        alert("You have successfully logged out!")
+        }).catch(function(error) {
+          console.log("Error:", error);
+        });
+    }
     },
     created() {
       this.restaurant.id = this.$route.params.id
