@@ -20,8 +20,8 @@
     </div>
 
     <div class="content">
+      <h2>My Reservations</h2>
       <div class="pastreservations">
-         <h2>My Reservations</h2>
           <table class="styled-table">
           <thead>
             <tr>
@@ -48,7 +48,7 @@
       <div class="profilearea">
         <div class="profilecard">
           <h2 v-if="this.loaded == true">Profile page of {{profileInfo.name.first_name}} {{profileInfo.name.last_name}}</h2>
-          <p v-if="this.loaded == true">You have a wallet balance of: ${{profileInfo.wallet_balance}}</p>
+          <!--<p v-if="this.loaded == true">You have a wallet balance of: ${{profileInfo.wallet_balance}}</p>-->
           <br>
           <div>
         <div >
@@ -257,7 +257,6 @@ div.content {
 .profilearea {
   width: 30%;
   float: right;
-  background-color: red;
 }
 
 .pastreservations {
@@ -269,6 +268,15 @@ div.content {
 img {
     width: 300px;
     height: auto;
+}
+
+.profilecard {
+  background-color: whitesmoke;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  border-radius: 10px 10px 10px 10px;
+  max-width: 300px;
+  margin: auto;
+  text-align: center;
 }
 
 .styled-table {
@@ -308,10 +316,5 @@ img {
     color: #009879;
 }
 
-.profilecard {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  max-width: 300px;
-  margin: auto;
-  text-align: center;
-}
+
 </style>

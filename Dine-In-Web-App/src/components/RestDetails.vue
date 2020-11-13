@@ -48,17 +48,17 @@
                 <label for="fiveseater">How many 5-seaters</label>
                 <input type="text" id="fiveseater" name="fiveseater" v-model="merchant_data.capacity.five_seater">
                 <br>
-                <label for="cuisine">COVID measures:</label>
+                <label for="covidmeasures">COVID measures:</label>
                 <hr>
-                <label for="vehicle1">Contact Tracing</label>
+                <label for="covidmeasures">Contact Tracing</label>
                 <input type="checkbox" id="contacttracing" name="contacttracing" value=True v-model="merchant_data.safety_measures.contact_trace">
-                <label for="vehicle2">Masks Required</label>              
-                <input type="checkbox" id="masks" name="masks" value="Car" v-model="merchant_data.safety_measures.masks">
+                <label for="covidmeasures">Masks Required</label>              
+                <input type="checkbox" id="masks" name="masks" value=True v-model="merchant_data.safety_measures.masks">
                 <br>
-                <label for="vehicle3">Safe Distancing</label>
-                <input type="checkbox" id="safedistancing" name="safedistancing" value="Boat" v-model="merchant_data.safety_measures.safe_distance">
-                <label for="vehicle3">temperature screening</label>
-                <input type="checkbox" id="temperaturescreening" name="temperaturescreening" value="monkey" v-model="merchant_data.safety_measures.temp_screening">
+                <label for="covidmeasures">Safe Distancing</label>
+                <input type="checkbox" id="safedistancing" name="safedistancing" value=True v-model="merchant_data.safety_measures.safe_distance">
+                <label for="covidmeasures">Temperature Screening</label>
+                <input type="checkbox" id="temperaturescreening" name="temperaturescreening" value=True v-model="merchant_data.safety_measures.temp_screening">
                 <br>
                 <br>
                 
