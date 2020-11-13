@@ -19,28 +19,46 @@
 
     <div class="content">
         <div class="form">
-            <h2>Make a reservation for { restaurant name }</h2> <!--pass name over-->
+            <h2>Make a reservation for { this.restaurant_name }</h2> <!--pass name over-->
             <div class="seats">
-                <label for="people">Number of People</label>
-                <br>
-                <span>
-                <button class="seatbutton" value=1>1</button>
-                <button class="seatbutton" value=2>2</button>
-                <button class="seatbutton" value=3>3</button>
-                <button class="seatbutton" value=4>4</button>
-                <button class="seatbutton" value=5>5</button>
-                </span>
+                <div class="vacancies">
+                    <div class="tabletype">
+                        <p>No. of One Seater Tables available</p>
+                    </div>
+                    <div class="available seats">
+                        <p>{{this.oneSeaters}}</p>
+                    </div>
+                    <div class="adjustments">
+                        <button class="adjustseats" @click="minusSeat(1)">-</button>
+                        <button class="adjustseats" @click="addSeat(1)">+</button>
+                    </div>
+                </div>
             </div>
             <br>
-            <div class="time">
-                <label for="timeslot">Choose Timeslot</label>
-                <span><input type="datetime-local" id="time" name="time" placeholder="EST"/></span>
+            <div class="reservationlist">
+                <table>
+                    <thead>
+                    <tr>
+                    <th></th>
+                    <th>Restaurant</th>
+                    <th>Date</th>
+                    <th>Pax</th>
+                    <th>Cancel Reservation</th>
+                    <th>Leave a Review</th>
+                    </tr>
+                    </thead>
+                <tbody>
+                    <tr v-for="(reservation ,i) in user_reservations" :key="i">
+                    <th scope="row">{{i + 1}}</th>  
+                    <td>{{ reservation.merchant_name }}</td> 
+                    <td>{{ reservation.datetime }}</td> <!-- Format nicely in DOW/ DATE/ TIME -->
+                    <td>{{ reservation.pax }}</td>
+                    <td><button @click="cancelReservation(reservation.reservation_id)">Confirm Reservation</button></td>
+                    <td><button @click="blacklistCustomer(user_id)">Customer did not show up</button></td> <!-- Go to review form -->
+                    </tr>
+                </tbody>
+                </table>
             </div>
-            <div class="confirmation">
-                <p> Your reservation details are as follows </p>
-                <!-- Pass over info here -->
-            </div>
-            <button class="reservebutton">Make Reservation</button>
         </div>
       
     </div>
@@ -60,7 +78,9 @@ export default {
   data() {
     return {
       email: null,
-      password: null
+      password: null,
+      restaurant_reservations: [],
+      user_id: null
     }
   },
   methods: {
@@ -90,11 +110,55 @@ export default {
         }
           console.log(error);
       });
+    },
+    getUserRes: function() {
+        console.log("getUserRes called");
+              database.collection('reservations').get().then((querySnapShot) => {
+              querySnapShot.forEach(doc=> {
+                if (doc.data().user_id == this.user_id) {
+                  let reservation = {};
+                  reservation.reservation_id = doc.id;
+                  reservation.merchant_name = doc.data().merchant_name;
+                  let reservation_date = doc.data().date_reserved.toDate().toDateString();
+                  let reservation_time = new Date(doc.data().date_reserved * 1000).toLocaleTimeString('en-US', {hour: 'numeric', minute: 'numeric', hour12: true}); 
+                  reservation.datetime = reservation_date + " " + reservation_time;
+                  reservation.pax = doc.data().pax;
+                  this.user_reservations.push(reservation);
+                }
+              })
+            }).catch(function(error) {
+              console.log("Error getting documents: ", error);
+            })
+          },
+    cancelReservation: function(res_id){
+        database.collection("reservations").doc(res_id).delete().then(function() {
+            console.log("Document successfully deleted!");
+            alert("Your reservation has been cancelled!")
+            location.reload() // Refresh
+          }).catch(function(error) {
+            console.error("Error deleting reservation: ", error);
+          });
+    },
+    logOut: function() {
+      firebase.auth().signOut().then(function() {
+        alert("You have successfully logged out!")
+        }).catch(function(error) {
+          console.log("Error:", error);
+        });
     }
   },
   // Lifecycle Hooks 
   created() {
-    
+    firebase.auth().onAuthStateChanged((user) => { // Use arrows so it knows that the context of this is our data()
+      if (user) {
+        console.log(user.uid);
+        this.user_id = user.uid;
+        console.log("Getting signed in user")
+        this.getUserRes();
+      } else {
+       console.log("Can't get signed in user")
+      }
+    })
   }
 }
 </script>
@@ -143,7 +207,7 @@ div.content {
   background-image: linear-gradient( rgb(78, 223, 78), rgb(85, 199, 228));
 }
 
-.seatbutton {
+.adjustseats {
   background-color: whitesmoke;
   border: none;
   color: black;
@@ -155,11 +219,8 @@ div.content {
   font-size: 20px;
 }
 
-.seatbutton:focus{
-    background-color:rgb(50, 223, 50);
-}
 
-.reservebutton {
+/*.reservebutton {
   display: block;
   margin-left: auto;
   margin-right: auto;
@@ -169,7 +230,7 @@ div.content {
   border-radius: 10px 10px 10px 10px;
   width: 25%;
   height: 15%;
-}
+}*/
 
 .form {
   border: 2px solid #ccc;
@@ -188,8 +249,23 @@ span {
     padding-right:10px;
 }
 
-input {
-    width: 100%;
+/*table css for reservation*/
+table {
+  border-collapse: collapse;
+  width:100%;
 }
+
+th, td {
+  text-align: center;
+  padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+
+th {
+  background-color: #36ac3a;
+  color: white;
+}
+
 
 </style>
