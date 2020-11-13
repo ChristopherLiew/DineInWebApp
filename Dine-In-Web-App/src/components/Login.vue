@@ -39,6 +39,7 @@
 // *https://firebase.google.com/docs/auth/admin/manage-users
 
 import firebase from '../firebase.js'
+const database = firebase.firestore();
 
 export default {
   data() {
@@ -51,8 +52,20 @@ export default {
     // Test with logged in progile and check profile.vue also
     logInUser: function() {
       firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(function() {
-        alert("Welcome!")
-        // Check user type and route accordingly
+        let uid = firebase.auth().currentUser.uid;
+        database.collection('users').where("user_id", "==", uid).get().then((querySnapShot) => {
+        querySnapShot.forEach(doc=> {
+          let strikes = doc.data().strikes;
+          if (strikes >= 3) {
+            firebase.auth().signOut().then(function() {
+              alert("Your account has been disabled!")
+              }).catch(function(error) {
+                console.log("Error:", error);
+                });
+          } else {
+            alert("Welcome!")
+          }
+      })
       }).catch(function(error) {
       var errorCode = error.code;
       var errorMessage = error.message;
@@ -63,6 +76,7 @@ export default {
         }
           console.log(error);
       });
+    })
     },
     signUpUser: function() { 
       firebase.auth().createUserWithEmailAndPassword(this.email, this.password).catch(function(error) {

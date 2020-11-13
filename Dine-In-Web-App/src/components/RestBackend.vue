@@ -108,12 +108,6 @@
 </div>
 </template>
 <script>
-// Logging In:
-// 1) Key in email and password and submit
-// 2) At the same time keep the email and password updated by using v-model for the input fields 
-// 3) On hitting the submit button, trigger the logInUser function
-// 4) Add in separate local variables i/e duplicate vacancy, v-model current input to that duplicate and upon update -> update document with the duplicate
-
 import firebase from '../firebase.js'
 const database = firebase.firestore();
 
@@ -151,9 +145,6 @@ export default {
     }
   },
   methods: {
-    // TBD:
-    // 1) Increment & Decrement (Check if it is larger than max)
-    // Get latest vacancy status
     getResVacancy: function() {
         console.log("Pulling restaurant vacancy data")
               database.collection('merchants').where("merchant_id", "==", this.merchant_id).get().then((querySnapShot) => {
@@ -163,6 +154,7 @@ export default {
                     this.merchant_id = doc.data().merchant_id;
                   } else {
                     this.vacancy = doc.data().vacancy;
+                    this.edited_vacancy = doc.data().vacancy;
                     this.capacity = doc.data().capacity;
                   }
                 }
@@ -171,22 +163,35 @@ export default {
               console.log("Error getting restaurant capacity data: ", error);
             })
         },
+    // Validate vacancy updates
+    validateUpdates(update_val, max_val, orig_val) {
+      if (parseInt(update_val) > max_val) {
+        alert("Number of vacant seats cannot exceed: " + this.capacity.five_seater);
+        return orig_val
+      } else if (parseInt(update_val) < 0) {
+        alert("There can't be less than 0 vacant seats!");
+        return orig_val
+      }
+      else {
+        return parseInt(update_val)
+      }
+    },
     // Update vacancies
     updateResVacancy: function() { 
-        this.edited_vacancy.five_seater = parseInt(this.edited_vacancy.five_seater);
-        this.edited_vacancy.four_seater = parseInt(this.edited_vacancy.four_seater);
-        this.edited_vacancy.three_seater = parseInt(this.edited_vacancy.three_seater);
-        this.edited_vacancy.two_seater = parseInt(this.edited_vacancy.two_seater);
-        this.edited_vacancy.one_seater = parseInt(this.edited_vacancy.one_seater);
-        this.edited_vacancy.total_seats = this.edited_vacancy.five_seater + this.edited_vacancy.four_seater + this.edited_vacancy.three_seater + this.edited_vacancy.two_seater + this.edited_vacancy.one_seater;
-        database.collection('merchants').doc(this.doc_id).update({"vacancy": this.edited_vacancy}).then(function() {
-          console.log("Updated!")
-          })
+      this.edited_vacancy.five_seater = this.validateUpdates(this.edited_vacancy.five_seater, this.capacity.five_seater, this.vacancy.five_seater);
+      this.edited_vacancy.four_seater = this.validateUpdates(this.edited_vacancy.four_seater, this.capacity.five_seater, this.vacancy.four_seater);
+      this.edited_vacancy.three_seater = this.validateUpdates(this.edited_vacancy.three_seater, this.capacity.three_seater, this.vacancy.three_seater);
+      this.edited_vacancy.two_seater = this.validateUpdates(this.edited_vacancy.two_seater, this.capacity.two_seater, this.vacancy.two_seater);
+      this.edited_vacancy.one_seater = this.validateUpdates(this.edited_vacancy.one_seater, this.capacity.one_seater, this.vacancy.one_seater);
+      this.edited_vacancy.total_seats = this.edited_vacancy.five_seater + this.edited_vacancy.four_seater + this.edited_vacancy.three_seater + this.edited_vacancy.two_seater + this.edited_vacancy.one_seater;
+      database.collection('merchants').doc(this.doc_id).update({"vacancy": this.edited_vacancy}).then(function() {
+        console.log("Updated!")
+        })
         .catch(function(error) {
           console.log("Error updating vacancy data: ", error);
-        });
-        alert("Your merchant profile has been updated successfully!");
-      },
+          });
+          alert("Your merchant profile has been updated successfully!");
+          },
     // Get Reservations
     getRestRes: function() {
               database.collection('reservations').get().then((querySnapShot) => {
