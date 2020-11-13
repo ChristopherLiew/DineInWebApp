@@ -31,7 +31,7 @@
                       <div class="availableseats">
                           <p>{{this.vacancy.one_seater}}</p>
                       </div>
-                      <input type="text" id="one_seaters" name="one_seaters" class="one_seaters" v-model="vacancy.one_seater" placeholder="Update here">
+                      <input type="text" id="one_seaters" name="one_seaters" class="one_seaters" v-model="edited_vacancy.one_seater" placeholder="Update here">
                   </div>
                   <div class="vacancies">
                       <div class="tabletype">
@@ -40,7 +40,7 @@
                       <div class="availableseats">
                           <p>{{this.vacancy.two_seater}}</p>
                       </div>
-                      <input type="text" id="two_seaters" name="two_seaters" class="two_seaters" v-model="vacancy.two_seater" placeholder="Update here">
+                      <input type="text" id="two_seaters" name="two_seaters" class="two_seaters" v-model="edited_vacancy.two_seater" placeholder="Update here">
                   </div>
                   <div class="vacancies">
                       <div class="tabletype">
@@ -49,7 +49,7 @@
                       <div class="availableseats">
                           <p>{{this.vacancy.three_seater}}</p>
                       </div>
-                      <input type="text" id="three_seaters" name="three_seaters" class="three_seaters" v-model="vacancy.three_seater" placeholder="Update here">
+                      <input type="text" id="three_seaters" name="three_seaters" class="three_seaters" v-model="edited_vacancy.three_seater" placeholder="Update here">
                   </div>
                   <div class="vacancies">
                       <div class="tabletype">
@@ -58,7 +58,7 @@
                       <div class="availableseats">
                           <p>{{this.vacancy.four_seater}}</p>
                       </div>
-                      <input type="text" id="four_seaters" name="four_seaters" class="four_seaters" v-model="vacancy.four_seater" placeholder="Update here">
+                      <input type="text" id="four_seaters" name="four_seaters" class="four_seaters" v-model="edited_vacancy.four_seater" placeholder="Update here">
                   </div>
                   <div class="vacancies">
                       <div class="tabletype">
@@ -67,7 +67,7 @@
                       <div class="availableseats">
                           <p>{{this.vacancy.five_seater}}</p>
                       </div>
-                      <input type="text" id="five_seaters" name="five_seaters" class="five_seaters" v-model="vacancy.five_seater" placeholder="Update here">
+                      <input type="text" id="five_seaters" name="five_seaters" class="five_seaters" v-model="edited_vacancy.five_seater" placeholder="Update here">
                   </div>
               </div>
               <button class="updatebutton" @click="updateResVacancy()"> Update </button>
@@ -186,11 +186,12 @@ export default {
       this.edited_vacancy.total_seats = this.edited_vacancy.five_seater + this.edited_vacancy.four_seater + this.edited_vacancy.three_seater + this.edited_vacancy.two_seater + this.edited_vacancy.one_seater;
       database.collection('merchants').doc(this.doc_id).update({"vacancy": this.edited_vacancy}).then(function() {
         console.log("Updated!")
+        alert("Your merchant profile has been updated successfully!");
+        location.reload();
         })
         .catch(function(error) {
           console.log("Error updating vacancy data: ", error);
           });
-          alert("Your merchant profile has been updated successfully!");
           },
     // Get Reservations
     getRestRes: function() {
