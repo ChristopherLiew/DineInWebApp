@@ -70,7 +70,8 @@ export default {
             first_name: '',
             last_name: '',
             salutation: 'Mr.'
-          }
+          },
+          strikes: 0
         }
       }
     },

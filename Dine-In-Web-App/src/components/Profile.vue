@@ -148,7 +148,6 @@ export default {
     });
     },
     // 2) Update profile information to Firebase 
-    // Process: Edit this.profileInfo THEN Use v-on:click with an update button to update profile information)
     updateProfile: function() {
       database.collection('users').doc(this.doc_id).update(
         this.profileInfo
@@ -158,7 +157,7 @@ export default {
           console.log("Error updating profile information: ", error);
         })
     },
-    // 3.1) Set Profile Image https://www.genuitec.com/upload-files-using-vue-and-firebase/
+    // 3) Set Profile Image 
     setProfileImage: function() {
         let uploadTask = storage.ref(`${this.imageData.name}`).put(this.imageData);
         uploadTask.on('state_changed', 
