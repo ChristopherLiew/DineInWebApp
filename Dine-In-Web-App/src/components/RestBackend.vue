@@ -22,22 +22,58 @@
       <div class="content">
         <div class="form">
             <h2>Update your current vacancies</h2> <!--pass name over-->
-            <div class="seats">
-                <div class="vacancies">
-                    <div class="tabletype">
-                        <p>No. of One Seater Tables available</p>
-                    </div>
-                    <div class="available seats">
-                        <p>{{this.vacancy.one_seater}}</p>
-                    </div>
-                    <input type="text" id="one_seaters" name="one_seaters" v-model="edited_vacancy.one_seater">
-                    <!-- <div class="adjustments">
-                        <button class="adjustseats" @click="minusSeat(1)">-</button>
-                        <button class="adjustseats" @click="addSeat(1)">+</button>
-                    </div> -->
-                </div>
+            <div class="seatupdatearea">
+              <div class="seats">
+                  <div class="vacancies">
+                      <div class="tabletype">
+                          <p>No. of One Seater Tables available</p>
+                      </div>
+                      <div class="availableseats">
+                          <p>{{this.vacancy.one_seater}}</p>
+                      </div>
+                      <input type="text" id="one_seaters" name="one_seaters" v-model="vacancy.one_seater" placeholder="Update here">
+                  </div>
+                  <div class="vacancies">
+                      <div class="tabletype">
+                          <p>No. of Two Seater Tables available</p>
+                      </div>
+                      <div class="availableseats">
+                          <p>{{this.vacancy.two_seater}}</p>
+                      </div>
+                      <input type="text" id="two_seaters" name="two_seaters" v-model="vacancy.two_seater" placeholder="Update here">
+                  </div>
+                  <div class="vacancies">
+                      <div class="tabletype">
+                          <p>No. of Three Seater Tables available</p>
+                      </div>
+                      <div class="availableseats">
+                          <p>{{this.vacancy.three_seater}}</p>
+                      </div>
+                      <input type="text" id="three_seaters" name="three_seaters" v-model="vacancy.three_seater" placeholder="Update here">
+                  </div>
+                  <div class="vacancies">
+                      <div class="tabletype">
+                          <p>No. of Four Seater Tables available</p>
+                      </div>
+                      <div class="availableseats">
+                          <p>{{this.vacancy.four_seater}}</p>
+                      </div>
+                      <input type="text" id="four_seaters" name="four_seaters" v-model="vacancy.four_seater" placeholder="Update here">
+                  </div>
+                  <div class="vacancies">
+                      <div class="tabletype">
+                          <p>No. of Five Seater Tables available</p>
+                      </div>
+                      <div class="availableseats">
+                          <p>{{this.vacancy.five_seater}}</p>
+                      </div>
+                      <input type="text" id="five_seaters" name="five_seaters" v-model="vacancy.five_seater" placeholder="Update here">
+                  </div>
+              </div>
+              <button class="updatebutton" @click="updateResVacancy()"> Update </button>
+              <br>
             </div>
-          
+            
             <br>
             <div class="reservationlist">
                 <table>
@@ -63,7 +99,7 @@
                 </tbody>
                 </table>
             </div>
-            <button @click="updateResVacancy()"> Update </button>
+            
         </div>
       
     </div>
@@ -267,7 +303,55 @@ div.content {
   background-image: linear-gradient( rgb(78, 223, 78), rgb(85, 199, 228));
 }
 
-.adjustseats {
+.seatupdatearea {
+  margin-left: auto;
+  margin-right: auto;
+
+}
+
+.vacancies {
+  padding: 5px;
+  text-align: center;
+  background-color: white;
+  width: 10rem;
+  display: inline-block;
+  margin: 2rem;
+  border-radius: 10px 10px 10px 10px;
+}
+
+.seats {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.tabletype {
+  text-align: center;
+  font-weight: bold;
+}
+
+.availableseats {
+  text-align: center;
+  font-weight: bold;
+  font-size: 250%;
+}
+
+input {
+  text-align: center; 
+}
+
+.updatebutton {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 30%;
+  height: 40%;
+  background-color: rgba(26, 182, 26, 0.829);
+}
+
+.updatebutton:active {
+  background-color: greenyellow;
+}
+/*.adjustseats {
   background-color: whitesmoke;
   border: none;
   color: black;
@@ -277,7 +361,7 @@ div.content {
   text-decoration: none;
   display: inline-block;
   font-size: 20px;
-}
+}*/
 
 
 /*.reservebutton {
@@ -298,7 +382,7 @@ div.content {
   padding: 5px;
   border-radius: 10px 10px 10px 10px;
   margin-top: 10px;
-  height:40%;
+  height:90%;
   width: 90%;
   margin: auto;
 }

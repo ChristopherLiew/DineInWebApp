@@ -252,7 +252,7 @@ div.content {
   padding: 5px;
   border-radius: 10px 10px 10px 10px;
   margin-top: 10px;
-  height:20%;
+  height:30%;
   width: 20%;
   margin: auto;
 
