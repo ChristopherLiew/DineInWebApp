@@ -110,6 +110,14 @@ export default {
             one_seater: 0,
             total_seats: 0
           },
+          vacancy: {
+            five_seater: 0,
+            four_seater: 0,
+            three_seater: 0,
+            two_seater: 0,
+            one_seater: 0,
+            total_seats: 0
+          },
           safety_measures: {
             contact_trace: false,
             masks: false,
@@ -138,13 +146,14 @@ export default {
               console.log("Error getting documents: ", error);
             })
         },
-      updateResProfile: function() { // BUG: can only update when we click on submit with cmd (i.e. open in new tab)
+      updateResProfile: function() { 
         this.merchant_data.capacity.five_seater = parseInt(this.merchant_data.capacity.five_seater);
         this.merchant_data.capacity.four_seater = parseInt(this.merchant_data.capacity.four_seater);
         this.merchant_data.capacity.three_seater = parseInt(this.merchant_data.capacity.three_seater);
         this.merchant_data.capacity.two_seater = parseInt(this.merchant_data.capacity.two_seater);
         this.merchant_data.capacity.one_seater = parseInt(this.merchant_data.capacity.one_seater);
         this.merchant_data.capacity.total_seats = this.merchant_data.capacity.five_seater + this.merchant_data.capacity.four_seater + this.merchant_data.capacity.three_seater + this.merchant_data.capacity.two_seater + this.merchant_data.capacity.one_seater;
+        this.merchant_data.vacancy = this.merchant_data.capacity;
         this.merchant_data.status = "registered";
         database.collection('merchants').doc(this.doc_id).update(this.merchant_data).then(function() {
           console.log("Updated!")
