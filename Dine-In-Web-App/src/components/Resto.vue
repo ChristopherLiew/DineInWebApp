@@ -13,7 +13,8 @@
         <router-link to="/profile">Profile</router-link>
         <router-link to="/login">Login</router-link>
         <router-link to="/restaurant">Restaurant</router-link>
-        <router-link to="/restdetails">Submit restaurant</router-link>
+        <router-link to="/restdetails">Merchant Profile</router-link>
+        <router-link to="/restbackend">Merchant Backend</router-link>
         <router-link to="/signup">Sign Up</router-link>
         <a href="#" @click="logOut()">Log Out</a>
         </div>

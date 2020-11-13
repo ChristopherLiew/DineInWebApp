@@ -13,14 +13,15 @@
         <router-link to="/profile">Profile</router-link>
         <router-link to="/login">Login</router-link>
         <router-link to="/restaurant">Restaurant</router-link>
-        <router-link to="/restdetails">Submit restaurant</router-link>
+        <router-link to="/restdetails">Merchant Profile</router-link>
+        <router-link to="/restbackend">Merchant Backend</router-link>
         <router-link to="/signup">Sign Up</router-link>
         <a href="#" @click="logOut()">Log Out</a>
       </div>
       <div class = "content">
         <h2>Create Account</h2>
         <div class="signupcontainer">
-            <form class="card-panel">
+            <form class="card-panel" v-on:submit.prevent="signUpUser">
                 <label for="email">Email:</label>
                 <div class="field">
                     <span><input type="email" name="email" v-model="email"></span>
@@ -38,7 +39,7 @@
                 <option value=User>User</option>
                 <option value=Merchant>Merchant</option>
                 </select>
-                <button @click="signUpUser" class="register">Sign Up</button> 
+                <input type="submit" value="Submit"/>
             </form>
             </div>
         </div>
@@ -84,6 +85,8 @@ export default {
         if (vm.acc_type == 'User') {
           new_user.user_id = uid;
           new_user.email = vm.email;
+          new_user.user_name = vm.username;
+          new_user.status = "new";
           // Create user within user collection
           database.collection('users').doc(uid).set(new_user).then(function() {
           console.log("user successfully written to users collection!");
@@ -91,10 +94,11 @@ export default {
         .catch(function(error) {
           console.error("Error writing new user to users collection: ", error);
           }); 
-          vm.$router.push({name: "profile"}) // Change to user sign up details page
+          vm.$router.push({name: "userdetails"}) // Change to user sign up details page
 
         } else {
           new_user.merchant_id = uid;
+          new_user.status = "new";
           // Create merchant within merchant collection
           database.collection('merchants').doc(uid).set(new_user).then(function() {
           console.log("merchant successfully written to merchants collection!");
@@ -102,7 +106,7 @@ export default {
         .catch(function(error) {
           console.error("Error writing new user to merchant collection: ", error);
           });
-          vm.$router.push({name: "restsignup"})
+          vm.$router.push({name: "restdetails"})
         }
       }).catch(function(error) {
         var errorCode = error.code;

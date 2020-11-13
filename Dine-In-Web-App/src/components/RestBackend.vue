@@ -13,8 +13,10 @@
         <router-link to="/profile">Profile</router-link>
         <router-link to="/login">Login</router-link>
         <router-link to="/restaurant">Restaurant</router-link>
-        <router-link to="/submitrestaurant">Submit restaurant</router-link>
-        <router-link to="/usersignup">Sign Up</router-link>
+        <router-link to="/restdetails">Merchant Profile</router-link>
+        <router-link to="/restbackend">Merchant Backend</router-link>
+        <router-link to="/signup">Sign Up</router-link>
+        <a href="#" @click="logOut()">Log Out</a>
     </div>
 
     <div class="content">
@@ -73,6 +75,7 @@
 // 3) On hitting the submit button, trigger the logInUser function
 
 import firebase from '../firebase.js'
+const database = firebase.firestore();
 
 export default {
   data() {

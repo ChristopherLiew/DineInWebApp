@@ -2,12 +2,13 @@ import Home from './components/Home.vue'
 import Profile from './components/Profile.vue'
 import Map from './components/Map.vue'
 import RestDetails from './components/RestDetails.vue'
+import UserDetails from './components/UserDetails.vue'
 import SignUp from './components/SignUp.vue'
 import Review from './components/Review.vue'
 import SearchBar from './components/SearchBar.vue'
 import Login from './components/Login.vue'
 import Resto from './components/Resto.vue'
-import MakeBooking from './components/MakeBooking.vue'
+import RestBackend from './components/RestBackend.vue'
 
 export default[
     {
@@ -56,8 +57,13 @@ export default[
         component: Resto
     },
     {
-        name: 'booking',
-        path:'/booking',
-        component: MakeBooking
+        name: 'restbackend',
+        path:'/restbackend',
+        component: RestBackend
+    },
+    {
+        name: 'userdetails',
+        path: '/userdetails',
+        component: UserDetails
     }
 ]
