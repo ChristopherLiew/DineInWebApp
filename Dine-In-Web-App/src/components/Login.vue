@@ -49,34 +49,45 @@ export default {
     }
   },
   methods: {
-    // Test with logged in progile and check profile.vue also
+    // Test with logged in profile and check profile.vue also
     logInUser: function() {
       firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(function() {
         let uid = firebase.auth().currentUser.uid;
-        database.collection('users').where("user_id", "==", uid).get().then((querySnapShot) => {
+        // Check user type
+        database.collection('user_type').where("user_id", "==", uid).get().then((querySnapShot) => {
         querySnapShot.forEach(doc=> {
-          let strikes = doc.data().strikes;
-          if (strikes >= 3) {
-            firebase.auth().signOut().then(function() {
-              alert("Your account has been disabled!")
-              }).catch(function(error) {
-                console.log("Error:", error);
-                });
+          let user_type = doc.data().user_type;
+          if (user_type == "user") {
+            // Check if blacklist
+            database.collection('users').where("user_id", "==", uid).get().then((querySnapShot) => {
+            querySnapShot.forEach(doc=> {
+              let strikes = doc.data().strikes;
+              if (strikes >= 3) {
+                firebase.auth().signOut().then(function() {
+                  alert("Your account has been disabled!")
+                  }).catch(function(error) {
+                    console.log("Error:", error);
+                    });
+              } else {
+                alert("Welcome!")
+              }
+          })
+          }).catch(function(error) {
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          if (errorCode === 'auth/wrong-password') {
+                alert('Wrong password.');
+            } else {
+                alert(errorMessage);
+            }
+              console.log(error);
+          });
           } else {
             alert("Welcome!")
           }
+        })
+        })
       })
-      }).catch(function(error) {
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      if (errorCode === 'auth/wrong-password') {
-            alert('Wrong password.');
-        } else {
-            alert(errorMessage);
-        }
-          console.log(error);
-      });
-    })
     },
     signUpUser: function() { 
       firebase.auth().createUserWithEmailAndPassword(this.email, this.password).catch(function(error) {
