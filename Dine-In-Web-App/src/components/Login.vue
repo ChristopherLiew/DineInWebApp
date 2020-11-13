@@ -34,10 +34,9 @@
 </div>
 </template>
 <script>
-// Logging In:
-// 1) Key in email and password and submit
-// 2) At the same time keep the email and password updated by using v-model for the input fields 
-// 3) On hitting the submit button, trigger the logInUser function
+// TBD
+// 1) Add in check for user strikes, if strikes = 3, disable user
+// *https://firebase.google.com/docs/auth/admin/manage-users
 
 import firebase from '../firebase.js'
 

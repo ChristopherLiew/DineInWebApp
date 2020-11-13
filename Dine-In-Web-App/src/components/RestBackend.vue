@@ -30,7 +30,7 @@
                     <div class="available seats">
                         <p>{{this.vacancy.one_seater}}</p>
                     </div>
-                    <input type="text" id="one_seaters" name="one_seaters" v-model="vacancy.one_seater">
+                    <input type="text" id="one_seaters" name="one_seaters" v-model="edited_vacancy.one_seater">
                     <!-- <div class="adjustments">
                         <button class="adjustseats" @click="minusSeat(1)">-</button>
                         <button class="adjustseats" @click="addSeat(1)">+</button>
@@ -76,6 +76,7 @@
 // 1) Key in email and password and submit
 // 2) At the same time keep the email and password updated by using v-model for the input fields 
 // 3) On hitting the submit button, trigger the logInUser function
+// 4) Add in separate local variables i/e duplicate vacancy, v-model current input to that duplicate and upon update -> update document with the duplicate
 
 import firebase from '../firebase.js'
 const database = firebase.firestore();
@@ -94,10 +95,28 @@ export default {
         two_seater: 0,
         one_seater: 0,
         total_seats: 0
+      },
+      edited_vacancy: {
+        five_seater: 0,
+        four_seater: 0,
+        three_seater: 0,
+        two_seater: 0,
+        one_seater: 0,
+        total_seats: 0
+      },
+      capacity: {
+        five_seater: 0,
+        four_seater: 0,
+        three_seater: 0,
+        two_seater: 0,
+        one_seater: 0,
+        total_seats: 0
       }
     }
   },
   methods: {
+    // TBD:
+    // 1) Increment & Decrement (Check if it is larger than max)
     // Get latest vacancy status
     getResVacancy: function() {
         console.log("Pulling restaurant vacancy data")
@@ -108,6 +127,7 @@ export default {
                     this.merchant_id = doc.data().merchant_id;
                   } else {
                     this.vacancy = doc.data().vacancy;
+                    this.capacity = doc.data().capacity;
                   }
                 }
               )
@@ -117,13 +137,13 @@ export default {
         },
     // Update vacancies
     updateResVacancy: function() { 
-        this.vacancy.five_seater = parseInt(this.vacancy.five_seater);
-        this.vacancy.four_seater = parseInt(this.vacancy.four_seater);
-        this.vacancy.three_seater = parseInt(this.vacancy.three_seater);
-        this.vacancy.two_seater = parseInt(this.vacancy.two_seater);
-        this.vacancy.one_seater = parseInt(this.vacancy.one_seater);
-        this.vacancy.total_seats = this.vacancy.five_seater + this.vacancy.four_seater + this.vacancy.three_seater + this.vacancy.two_seater + this.vacancy.one_seater;
-        database.collection('merchants').doc(this.doc_id).update({"vacancy": this.vacancy}).then(function() {
+        this.edited_vacancy.five_seater = parseInt(this.edited_vacancy.five_seater);
+        this.edited_vacancy.four_seater = parseInt(this.edited_vacancy.four_seater);
+        this.edited_vacancy.three_seater = parseInt(this.edited_vacancy.three_seater);
+        this.edited_vacancy.two_seater = parseInt(this.edited_vacancy.two_seater);
+        this.edited_vacancy.one_seater = parseInt(this.edited_vacancy.one_seater);
+        this.edited_vacancy.total_seats = this.edited_vacancy.five_seater + this.edited_vacancy.four_seater + this.edited_vacancy.three_seater + this.edited_vacancy.two_seater + this.edited_vacancy.one_seater;
+        database.collection('merchants').doc(this.doc_id).update({"vacancy": this.edited_vacancy}).then(function() {
           console.log("Updated!")
           })
         .catch(function(error) {
