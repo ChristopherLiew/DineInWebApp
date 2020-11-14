@@ -48,8 +48,58 @@
                 <label for="fiveseater">How many 5-seaters</label>
                 <input type="text" id="fiveseater" name="fiveseater" v-model="merchant_data.capacity.five_seater">
                 <br>
+                <label for="imgupload">Images of your Restaurant here:</label>
+                <hr>
+                <br>
+                <label for="interiorimg">1. Interior of Store:</label>
+                <div>
+                  <div>
+                    <input type="file" @change="inputImage" accept="image/*" >
+                  </div>
+                  <div>
+                    <p>Progress: {{uploadPct1.toFixed()+"%"}}
+                    <progress id="progress" :value="uploadPct1" max="100" ></progress>  </p>
+                  </div>
+                    <div v-if="imageData!=null">
+                      <button type="button" @click="setRestImage('interior')">Upload</button>
+                    </div>
+                  </div>
+                  <img v-if="merchant_data.imgURL.interior != null && loaded == true" :src=merchant_data.imgURL.interior alt="Interior Pic">
+                <br>
+                <label for="exteriorimg">2. Store Front:</label>
+                <div>
+                  <div>
+                    <input type="file" @change="inputImage" accept="image/*" >
+                  </div>
+                  <div>
+                    <p>Progress: {{uploadPct2.toFixed()+"%"}}
+                    <progress id="progress" :value="uploadPct2" max="100" ></progress>  </p>
+                  </div>
+                    <div v-if="imageData!=null">
+                      <button type="button" @click="setRestImage('exterior')">Upload</button>
+                    </div>
+                  </div>
+                  <img v-if="merchant_data.imgURL.exterior != null && loaded == true" :src=merchant_data.imgURL.exterior alt="Exterior Pic">
+                <br>
+                <label for="foodimg">3. Food Selection:</label>
+                <div>
+                  <div>
+                    <input type="file" @change="inputImage" accept="image/*" >
+                  </div>
+                  <div>
+                    <p>Progress: {{uploadPct3.toFixed()+"%"}}
+                    <progress id="progress" :value="uploadPct3" max="100" ></progress>  </p>
+                  </div>
+                    <div v-if="imageData!=null">
+                      <button type="button" @click="setRestImage('food')">Upload</button>
+                    </div>
+                  </div>
+                  <img v-if="merchant_data.imgURL.food != null && loaded == true" :src=merchant_data.imgURL.food alt="Food Pic">
+                <br>
+                <br>
                 <label for="covidmeasures">COVID measures:</label>
                 <hr>
+                <br>
                 <label for="covidmeasures">Contact Tracing</label>
                 <input type="checkbox" id="contacttracing" name="contacttracing" value=True v-model="merchant_data.safety_measures.contact_trace">
                 <label for="covidmeasures">Masks Required</label>              
@@ -67,8 +117,13 @@
                 <select id="cuisine" name="cuisine" v-model="merchant_data.cuisine">
                 <option value="japanese">Japanese</option>
                 <option value="chinese">Chinese</option>
+                <option value="korean">Korean</option>
+                <option value="indian">Indian</option>
+                <option value="malay">Malay</option>
+                <option value="taiwanese">Taiwanese</option>
                 <option value="french">French</option>
-                <option value="western">Western</option>
+                <option value="italian">Italian</option>
+                <option value="british">British</option>
                 </select>
                 <br>
                 <label for="description">Short Description</label>
@@ -80,11 +135,10 @@
     </body>
   </div>
 </template>
-
 <script>
 import firebase from '../firebase.js'
 const database = firebase.firestore();
-//const storage = firebase.storage();
+const storage = firebase.storage();
 
 export default {
   data() {
@@ -126,7 +180,18 @@ export default {
           },
           cuisine: 'french',
           description: '',
-        }
+
+          imgURL: {
+            interior: '',
+            exterior: '',
+            food: ''
+          }
+        },
+        loaded: false, // Triggered when data has sucessfully been pulled after Vue app is mounted
+        uploadPct1: 0,
+        uploadPct2: 0,
+        uploadPct3: 0,
+        imageData: null
       }
     },
     methods: {
@@ -157,15 +222,47 @@ export default {
         this.merchant_data.status = "registered";
         database.collection('merchants').doc(this.doc_id).update(this.merchant_data).then(function() {
           console.log("Updated!")
+          alert("Your merchant profile has been updated successfully!");
           })
         .catch(function(error) {
           console.log("Error updating profile information: ", error);
         });
-        alert("Your merchant profile has been updated successfully!");
       },
+      // 3) Set Rest Image 
+    setRestImage: function(img_type) { // interior, exterior & food
+        let uploadTask = storage.ref('rest_imgs/').child(this.merchant_id+ '/' + `${this.imageData.name}`).put(this.imageData);
+        uploadTask.on('state_changed', 
+        snapshot => {
+          if (img_type == 'interior') {
+            this.uploadPct1 = (snapshot.bytesTransferred/snapshot.totalBytes)*100;
+          } else if (img_type == 'exterior') {
+            this.uploadPct2 = (snapshot.bytesTransferred/snapshot.totalBytes)*100;
+          } else {
+            this.uploadPct3 = (snapshot.bytesTransferred/snapshot.totalBytes)*100;
+          }
+        },
+        error => {
+          console.log("Error uploading restaurant picture ", error);
+        },
+        () => {
+          this.uploadPct = 100;
+          uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+            this.merchant_data.imgURL[img_type] = downloadURL; // Profile Info has image URL and can directly pull with img tag
+            console.log("New restaurant image available at: ", downloadURL);
+          })
+        }
+      )
+    },
+    inputImage(event) {
+      this.uploadValue=0;
+      this.picture=null;
+      this.imageData = event.target.files[0];
+    },
+    // Logout
       logOut: function() {
       firebase.auth().signOut().then(function() {
         alert("You have successfully logged out!")
+        this.$router.push({name: 'home'})
         }).catch(function(error) {
           console.log("Error:", error);
         });
@@ -186,6 +283,7 @@ export default {
 
 }
 </script>
+
 
 <style>
 body {

@@ -47,13 +47,12 @@
       </div>
       <div class="profilearea">
         <div class="profilecard">
-          <h2 v-if="this.loaded == true">Profile page of {{profileInfo.name.first_name}} {{profileInfo.name.last_name}}</h2>
-          <!--<p v-if="this.loaded == true">You have a wallet balance of: ${{profileInfo.wallet_balance}}</p>-->
+          <h2 v-if="this.loaded == true">Profile of</h2> 
+          <h2>{{profileInfo.name.first_name}} {{profileInfo.name.last_name}}</h2>
           <br>
-          <div>
-        <div >
-          <p>Upload an image to Firebase:</p>
-          <input type="file" @change="inputImage" accept="image/*" >
+      <div>
+        <div>
+          <input type="file" @change="inputImage" accept="image/*">
         </div>
         <div>
           <p>Progress: {{uploadPct.toFixed()+"%"}}
@@ -84,8 +83,19 @@ export default {
   data() {
     return {
       profileInfo: {
-        imgURL: null
-      },
+        status: "new",
+          user_id: '',
+          user_name: '',
+          imgUrl: '',
+          email: '',
+          phone_number: '',
+          name: {
+            first_name: '',
+            last_name: '',
+            salutation: 'Mr.'
+          },
+          strikes: 0
+        },
       loaded: false, // Triggered when data has sucessfully been pulled after Vue app is mounted
       uploadPct: 0,
       imageData: null,
@@ -129,18 +139,7 @@ export default {
           console.log("User data =>", doc.data());
           // Document ID
           this.doc_id = doc.id;
-          // User Profile Data
-          this.profileInfo.user_name = doc.data().user_name;
-          // Personal Information (Salutation + First Name + Last Name + DOB)
-          this.profileInfo.name = doc.data().name;
-          // Contact Details
-          this.profileInfo.contact = doc.data().contact_details;
-          // Payment Details (CC + Wallet only)
-          this.profileInfo.payment = doc.data().cc_payment_info;
-          this.profileInfo.wallet_balance = doc.data().wallet_balance;
-          // Profile Image URL
-          this.profileInfo.imgURL = doc.data().imgURL;
-          // Data loaded sucessfully
+          this.profileInfo = doc.data();
           this.loaded = true;
         })
       }).catch(function(error) {
@@ -159,7 +158,7 @@ export default {
     },
     // 3) Set Profile Image 
     setProfileImage: function() {
-        let uploadTask = storage.ref(`${this.imageData.name}`).put(this.imageData);
+        let uploadTask = storage.ref('user_imgs/').child(this.user_id + '/' + `${this.imageData.name}`).put(this.imageData);
         uploadTask.on('state_changed', 
         snapshot => {
           this.uploadPct = (snapshot.bytesTransferred/snapshot.totalBytes)*100;
@@ -189,11 +188,12 @@ export default {
     logOut: function() {
       firebase.auth().signOut().then(function() {
         alert("You have successfully logged out!")
+        this.$router.push({name: 'home'})
         }).catch(function(error) {
           console.log("Error:", error);
         });
     }
-  },
+    },
   // Lifecycle Hooks 
   created() {
     firebase.auth().onAuthStateChanged((user) => {
@@ -210,6 +210,7 @@ export default {
   }
 }
 </script>
+
 <style>
 body {
   margin: 0;
