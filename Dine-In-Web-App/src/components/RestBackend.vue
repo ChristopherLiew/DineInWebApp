@@ -29,7 +29,7 @@
                           <p>No. of One Seater Tables available</p>
                       </div>
                       <div class="availableseats">
-                          <p>{{this.vacancy.one_seater}}</p>
+                          <p>{{getOneSeaterVacancy}}</p>
                       </div>
                       <input type="text" id="one_seaters" name="one_seaters" class="one_seaters" v-model="edited_vacancy.one_seater" placeholder="Update here">
                   </div>
@@ -38,7 +38,7 @@
                           <p>No. of Two Seater Tables available</p>
                       </div>
                       <div class="availableseats">
-                          <p>{{this.vacancy.two_seater}}</p>
+                          <p>{{getTwoSeaterVacancy}}</p>
                       </div>
                       <input type="text" id="two_seaters" name="two_seaters" class="two_seaters" v-model="edited_vacancy.two_seater" placeholder="Update here">
                   </div>
@@ -47,7 +47,7 @@
                           <p>No. of Three Seater Tables available</p>
                       </div>
                       <div class="availableseats">
-                          <p>{{this.vacancy.three_seater}}</p>
+                          <p>{{getThreeSeaterVacancy}}</p>
                       </div>
                       <input type="text" id="three_seaters" name="three_seaters" class="three_seaters" v-model="edited_vacancy.three_seater" placeholder="Update here">
                   </div>
@@ -56,7 +56,7 @@
                           <p>No. of Four Seater Tables available</p>
                       </div>
                       <div class="availableseats">
-                          <p>{{this.vacancy.four_seater}}</p>
+                          <p>{{getFourSeaterVacancy}}</p>
                       </div>
                       <input type="text" id="four_seaters" name="four_seaters" class="four_seaters" v-model="edited_vacancy.four_seater" placeholder="Update here">
                   </div>
@@ -65,7 +65,7 @@
                           <p>No. of Five Seater Tables available</p>
                       </div>
                       <div class="availableseats">
-                          <p>{{this.vacancy.five_seater}}</p>
+                          <p>{{getFiveSeaterVacancy}}</p>
                       </div>
                       <input type="text" id="five_seaters" name="five_seaters" class="five_seaters" v-model="edited_vacancy.five_seater" placeholder="Update here">
                   </div>
@@ -75,6 +75,7 @@
             </div>
             
             <br>
+            <h2>Upcoming Reservations</h2>
             <div class="reservationlist">
                 <table>
                     <thead>
@@ -84,7 +85,7 @@
                     <th>Date</th>
                     <th>Pax</th>
                     <th>Cancel Reservation</th>
-                    <th>Leave a Review</th>
+                    <th>Blacklist User</th>
                     </tr>
                     </thead>
                 <tbody>
@@ -99,7 +100,7 @@
                 </tbody>
                 </table>
             </div>
-            
+            <!-- Add in Past Reservations -->
         </div>
       
     </div>
@@ -118,7 +119,7 @@ export default {
       password: null,
       restaurant_reservations: [],
       merchant_id: null,
-      vacancy: {
+      filledseats: {
         five_seater: 0,
         four_seater: 0,
         three_seater: 0,
@@ -145,7 +146,7 @@ export default {
     }
   },
   methods: {
-    getResVacancy: function() {
+    getResCapacity: function() {
         console.log("Pulling restaurant vacancy data")
               database.collection('merchants').where("merchant_id", "==", this.merchant_id).get().then((querySnapShot) => {
               querySnapShot.forEach(doc=> {
@@ -153,9 +154,8 @@ export default {
                   if (doc.data().status == "new") {
                     this.merchant_id = doc.data().merchant_id;
                   } else {
-                    this.vacancy = doc.data().vacancy;
-                    this.edited_vacancy = doc.data().vacancy;
                     this.capacity = doc.data().capacity;
+                    this.edited_vacancy = doc.data().capacity;
                   }
                 }
               )
@@ -164,13 +164,13 @@ export default {
             })
         },
     // Validate vacancy updates
-    validateUpdates(update_val, max_val, orig_val) {
+    validateUpdates(update_val, max_val) {
       if (parseInt(update_val) > max_val) {
         alert("Number of vacant seats cannot exceed: " + this.capacity.five_seater);
-        return orig_val
+        return 0
       } else if (parseInt(update_val) < 0) {
         alert("There can't be less than 0 vacant seats!");
-        return orig_val
+        return 0
       }
       else {
         return parseInt(update_val)
@@ -178,33 +178,33 @@ export default {
     },
     // Update vacancies
     updateResVacancy: function() { 
-      this.edited_vacancy.five_seater = this.validateUpdates(this.edited_vacancy.five_seater, this.capacity.five_seater, this.vacancy.five_seater);
-      this.edited_vacancy.four_seater = this.validateUpdates(this.edited_vacancy.four_seater, this.capacity.five_seater, this.vacancy.four_seater);
-      this.edited_vacancy.three_seater = this.validateUpdates(this.edited_vacancy.three_seater, this.capacity.three_seater, this.vacancy.three_seater);
-      this.edited_vacancy.two_seater = this.validateUpdates(this.edited_vacancy.two_seater, this.capacity.two_seater, this.vacancy.two_seater);
-      this.edited_vacancy.one_seater = this.validateUpdates(this.edited_vacancy.one_seater, this.capacity.one_seater, this.vacancy.one_seater);
+      this.edited_vacancy.five_seater = this.validateUpdates(this.edited_vacancy.five_seater, this.capacity.five_seater);
+      this.edited_vacancy.four_seater = this.validateUpdates(this.edited_vacancy.four_seater, this.capacity.five_seater);
+      this.edited_vacancy.three_seater = this.validateUpdates(this.edited_vacancy.three_seater, this.capacity.three_seater);
+      this.edited_vacancy.two_seater = this.validateUpdates(this.edited_vacancy.two_seater, this.capacity.two_seater);
+      this.edited_vacancy.one_seater = this.validateUpdates(this.edited_vacancy.one_seater, this.capacity.one_seater);
       this.edited_vacancy.total_seats = this.edited_vacancy.five_seater + this.edited_vacancy.four_seater + this.edited_vacancy.three_seater + this.edited_vacancy.two_seater + this.edited_vacancy.one_seater;
+      if (![this.edited_vacancy.five_seater, this.edited_vacancy.four_seater, this.edited_vacancy.three_seater, this.edited_vacancy.two_seater, this.edited_vacancy.one_seater].some((num) => num === 0)) {
       database.collection('merchants').doc(this.doc_id).update({"vacancy": this.edited_vacancy}).then(function() {
-        console.log("Updated!")
         alert("Your merchant profile has been updated successfully!");
         location.reload();
         })
         .catch(function(error) {
           console.log("Error updating vacancy data: ", error);
           });
-          },
-    // Get Reservations
+        }
+    },
     getRestRes: function() {
               database.collection('reservations').get().then((querySnapShot) => {
               console.log("Getting all reservations for merchant")
               querySnapShot.forEach(doc=> {
-                if (doc.data().merchant_id == this.merchant_id) {
+                if (doc.data().merchant_id == this.merchant_id && doc.data().date_reserved >= new Date().getTime / 1000) {
                   let reservation = {};
                   reservation.reservation_id = doc.id;
                   reservation.user_name = doc.data().user_name;
                   reservation.user_id = doc.data().user_id;
-                  let reservation_date = doc.data().date_reserved.toDate().toDateString();
-                  let reservation_time = new Date(doc.data().date_reserved * 1000).toLocaleTimeString('en-US', {hour: 'numeric', minute: 'numeric', hour12: true}); 
+                  let reservation_date = new Date(doc.data().date_reserved * 1000).toDateString()
+                  let reservation_time = new Date(doc.data().date_reserved * 1000).toLocaleTimeString('en-SG', {timeZone: 'Asia/Singapore', hour: 'numeric', minute: 'numeric', hour12: true}); 
                   reservation.datetime = reservation_date + " " + reservation_time;
                   reservation.pax = doc.data().pax;
                   this.restaurant_reservations.push(reservation);
@@ -240,12 +240,56 @@ export default {
         })
       })
     },
+    getResVacancy: function() {
+      database.collection("reservations")
+        .where("merchant_id", "==", this.merchant_id)
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach(doc => { //vacancy = capacity - capacity of (reservations with datetimes > today - 20min AND today < reservation datetime + 30min AND status != "completed" and status != "no-show" and status != "cancelled")
+            var chosen_date = doc.data().date_reserved;
+            var today = Number((new Date().getTime() / 1000).toFixed(0));
+            var date_condition = chosen_date >= this.addMinutes(today, -20) && today < this.addMinutes(chosen_date, 30);
+            if (date_condition) {
+              this.filledseats.one_seater += doc.data().seat_type == "one_seater";
+              this.filledseats.two_seater += doc.data().seat_type == "two_seater";
+              this.filledseats.three_seater += doc.data().seat_type == "three_seater";
+              this.filledseats.four_seater += doc.data().seat_type == "four_seater";
+              this.filledseats.five_seater += doc.data().seat_type == "five_seater";
+            }
+          })
+        })
+    },
+    //Add a given number of days to a given datetime
+    addDays: function(date, days) {
+      return date + days * 24 * 3600;
+    },
+    //Add a given number of minutes to a given datetime
+    addMinutes: function(date, minutes) {
+      return date + minutes * 60;
+    },
     logOut: function() {
       firebase.auth().signOut().then(function() {
         alert("You have successfully logged out!")
         }).catch(function(error) {
           console.log("Error:", error);
         });
+    }
+  },
+  computed: {
+     getOneSeaterVacancy: function() {
+      return Number(this.capacity.one_seater - this.filledseats.one_seater);
+    },
+    getTwoSeaterVacancy: function() {
+      return Number(this.capacity.two_seater - this.filledseats.two_seater);
+    },
+    getThreeSeaterVacancy: function() {
+      return Number(this.capacity.three_seater - this.filledseats.three_seater);
+    },
+    getFourSeaterVacancy: function() {
+      return Number(this.capacity.four_seater - this.filledseats.four_seater);
+    },
+    getFiveSeaterVacancy: function() {
+      return Number(this.capacity.five_seater - this.filledseats.five_seater);
     }
   },
   // Lifecycle Hooks 
@@ -256,6 +300,7 @@ export default {
         this.merchant_id = user.uid;
         console.log("Getting signed in user")
         this.getRestRes();
+        this.getResCapacity();
         this.getResVacancy();
       } else {
        console.log("Can't get signed in user")

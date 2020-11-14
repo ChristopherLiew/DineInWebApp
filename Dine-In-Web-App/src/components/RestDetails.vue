@@ -30,9 +30,9 @@
                 <input type="text" id="address" name="address" v-model="merchant_data.address">
 
                 <label for="opening">Opening Time</label>
-                <input type="text" id="opening" name="opening" v-model="merchant_data.operating_hours.opening">
+                <input type="time" id="opening" name="opening" v-model="merchant_data.operating_hours.opening">
                 <label for="closing">Closing Time</label>
-                <input type="text" id="closing" name="closing" v-model="merchant_data.operating_hours.closing">
+                <input type="time" id="closing" name="closing" v-model="merchant_data.operating_hours.closing">
 
                 <label for="contact">Contact Number</label>
                 <input type="text" id="contact" name="contact" v-model="merchant_data.contact">
@@ -47,6 +47,7 @@
                 <input type="text" id="fourseater" name="fourseater" v-model="merchant_data.capacity.four_seater">
                 <label for="fiveseater">How many 5-seaters</label>
                 <input type="text" id="fiveseater" name="fiveseater" v-model="merchant_data.capacity.five_seater">
+                <br>
                 <br>
                 <label for="imgupload">Images of your Restaurant here:</label>
                 <hr>
@@ -96,7 +97,6 @@
                   </div>
                   <img v-if="merchant_data.imgURL.food != null && loaded == true" :src=merchant_data.imgURL.food alt="Food Pic">
                 <br>
-                <br>
                 <label for="covidmeasures">COVID measures:</label>
                 <hr>
                 <br>
@@ -111,8 +111,6 @@
                 <input type="checkbox" id="temperaturescreening" name="temperaturescreening" value=True v-model="merchant_data.safety_measures.temp_screening">
                 <br>
                 <br>
-                
-
                 <label for="cuisine">Cuisine</label>
                 <select id="cuisine" name="cuisine" v-model="merchant_data.cuisine">
                 <option value="japanese">Japanese</option>
@@ -164,13 +162,12 @@ export default {
             one_seater: 0,
             total_seats: 0
           },
-          vacancy: {
-            five_seater: 0,
-            four_seater: 0,
-            three_seater: 0,
-            two_seater: 0,
-            one_seater: 0,
-            total_seats: 0
+          filledseats: {
+            one_seater: null,
+            two_seater: null,
+            three_seater: null,
+            four_seater: null,
+            five_seater: null      
           },
           safety_measures: {
             contact_trace: false,
@@ -204,6 +201,15 @@ export default {
                     this.merchant_data.merchant_id = doc.data().merchant_id;
                   } else {
                     this.merchant_data = doc.data();
+                    // Handle UNIXTIME for operating hours
+                    let opening = new Date(this.merchant_data.operating_hours.opening * 1000);
+                    var opening_min = opening.getMinutes() < 10 ? '0' + opening.getMinutes() : opening.getMinutes();
+                    let opening_formatted = opening.getHours() + ":" + opening_min;
+                    let closing = new Date(this.merchant_data.operating_hours.closing * 1000);
+                    var closing_min = closing.getMinutes() < 10 ? '0' + closing.getMinutes() : closing.getMinutes();
+                    let closing_formatted = closing.getHours() + ":" + closing_min
+                    this.merchant_data.operating_hours.opening = opening_formatted;
+                    this.merchant_data.operating_hours.closing = closing_formatted;
                   }
                 }
               )
@@ -219,10 +225,14 @@ export default {
         this.merchant_data.capacity.one_seater = parseInt(this.merchant_data.capacity.one_seater);
         this.merchant_data.capacity.total_seats = this.merchant_data.capacity.five_seater + this.merchant_data.capacity.four_seater + this.merchant_data.capacity.three_seater + this.merchant_data.capacity.two_seater + this.merchant_data.capacity.one_seater;
         this.merchant_data.vacancy = this.merchant_data.capacity;
+        // Set 1970/01/01 as 
+        this.merchant_data.operating_hours.opening = Math.round(new Date("1970/01/01 " + this.merchant_data.operating_hours.opening + ":00").getTime()/1000);
+        this.merchant_data.operating_hours.closing = Math.round(new Date("1970/01/01 " + this.merchant_data.operating_hours.closing + ":00").getTime()/1000);
         this.merchant_data.status = "registered";
         database.collection('merchants').doc(this.doc_id).update(this.merchant_data).then(function() {
           console.log("Updated!")
           alert("Your merchant profile has been updated successfully!");
+          location.reload();
           })
         .catch(function(error) {
           console.log("Error updating profile information: ", error);
@@ -230,7 +240,7 @@ export default {
       },
       // 3) Set Rest Image 
     setRestImage: function(img_type) { // interior, exterior & food
-        let uploadTask = storage.ref('rest_imgs/').child(this.merchant_id+ '/' + `${this.imageData.name}`).put(this.imageData);
+        let uploadTask = storage.ref('rest_imgs/').child(this.merchant_id + '/' + `${this.imageData.name}`).put(this.imageData);
         uploadTask.on('state_changed', 
         snapshot => {
           if (img_type == 'interior') {

@@ -20,7 +20,8 @@
     </div>
 
     <div class="content">
-      <h2>My Reservations</h2>
+      <!-- Can only review past reservations -->
+      <h2>Upcoming Reservations</h2>
       <div class="pastreservations">
           <table class="styled-table">
           <thead>
@@ -49,6 +50,8 @@
         <div class="profilecard">
           <h2 v-if="this.loaded == true">Profile of</h2> 
           <h2>{{profileInfo.name.first_name}} {{profileInfo.name.last_name}}</h2>
+          <img v-if="profileInfo.imgURL != null && loaded == true" :src=profileInfo.imgURL alt="Profile Pic">
+          <br>
           <br>
       <div>
         <div>
@@ -62,8 +65,34 @@
             <button @click="setProfileImage">Upload</button>
           </div>
         </div>
-        <img v-if="profileInfo.imgURL != null && loaded == true" :src=profileInfo.imgURL alt="Profile Pic">
         </div>
+      </div>
+      <!-- Get past reservations -->
+      <br>
+      <h2>Past Reservations</h2>
+      <div class="pastreservations">
+          <table class="styled-table">
+          <thead>
+            <tr>
+            <th></th>
+            <th>Restaurant</th>
+            <th>Date</th>
+            <th>Pax</th>
+            <th>Cancel Reservation</th>
+            <th>Leave a Review</th>
+            </tr>
+          </thead>
+            <tbody>
+              <tr v-for="(reservation ,i) in user_reservations" :key="i">
+                <th scope="row">{{i + 1}}</th>  
+                <td>{{ reservation.merchant_name }}</td> 
+                <td>{{ reservation.datetime }}</td> <!-- Format nicely in DOW/ DATE/ TIME -->
+                <td>{{ reservation.pax }}</td>
+                <td><button @click="cancelReservation(reservation.reservation_id)">Cancel</button></td>
+                <td><button @click="goToReview(reservation.merchant_id)">Review</button></td> <!-- Go to review form -->
+              </tr>
+            </tbody>
+          </table>
       </div>
     </div>
   </body>
@@ -100,23 +129,43 @@ export default {
       uploadPct: 0,
       imageData: null,
       user_id: null,
-      user_reservations: []
+      user_reservations: [],
+      past_reservations: []
     }
   },
   methods: {
     getUserRes: function() {
               database.collection('reservations').get().then((querySnapShot) => {
               querySnapShot.forEach(doc=> {
-                if (doc.data().user_id == this.user_id) {
+                if (doc.data().user_id == this.user_id && doc.data().date_reserved >= new Date().getTime / 1000) {
                   let reservation = {};
                   reservation.reservation_id = doc.id;
                   reservation.merchant_name = doc.data().merchant_name;
                   reservation.merchant_id = doc.data().merchant_id;
-                  let reservation_date = doc.data().date_reserved.toDate().toDateString();
-                  let reservation_time = new Date(doc.data().date_reserved * 1000).toLocaleTimeString('en-US', {hour: 'numeric', minute: 'numeric', hour12: true}); 
+                  let reservation_date = new Date(doc.data().date_reserved * 1000).toDateString()
+                  let reservation_time = new Date(doc.data().date_reserved * 1000).toLocaleTimeString('en-SG', {timeZone: 'Asia/Singapore', hour: 'numeric', minute: 'numeric', hour12: true}); 
                   reservation.datetime = reservation_date + " " + reservation_time;
                   reservation.pax = doc.data().pax;
                   this.user_reservations.push(reservation);
+                }
+              })
+            }).catch(function(error) {
+              console.log("Error getting documents: ", error);
+            })
+          },
+          getPastUserRes: function() {
+              database.collection('reservations').get().then((querySnapShot) => {
+              querySnapShot.forEach(doc=> {
+                if (doc.data().user_id == this.user_id && doc.data().date_reserved < new Date().getTime / 1000) {
+                  let reservation = {};
+                  reservation.reservation_id = doc.id;
+                  reservation.merchant_name = doc.data().merchant_name;
+                  reservation.merchant_id = doc.data().merchant_id;
+                  let reservation_date = new Date(doc.data().date_reserved * 1000).toDateString()
+                  let reservation_time = new Date(doc.data().date_reserved * 1000).toLocaleTimeString('en-SG', {timeZone: 'Asia/Singapore', hour: 'numeric', minute: 'numeric', hour12: true}); 
+                  reservation.datetime = reservation_date + " " + reservation_time;
+                  reservation.pax = doc.data().pax;
+                  this.past_reservations.push(reservation);
                 }
               })
             }).catch(function(error) {
@@ -205,8 +254,8 @@ export default {
        console.log("Can't get signed in user")
       }
     });
-    this.fetchProfile();
     this.getUserRes();
+    this.getPastUserRes();
   }
 }
 </script>

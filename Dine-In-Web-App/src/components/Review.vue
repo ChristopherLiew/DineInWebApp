@@ -62,6 +62,7 @@
 // 1) Get review matching user_id and merchant_id (merchant_id and user_id has to be passed via router to this component)
 // 2) Update doc if review exists else create new review
 import firebase from '../firebase.js'
+import { Timestamp } from '../firebase.js'
 const database = firebase.firestore();
 
 export default {
@@ -71,10 +72,7 @@ export default {
       user_id: '',
       review_id: '',
       review_data: {
-        date_reviewed: {
-          nanoseconds: 0,
-          seconds: Math.floor(Date.now() / 1000)
-        },
+        date_reviewed: '',
         merchant_id: '',
         merchant_name: '', // Should we pull from merchant collection instead seems weird for us to ask the user to input merchant name.
         rating: '',
@@ -112,8 +110,10 @@ export default {
       this.review_data.rating = parseInt(this.review_data.rating);
       if (this.review_id == '') { // Create if not exists
       // Set merchant and user ID
+      console.log(new Date());
       this.review_data.merchant_id = this.merchant_id;
       this.review_data.user_id = this.user_id;
+      this.review_data.date_reviewed = Timestamp.fromDate(new Date());
       // TBD add date reviewed
         database.collection('reviews').doc(this.user_id + Math.floor(Math.random() * 100001)).set(this.review_data)
         .then(function() {
