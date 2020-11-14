@@ -6,8 +6,10 @@
 
     <body>
       <div class="sidebar">
-        <div class="icon">
-          <h2>Dinein</h2>
+        <div class="icon" :style="{
+            'background-image': 'url(https://firebasestorage.googleapis.com/v0/b/dineinwebapp.appspot.com/o/Site%20Images%2Fmain_logo.png?alt=media&token=024c04f1-2b1a-4e35-9651-da1aa5a17fbd)',
+          }">
+          <h2>DineIn</h2>
         </div>
         <router-link to="/">Home</router-link>
         <router-link to="/profile">Profile</router-link>
@@ -18,119 +20,86 @@
         <router-link to="/signup">Sign Up</router-link>
         <a href="#" @click="logOut()">Log Out</a>
       </div>
-      <div class="accountbar">
-        <button class="login" @click="goToLogin">Login</button>
-        <button class="signup" @click="goToSignUp">Sign Up</button>
-      </div>
-      <div class="content">
-
+      <div class="welcomepicture">
         <div
           class="info"
           :style="{
-            'background-image': 'url(https://vuejs.org/images/logo.png)',
+            'background-image': 'url(https://firebasestorage.googleapis.com/v0/b/dineinwebapp.appspot.com/o/Site%20Images%2Fbanner.jpg?alt=media&token=5525b3e1-430e-4e9b-ab46-576052cd40be)',
           }"
         >
-          <h1>What shall we explore today?</h1>
+          <h1 style="color:White">What shall we explore today?</h1>
+        </div>
+      </div>
+
+      <div class="content">
+        <br>
+        <div class ="searcharea">
           <search></search>
         </div>
+        <h1>Japanese Food</h1>
         <div class="row">
-          <h1>Japanese Food</h1>
-          <div class="cards">
-            <div class="card">
-              <img
+          <div class="displaycard">
+            <img
                 class="card-img-top"
-                src="https://placekitten.com/g/200/200"
-                alt="Card image cap"
-                height="100"
-                width="100"
-                style="border-radius: 0.6rem"
+                src="https://placekitten.com/g/100/100"
+                style="border-radius: 0.6rem; height:175px; width: 175px;"
               />
-              <div class="card-block">
-                <h4 class="card-title">Name</h4>
-                <p class="card-text">Some quick example text to build</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
-              </div>
-            </div>
-            <div class="card">
-              <img
+            <h3>Name of Restaurant</h3>
+            <h3>link</h3>
+
+          </div>
+          <div class="displaycard">
+            <img
                 class="card-img-top"
-                src="https://placekitten.com/g/200/200"
-                alt="Card image cap"
-                height="100"
-                width="100"
-                style="border-radius: 0.6rem"
+                src="https://placekitten.com/g/100/100"
+                style="border-radius: 0.6rem; height:175px; width: 175px;"
               />
-              <div class="card-block">
-                <h4 class="card-title">Name</h4>
-                <p class="card-text">Some quick example text to build</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
-              </div>
-            </div>
-            <div class="card">
-              <img
+            <h3>Name of Restaurant</h3>
+            <h3>link</h3>
+
+          </div>
+          <div class="displaycard">
+            <img
                 class="card-img-top"
-                src="https://placekitten.com/g/200/200"
-                alt="Card image cap"
-                height="100"
-                width="100"
-                style="border-radius: 0.6rem"
+                src="https://placekitten.com/g/100/100"
+                style="border-radius: 0.6rem; height:175px; width: 175px;"
               />
-              <div class="card-block">
-                <h4 class="card-title">Name</h4>
-                <p class="card-text">Some quick example text to build</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
-              </div>
-            </div>
-            <div class="card">
-              <img
+            <h3>Name of Restaurant</h3>
+            <h3>link</h3>
+
+          </div>
+          <div class="displaycard">
+            <img
                 class="card-img-top"
-                src="https://placekitten.com/g/200/200"
-                alt="Card image cap"
-                height="100"
-                width="100"
-                style="border-radius: 0.6rem"
+                src="https://placekitten.com/g/100/100"
+                style="border-radius: 0.6rem; height:175px; width: 175px;"
               />
-              <div class="card-block">
-                <h4 class="card-title">Name</h4>
-                <p class="card-text">Some quick example text to build</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
-              </div>
-            </div>
-            <div class="card">
-              <img
+            <h3>Name of Restaurant</h3>
+            <h3>link</h3>
+
+          </div>
+          <div class="displaycard">
+            <img
                 class="card-img-top"
-                src="https://placekitten.com/g/200/200"
-                alt="Card image cap"
-                height="100"
-                width="100"
-                style="border-radius: 0.6rem"
+                src="https://placekitten.com/g/100/100"
+                style="border-radius: 0.6rem; height:175px; width: 175px;"
               />
-              <div class="card-block">
-                <h4 class="card-title">Name</h4>
-                <p class="card-text">Some quick example text to build</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
-              </div>
-            </div>
-            <div class="card">
-              <img
+            <h3>Name of Restaurant</h3>
+            <h3>link</h3>
+
+          </div>
+          <div class="displaycard">
+            <img
                 class="card-img-top"
-                src="https://placekitten.com/g/200/200"
-                alt="Card image cap"
-                height="100"
-                width="100"
-                style="border-radius: 0.6rem"
+                src="https://placekitten.com/g/100/100"
+                style="border-radius: 0.6rem; height:175px; width: 175px;"
               />
-              <div class="card-block">
-                <h4 class="card-title">Name</h4>
-                <p class="card-text">Some quick example text to build</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
-              </div>
-            </div>
+            <h3>Name of Restaurant</h3>
+            <h3>link</h3>
+
           </div>
         </div>
-        <div class="row">
-          <h1>Japanese Food</h1>
-        </div>
+        <h1>Japanese Food</h1>
       </div>
     </body>
   </div>
@@ -249,9 +218,9 @@ body {
 }
 
 .info {
-  background-image: restopic1;
   background: rgba(0, 0, 0, 0.5);
-  color: #f1f1f1;
+  color: black;
+  
   width: 100%;
   height: 10%;
   padding: 80px;
@@ -324,9 +293,6 @@ div.content {
   color: white;
 }
 
-.* {
-  box-sizing: border-box;
-}
 
 /* Float four columns side by side */
 
@@ -347,48 +313,24 @@ div.content {
     margin-bottom: 10px;
   }
 }
-.accountbar {
+..welcomepicture {
   height: auto;
 }
 
-.login {
-  float: right;
-  background-color: blue; /* Green */
-  border: none;
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  margin: 4px 2px;
-  cursor: pointer;
-}
-
-.signup {
-  float: right;
-  background-color: blue; /* Green */
-  border: none;
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  margin: 4px 2px;
-  cursor: pointer;
-}
 /* Style the counter cards */
-.card {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+.displaycard {
   padding: 5px;
   text-align: center;
-  background-color: white;
-  width: 20rem;
   display: inline-block;
+  width: 250px;
+  border-radius: 10px 10px 10px 10px;
+  background-color: whitesmoke;
+  margin: 1rem;
 }
 
-.cards {
-  padding: 16px;
-  overflow: scroll;
+.row {
+  overflow-x: scroll;
+  overflow-y: hidden;
   white-space: nowrap;
 }
 
