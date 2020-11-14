@@ -77,19 +77,19 @@
 
               <!-- Detailed Seats Card -->
               <div class="card">
-                <p>One-seaters: {{ vacancy.one_seater }}/{{ capacity.one_seater }}</p>
+                <p>One-seaters: {{ getOneSeaterVacancy }}/{{ capacity.one_seater }}</p>
               </div>
               <div class="card">
-                <p>Two-seaters: {{ vacancy.two_seater }}/{{ capacity.two_seater }}</p>
+                <p>Two-seaters: {{ getTwoSeaterVacancy }}/{{ capacity.two_seater }}</p>
               </div>
               <div class="card">
-                <p>Three-seaters: {{ vacancy.three_seater }}/{{ capacity.three_seater }}</p>
+                <p>Three-seaters: {{ getThreeSeaterVacancy }}/{{ capacity.three_seater }}</p>
               </div>
               <div class="card">
-                <p>Four-seaters: {{ vacancy.four_seater }}/{{ capacity.four_seater }}</p>
+                <p>Four-seaters: {{ getFourSeaterVacancy }}/{{ capacity.four_seater }}</p>
               </div>
               <div class="card">
-                <p>Five-seaters: {{ vacancy.five_seater }}/{{ capacity.five_seater }}</p>
+                <p>Five-seaters: {{ getFiveSeaterVacancy }}/{{ capacity.five_seater }}</p>
               </div>
             </div>           
           </div>
@@ -159,7 +159,7 @@ export default {
         opening_hours: "",
         closing_houurs: ""
       },
-      vacancy: {
+      filledseats: {
         one_seater: null,
         two_seater: null,
         three_seater: null,
@@ -217,12 +217,6 @@ export default {
           this.capacity.three_seater = doc.data().capacity.three_seater;
           this.capacity.four_seater = doc.data().capacity.four_seater;
           this.capacity.five_seater = doc.data().capacity.five_seater;
-          //Vacancies
-          this.vacancy.one_seater = doc.data().vacancy.one_seater; // vacancy = capacity - capacity of (reservations with datetimes > current datetime AND < reservation datetime + 30min AND status != "completed" and status != "no-show" and status != "cancelled")
-          this.vacancy.two_seater = doc.data().vacancy.two_seater;
-          this.vacancy.three_seater = doc.data().vacancy.three_seater;
-          this.vacancy.four_seater = doc.data().vacancy.four_seater;
-          this.vacancy.five_seater = doc.data().vacancy.five_seater;
         })
       })
 
@@ -251,20 +245,32 @@ export default {
           this.summed_tempscreen += doc.data().safety.temp_screen;
         })
       })
-    },
 
-    //Check vacancy per seat type
-    // checkVacancies: function() {
-    //   var one_taken;
-    //   db.collection("reservations")
-    //   .where("merchant_id", "==", this.merchant_id)
-    //   .get()
-    //   .then((querySnapshot) => {
-    //     querySnapshot.forEach(doc => {
-          
-    //     })
-    //   })
-    // }, 
+      //Update vacancy per seat type
+      db.collection("reservations")
+      .where("merchant_id", "==", this.merchant_id)
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach(doc => { //vacancy = capacity - capacity of (reservations with datetimes > today - 20min AND today < reservation datetime + 30min AND status != "completed" and status != "no-show" and status != "cancelled")
+          var chosen_date = doc.data().date_reserved.toDate()
+          var today = new Date();
+          var max_time = this.addMinutes(chosen_date, 30);
+          var status = doc.data().status;
+          var date_condition = chosen_date >= this.addMinutes(today, -15) && today < max_time;
+          var status_condition = status == "confirmed"; // i.e. not completed, no-show or cancel
+          //console.log("reservation user ", doc.data().user_id, "\ntoday: ", today, " chosen_date: ", chosen_date, " max_time: ", max_time, "\nchosen_date >= today: ", chosen_date >= today, " chosen_date < max_time: ", chosen_date < max_time, " + status condition: ", status_condition);
+
+          if (date_condition && status_condition) {
+            this.filledseats.one_seater += doc.data().seat_type == "one_seater";
+            this.filledseats.two_seater += doc.data().seat_type == "two_seater";
+            this.filledseats.three_seater += doc.data().seat_type == "three_seater";
+            this.filledseats.four_seater += doc.data().seat_type == "four_seater";
+            this.filledseats.five_seater += doc.data().seat_type == "five_seater";
+          }
+          console.log("Filled Seats => ", this.filledseats)
+        })
+      })
+    },
 
     //Validate reservation form and save data to firestore if valid
     checkReservationForm: function() {
@@ -274,6 +280,10 @@ export default {
       if (!this.reservation_datetime) {
         alert("Please tell us when you're coming")
       } else {
+        //Ensure valid seat choice
+        
+
+        //Ensure valid datetime
         var chosen_date = new Date(this.reservation_datetime);
         var today = new Date();
         var max_date = this.addDays(today, 14);
@@ -301,6 +311,7 @@ export default {
             date_reserved: chosen_date,
             pax: Number(this.seat_type_chosen.split(",")[1]),
             seat_type: this.seat_type_chosen.split(",")[0],
+            status: "confirmed",
             merchant_id: this.merchant_id,
             user_id: this.user_id,
             merchant_name: this.merchant_info.merchant_name,
@@ -311,10 +322,17 @@ export default {
       }
     },
 
-    //Add a given number of days to a given date
+    //Add a given number of days to a given datetime
     addDays: function(date, days) {
       var result = new Date(date);
       result.setDate(result.getDate() + days);
+      return result;
+    },
+
+    //Add a given number of minutes to a given datetime
+    addMinutes: function(date, minutes) {
+      var result = new Date(date);
+      result.setTime(result.getTime() + minutes * 60000);
       return result;
     },
 
@@ -342,9 +360,24 @@ export default {
       return Number(this.capacity.one_seater + this.capacity.two_seater * 2 + this.capacity.three_seater * 3 + this.capacity.four_seater * 4 + this.capacity.five_seater * 5);
     },
 
-    //Calculate sum of seat vacancies
+    //Calculate seat vacancies per seat type and in total
+    getOneSeaterVacancy: function() {
+      return Number(this.capacity.one_seater - this.filledseats.one_seater);
+    },
+    getTwoSeaterVacancy: function() {
+      return Number(this.capacity.two_seater - this.filledseats.two_seater);
+    },
+    getThreeSeaterVacancy: function() {
+      return Number(this.capacity.three_seater - this.filledseats.three_seater);
+    },
+    getFourSeaterVacancy: function() {
+      return Number(this.capacity.four_seater - this.filledseats.four_seater);
+    },
+    getFiveSeaterVacancy: function() {
+      return Number(this.capacity.five_seater - this.filledseats.five_seater);
+    },
     getTotalSeatVacancy: function() {
-      return Number(this.vacancy.one_seater + this.vacancy.two_seater * 2 + this.vacancy.three_seater * 3 + this.vacancy.four_seater * 4 + this.vacancy.five_seater * 5);
+      return Number(this.getOneSeaterVacancy + this.getTwoSeaterVacancy * 2 + this.getThreeSeaterVacancy * 3 + this.getFourSeaterVacancy * 4 + this.getFiveSeaterVacancy * 5);
     },
 
     //Calculate adherence to each safety measure
