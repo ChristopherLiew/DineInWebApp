@@ -199,113 +199,78 @@ export default {
 
     //Get merchant information from firestore, then update all merchant-related info
     fetchMerchantInfo: function() {
-      return new Promise((resolve, reject) => {
-        if (this.merchant_id) {
-          db.collection("merchants")
-          .where("merchant_id", "==", this.merchant_id)
-          .get()
-          .then((querySnapshot) => {
-            querySnapshot.forEach(doc => {
-              //console.log("Merchant =>", doc.data());
-              //Restaurant Info Page
-              this.merchant_info.merchant_name = doc.data().merchant_name;
-              this.merchant_info.address = doc.data().address;
-              this.merchant_info.contact = doc.data().contact;
-              this.merchant_info.opening_hours = doc.data().operating_hours.opening;
-              this.merchant_info.closing_hours = doc.data().operating_hours.closing;
-              //Capacities
-              this.capacity.one_seater = doc.data().capacity.one_seater;
-              this.capacity.two_seater = doc.data().capacity.two_seater;
-              this.capacity.three_seater = doc.data().capacity.three_seater;
-              this.capacity.four_seater = doc.data().capacity.four_seater;
-              this.capacity.five_seater = doc.data().capacity.five_seater;
-            })
+      if (this.merchant_id) {
+        db.collection("merchants")
+        .where("merchant_id", "==", this.merchant_id)
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach(doc => {
+            //Restaurant Info Page
+            this.merchant_info.merchant_name = doc.data().merchant_name;
+            this.merchant_info.address = doc.data().address;
+            this.merchant_info.contact = doc.data().contact;
+            this.merchant_info.opening_hours = doc.data().operating_hours.opening;
+            this.merchant_info.closing_hours = doc.data().operating_hours.closing;
+            //Capacities
+            this.capacity.one_seater = doc.data().capacity.one_seater;
+            this.capacity.two_seater = doc.data().capacity.two_seater;
+            this.capacity.three_seater = doc.data().capacity.three_seater;
+            this.capacity.four_seater = doc.data().capacity.four_seater;
+            this.capacity.five_seater = doc.data().capacity.five_seater;
           })
+        })
 
-          //Reviews and Ratings and Safety Scores
-          db.collection("reviews")
-          .where("merchant_id", "==", this.merchant_id)
-          .get()
-          .then((querySnapshot) => {
-            this.num_reviewers = querySnapshot.size;
-            querySnapshot.forEach(doc => {
-              console.log("Review =>", doc.data());
-              let review = {};
-              //var user_name = this.getUsernameFromId(user_id); // why is this not working? <--------------------------
-              //console.log("User name: " + this.getUsernameFromId(user_id));
-              review["user_name"] = '';
-              review["user_id"] = doc.data().user_id;
-              review["rating"] = doc.data().rating;
-              //console.log("rating: ", review["rating"]);
-              review["review_text"] = doc.data().review;
-              review["date"] = doc.data().date_reviewed.toDate().toDateString();
+        //Reviews and Ratings and Safety Scores
+        db.collection("reviews")
+        .where("merchant_id", "==", this.merchant_id)
+        .get()
+        .then((querySnapshot) => {
+          this.num_reviewers = querySnapshot.size;
+          
+          querySnapshot.forEach(doc => {
+            console.log("Review =>", doc.data());
+            let review = {};
+            review["user_name"] = doc.data().user_name;
+            review["user_id"] = doc.data().user_id;
+            review["rating"] = doc.data().rating;
+            review["review_text"] = doc.data().review;
+            review["date"] = doc.data().date_reviewed.toDate().toDateString();
 
-              this.reviewslist.push(review);
-              this.summed_rating += review["rating"];
+            this.reviewslist.push(review);
+            this.summed_rating += review["rating"];
 
-              this.summed_contacttrace += doc.data().safety.contact_trace;
-              this.summed_masks += doc.data().safety.masks;
-              this.summed_safedistance += doc.data().safety.safe_distance;
-              this.summed_tempscreen += doc.data().safety.temp_screen;
-            })
+            this.summed_contacttrace += doc.data().safety.contact_trace;
+            this.summed_masks += doc.data().safety.masks;
+            this.summed_safedistance += doc.data().safety.safe_distance;
+            this.summed_tempscreen += doc.data().safety.temp_screen;
           })
+        })
 
-          //Update vacancy per seat type
-          db.collection("reservations")
-          .where("merchant_id", "==", this.merchant_id)
-          .get()
-          .then((querySnapshot) => {
-            querySnapshot.forEach(doc => { //vacancy = capacity - capacity of (reservations with datetimes > today - 20min AND today < reservation datetime + 30min AND status != "completed" and status != "no-show" and status != "cancelled")
-              var chosen_date = doc.data().date_reserved.toDate()
-              var today = new Date();
-              var max_time = this.addMinutes(chosen_date, 30);
-              var status = doc.data().status;
-              var date_condition = chosen_date >= this.addMinutes(today, -15) && today < max_time;
-              var status_condition = status == "confirmed"; // i.e. not completed, no-show or cancel
-              //console.log("reservation user ", doc.data().user_id, "\ntoday: ", today, " chosen_date: ", chosen_date, " max_time: ", max_time, "\nchosen_date >= today: ", chosen_date >= today, " chosen_date < max_time: ", chosen_date < max_time, " + status condition: ", status_condition);
+        //Update vacancy per seat type
+        db.collection("reservations")
+        .where("merchant_id", "==", this.merchant_id)
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach(doc => { //vacancy = capacity - capacity of (reservations with datetimes > today - 20min AND today < reservation datetime + 30min AND status != "completed" and status != "no-show" and status != "cancelled")
+            var chosen_date = doc.data().date_reserved.toDate()
+            var today = new Date();
+            var max_time = this.addMinutes(chosen_date, 30);
+            var status = doc.data().status;
+            var date_condition = chosen_date >= this.addMinutes(today, -15) && today < max_time;
+            var status_condition = status == "confirmed"; // i.e. not completed, no-show or cancel
+            //console.log("reservation user ", doc.data().user_id, "\ntoday: ", today, " chosen_date: ", chosen_date, " max_time: ", max_time, "\nchosen_date >= today: ", chosen_date >= today, " chosen_date < max_time: ", chosen_date < max_time, " + status condition: ", status_condition);
 
-              if (date_condition && status_condition) {
-                this.filledseats.one_seater += doc.data().seat_type == "one_seater";
-                this.filledseats.two_seater += doc.data().seat_type == "two_seater";
-                this.filledseats.three_seater += doc.data().seat_type == "three_seater";
-                this.filledseats.four_seater += doc.data().seat_type == "four_seater";
-                this.filledseats.five_seater += doc.data().seat_type == "five_seater";
-              }
-              console.log("Filled Seats => ", this.filledseats)
-            })
+            if (date_condition && status_condition) {
+              this.filledseats.one_seater += doc.data().seat_type == "one_seater";
+              this.filledseats.two_seater += doc.data().seat_type == "two_seater";
+              this.filledseats.three_seater += doc.data().seat_type == "three_seater";
+              this.filledseats.four_seater += doc.data().seat_type == "four_seater";
+              this.filledseats.five_seater += doc.data().seat_type == "five_seater";
+            }
+            console.log("Filled Seats => ", this.filledseats)
           })
-          resolve("fetchMerchantInfo is done running!");
-        } else {
-          reject("Dead XD");
-        }
-      });
-    },
-
-    //Create user_name array
-    getReviewersUserNames: function() {
-      return new Promise(function(resolve, reject) {
-        if (this.reviewslist) {
-          console.log("Im getting user names")
-          var reviewer_usernames = {}
-          for (var review in this.reviewslist) {
-            let id = review["user_id"]
-            console.log("review: " + id);
-            db.collection("users")
-            .where("user_id", "==", id)
-            .get()
-            .then((querySnapshot) => {
-              querySnapshot.forEach(doc => {
-                console.log("my username:" + doc.data().user_name);
-                reviewer_usernames.push(doc.data().user_name);
-              })
-            })
-          }
-          this.reviewersUsername = reviewer_usernames;
-          resolve("getReviewersUserNames is done running!");
-        } else {
-          reject("XD");
-        }
-      })
+        })
+      }
     },
 
     //Validate reservation form and save data to firestore if valid
@@ -396,15 +361,6 @@ export default {
       result.setTime(result.getTime() + minutes * 60000);
       return result;
     },
-
-    //Chain promises
-    chainPromises: function() {
-      this.fetchMerchantInfo()
-      .then(this.getReviewersUserNames())
-      .catch((error) => {
-        console.log(error)
-      })
-    }
   },
 
   computed: {
@@ -440,36 +396,34 @@ export default {
 
     //Calculate adherence to each safety measure
     getContactTrace: function() {
-      return Number(this.summed_contacttrace * 100 / this.num_reviewers);
+      return Number((this.summed_contacttrace * 100 / this.num_reviewers).toFixed(1));
     },
     getMasks: function() {
-      return Number(this.summed_masks * 100 / this.num_reviewers);
+      return Number((this.summed_masks * 100 / this.num_reviewers).toFixed(1));
     },
     getSafeDistance: function() {
-      return Number(this.summed_safedistance * 100 / this.num_reviewers);
+      return Number((this.summed_safedistance * 100 / this.num_reviewers).toFixed(1));
     },
     getTempScreen: function() {
-      return Number(this.summed_tempscreen * 100 / this.num_reviewers);
+      return Number((this.summed_tempscreen * 100 / this.num_reviewers).toFixed(1));
     },
 
     //Calculate overall adherence to safety in percentage
     getSafetyScore: function() {
-      return Number((this.getContactTrace + this.getMasks + this.getSafeDistance + this.getTempScreen) / 4);
+      return Number(((this.getContactTrace + this.getMasks + this.getSafeDistance + this.getTempScreen) / 4).toFixed(1));
     }
   },
 
   created() {
-    //Ensure it's the user, else ask them to log in //how come i'm signed in after clicking away and going back again lmao
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         console.log(user.uid);
         this.user_id = user.uid;
-        this.chainPromises();
+        this.fetchMerchantInfo();
       } else {
         alert("Please sign in!");
       }
     })
-      //this.getReviewersUserNames();
   }
 
   
