@@ -35,56 +35,61 @@
               <div class="stati turquoise">
                 <div style="display: inline-block">
                   <b>{{ getOverallRating }}/5</b>
-                  <span>Avg Rating</span>
+                  <span>Overall Rating</span>
                 </div>
               </div>
+              <div class="stati turquoise">
+                <div style="display: inline-block">
+                  <b>{{ getSafetyScore }}%</b>
+                  <span>Safety Adherence</span>
+                </div>
+              </div>
+
+              <!-- Safety Measures Card -->
+              <div class="card">
+                <p>Contact Tracing: {{ getContactTrace }}%</p>
+              </div>
+              <div class="card">
+                <p>Compulsory Masks: {{ getMasks }}%</p>
+              </div>
+              <div class="card">
+                <p>Safe Distancing: {{ getSafeDistance }}%</p>
+              </div>
+              <div class="card">
+                <p>Temperature Screening: {{ getTempScreen }}%</p>
+              </div>
+            </div>
+        
+            <div class="column right1">
+
               <div class="stati turquoise">
                 <div style="display: inline-block">
                   <b>{{ num_reviewers }}</b>
                   <span>No. of Reviewers</span>
                 </div>
               </div>
-
-              <!-- Safety Measures Cards -->
-              <div class="card" v-if="this.safety.masks == true">
-                <p>Enforces masks</p>
-              </div>
-              <div class="card" v-if="this.safety.contact_trace == true">
-                <p>Contact tracing</p>
-              </div>
-              <div class="card" v-if="this.safety.temp_screen == true">
-                <p>Temperature screening</p>
-              </div>
-              <div class="card" v-if="this.safety.safe_distance == true">
-                <p>Safe distancing</p>
-              </div>
-
-            </div>
-            
-            <div class="column right1">
-
               <div class="stati turquoise">
                 <div style="display: inline-block">
-                  <b>/{{ getTotalSeatCapacity }}</b>
+                  <b>{{ getTotalSeatVacancy }}/{{ getTotalSeatCapacity }}</b>
                   <span>Seats Available Now</span>
                 </div>
               </div>
 
               <!-- Detailed Seats Card -->
               <div class="card">
-                <p>One-seaters: /{{ capacity.one_seater }}</p>
+                <p>One-seaters: {{ vacancy.one_seater }}/{{ capacity.one_seater }}</p>
               </div>
               <div class="card">
-                <p>Two-seaters: /{{ capacity.two_seater }}</p>
+                <p>Two-seaters: {{ vacancy.two_seater }}/{{ capacity.two_seater }}</p>
               </div>
               <div class="card">
-                <p>Three-seaters: /{{ capacity.three_seater }}</p>
+                <p>Three-seaters: {{ vacancy.three_seater }}/{{ capacity.three_seater }}</p>
               </div>
               <div class="card">
-                <p>Four-seaters: /{{ capacity.four_seater }}</p>
+                <p>Four-seaters: {{ vacancy.four_seater }}/{{ capacity.four_seater }}</p>
               </div>
               <div class="card">
-                <p>Five-seaters: /{{ capacity.five_seater }}</p>
+                <p>Five-seaters: {{ vacancy.five_seater }}/{{ capacity.five_seater }}</p>
               </div>
             </div>           
           </div>
@@ -116,11 +121,11 @@
 
               <label for="seats">Desired seat types</label>
               <select id="seats" name="seats" v-model="seat_type_chosen">
-                <option value="1">One-seater</option>
-                <option value="2">Two-seater</option>
-                <option value="3">Three-seater</option>
-                <option value="4">Four-seater</option>
-                <option value="5">Five-seater</option>
+                <option value="one_seater,1">One-seater</option>
+                <option value="two_seater,2">Two-seater</option>
+                <option value="three_seater,3">Three-seater</option>
+                <option value="four_seater,4">Four-seater</option>
+                <option value="five_seater,5">Five-seater</option>
               </select>
               <br/>
               <br/>
@@ -146,13 +151,20 @@ export default {
       user_id: null,
       user_name: null,
       //Merchant information to be displayed
-      merchant_id: "XSUFuBfW2LhMy5RcQIxZ9uiSvS73", //need to figure out how to pull this from the search page, i.e. when user clicks on the merchant from the filter page
+      merchant_id: "4czuiVI8sNQKcPRMVRgk0ahTKzc2", //need to figure out how to pull this from the search page, i.e. when user clicks on the merchant from the filter page
       merchant_info: {
         merchant_name: "",
         address: "",
         contact: null,
         opening_hours: "",
         closing_houurs: ""
+      },
+      vacancy: {
+        one_seater: null,
+        two_seater: null,
+        three_seater: null,
+        four_seater: null,
+        five_seater: null      
       },
       capacity: {
         one_seater: null,
@@ -174,7 +186,12 @@ export default {
       //Reservation form
       reservation_datetime: null,
       seat_type_chosen: null,
-      reserver_name: null
+      reserver_name: null,
+      //Safety cards
+      summed_contacttrace: null,
+      summed_masks: null,
+      summed_safedistance: null,
+      summed_tempscreen: null
     }
   },
 
@@ -187,7 +204,7 @@ export default {
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach(doc => {
-          console.log("Merchant =>", doc.data());
+          //console.log("Merchant =>", doc.data());
           //Restaurant Info Page
           this.merchant_info.merchant_name = doc.data().merchant_name;
           this.merchant_info.address = doc.data().address;
@@ -195,43 +212,59 @@ export default {
           this.merchant_info.opening_hours = doc.data().operating_hours.opening;
           this.merchant_info.closing_hours = doc.data().operating_hours.closing;
           //Capacities
-          this.capacity.total = doc.data().capacity.total_seats;
           this.capacity.one_seater = doc.data().capacity.one_seater;
           this.capacity.two_seater = doc.data().capacity.two_seater;
           this.capacity.three_seater = doc.data().capacity.three_seater;
           this.capacity.four_seater = doc.data().capacity.four_seater;
           this.capacity.five_seater = doc.data().capacity.five_seater;
+          //Vacancies
+          this.vacancy.one_seater = doc.data().vacancy.one_seater; // vacancy = capacity - capacity of (reservations with datetimes > current datetime AND < reservation datetime + 30min AND status != "completed" and status != "no-show" and status != "cancelled")
+          this.vacancy.two_seater = doc.data().vacancy.two_seater;
+          this.vacancy.three_seater = doc.data().vacancy.three_seater;
+          this.vacancy.four_seater = doc.data().vacancy.four_seater;
+          this.vacancy.five_seater = doc.data().vacancy.five_seater;
         })
       })
 
-      //Reviews and Ratings
+      //Reviews and Ratings and Safety Scores
       db.collection("reviews")
       .where("merchant_id", "==", this.merchant_id)
       .get()
       .then((querySnapshot) => {
         this.num_reviewers = querySnapshot.size;
         querySnapshot.forEach(doc => {
-          console.log("Review =>", doc.data());
+          //console.log("Review =>", doc.data());
           let review = {};
-
-          db.collection("users")
-          .where("user_id", "==", doc.data().user_id)
-          .get()
-          .then((querySnapshot) => {
-            querySnapshot.forEach(user => {
-              review["user_name"] = user.data().user_name;
-            })
-          })
-
+          
+          var user_name = this.getReviewersUsername(doc.data().user_id); // why is this not working?
+          review["user_name"] = user_name;
           review["rating"] = doc.data().rating;
           review["review_text"] = doc.data().review;
           review["date"] = doc.data().date_reviewed.toDate().toDateString();
+
           this.reviewslist.push(review);
-          
           this.summed_rating += review["rating"];
+
+          this.summed_contacttrace += doc.data().safety.contact_trace;
+          this.summed_masks += doc.data().safety.masks;
+          this.summed_safedistance += doc.data().safety.safe_distance;
+          this.summed_tempscreen += doc.data().safety.temp_screen;
         })
       })
     },
+
+    //Check vacancy per seat type
+    // checkVacancies: function() {
+    //   var one_taken;
+    //   db.collection("reservations")
+    //   .where("merchant_id", "==", this.merchant_id)
+    //   .get()
+    //   .then((querySnapshot) => {
+    //     querySnapshot.forEach(doc => {
+          
+    //     })
+    //   })
+    // }, 
 
     //Validate reservation form and save data to firestore if valid
     checkReservationForm: function() {
@@ -249,7 +282,7 @@ export default {
           console.log("Max date: ", max_date);
           alert("Please choose a valid reservation date, in between today and two weeks from now");
         } else {
-          console.log("Chosen date and seat: ", chosen_date, " and ", this.seat_type_chosen);
+          console.log("Chosen date and seat: ", chosen_date, " and ", this.seat_type_chosen.split(",")[0]);
           console.log("Max date: ", max_date);
 
           db.collection("users")
@@ -266,7 +299,8 @@ export default {
           db.collection("reservations")
           .add({
             date_reserved: chosen_date,
-            pax: Number(this.seat_type_chosen),
+            pax: Number(this.seat_type_chosen.split(",")[1]),
+            seat_type: this.seat_type_chosen.split(",")[0],
             merchant_id: this.merchant_id,
             user_id: this.user_id,
             merchant_name: this.merchant_info.merchant_name,
@@ -277,10 +311,23 @@ export default {
       }
     },
 
+    //Add a given number of days to a given date
     addDays: function(date, days) {
       var result = new Date(date);
       result.setDate(result.getDate() + days);
       return result;
+    },
+
+    //Pull the reviewer's username given user_id
+    getReviewersUsername: function(user_id) {
+      db.collection("users")
+      .where("user_id", "==", user_id)
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach(doc => {
+          return doc.data().user_name;
+        })
+      })
     }
   },
 
@@ -294,6 +341,30 @@ export default {
     getTotalSeatCapacity: function() {
       return Number(this.capacity.one_seater + this.capacity.two_seater * 2 + this.capacity.three_seater * 3 + this.capacity.four_seater * 4 + this.capacity.five_seater * 5);
     },
+
+    //Calculate sum of seat vacancies
+    getTotalSeatVacancy: function() {
+      return Number(this.vacancy.one_seater + this.vacancy.two_seater * 2 + this.vacancy.three_seater * 3 + this.vacancy.four_seater * 4 + this.vacancy.five_seater * 5);
+    },
+
+    //Calculate adherence to each safety measure
+    getContactTrace: function() {
+      return Number(this.summed_contacttrace * 100 / this.num_reviewers);
+    },
+    getMasks: function() {
+      return Number(this.summed_masks * 100 / this.num_reviewers);
+    },
+    getSafeDistance: function() {
+      return Number(this.summed_safedistance * 100 / this.num_reviewers);
+    },
+    getTempScreen: function() {
+      return Number(this.summed_tempscreen * 100 / this.num_reviewers);
+    },
+
+    //Calculate overall adherence to safety in percentage
+    getSafetyScore: function() {
+      return Number((this.getContactTrace + this.getMasks + this.getSafeDistance + this.getTempScreen) / 4);
+    }
   },
 
   created() {
@@ -313,7 +384,7 @@ export default {
     this.fetchMerchantInfo();
   },
 
-  props: {
+/*  props: {
     vacancy: {
       type: String,
       default: "img/icon/table.png",
@@ -339,7 +410,7 @@ export default {
       default: "img/restimage/restopic1.jpg",
       description: "vacancy",
     }
-  }
+  } */
 }
 </script>
 
