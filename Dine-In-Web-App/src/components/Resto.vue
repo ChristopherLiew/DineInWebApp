@@ -144,6 +144,7 @@ export default {
     return {
       //Authenticated user
       user_id: null,
+      user_name: null,
       //Merchant information to be displayed
       merchant_id: "XSUFuBfW2LhMy5RcQIxZ9uiSvS73", //need to figure out how to pull this from the search page, i.e. when user clicks on the merchant from the filter page
       merchant_info: {
@@ -172,7 +173,8 @@ export default {
       num_reviewers: null,
       //Reservation form
       reservation_datetime: null,
-      seat_type_chosen: null
+      seat_type_chosen: null,
+      reserver_name: null
     }
   },
 
@@ -250,18 +252,17 @@ export default {
           console.log("Chosen date and seat: ", chosen_date, " and ", this.seat_type_chosen);
           console.log("Max date: ", max_date);
 
-          let reserver_name = "";
-
           db.collection("users")
           .where("user_id", "==", this.user_id)
           .get()
           .then((querySnapshot) => {
             querySnapshot.forEach(user => {
-              reserver_name = user.data().user_name;
-              console.log("reserver name: ", reserver_name);
+              this.reserver_name = user.data().user_name;
+              console.log("reserver name 1: ", this.reserver_name);
             })
           });
 
+          console.log("reserver name 2: ", this.reserver_name);
           db.collection("reservations")
           .add({
             date_reserved: chosen_date,
@@ -269,7 +270,7 @@ export default {
             merchant_id: this.merchant_id,
             user_id: this.user_id,
             merchant_name: this.merchant_info.merchant_name,
-            user_name: reserver_name
+            user_name: this.reserver_name
           });
           alert("Reservation successful! Be there or be square :)");
         }
@@ -301,7 +302,7 @@ export default {
       if (user) {
         console.log(user.uid);
         this.user_id = user.uid;
-        console.log("User is signed in: ", this.user_id);
+        console.log("User is signed in: ", this.user_id, this.user_name);
       } else {
         alert("Please sign in!");
       }
