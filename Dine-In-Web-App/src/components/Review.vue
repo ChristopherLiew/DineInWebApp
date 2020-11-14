@@ -85,7 +85,8 @@ export default {
           safe_distance: false,
           temp_screen: false
         },
-        user_id: ''
+        user_id: '',
+        user_name: ''
       },
       data_loaded: false
     }
@@ -128,6 +129,13 @@ export default {
       }
       this.$router.push({name: "profile"});
      },
+     getUserName: function() {
+       database.collection("users").where("user_id", "==", this.user_id).get().then((querySnapshot) => {
+         querySnapshot.forEach(doc => {
+          this.review_data.user_name = doc.data().user_name;
+         })
+       })
+     },
      logOut: function() {
       firebase.auth().signOut().then(function() {
         alert("You have successfully logged out!")
@@ -141,6 +149,7 @@ export default {
       this.merchant_id = this.$route.params.merchant_id;
       this.user_id = this.$route.params.user_id;
       this.getReview();
+      this.getUserName();
     }
   }
 </script>
