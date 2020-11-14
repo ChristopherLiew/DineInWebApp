@@ -98,7 +98,6 @@
             <!-- Table of Reviews -->
             <div class="ex3" id="reviews_table">
               <div class="testimonials" v-for="review in reviewslist" :key="review.number">
-                <div class="iconDetails"><img :src="person2"/></div>
                 <div>
                   <p>{{ review.user_name }} rated {{ review.rating }}/5 stars.</p>
                   <p>{{ review.date }}</p>
@@ -180,7 +179,6 @@ export default {
         safe_distance: false
       },
       reviewslist: [],
-      reviewersUsername: [],
       //Computed values
       summed_rating: null,
       num_reviewers: null,
@@ -228,13 +226,12 @@ export default {
           this.num_reviewers = querySnapshot.size;
           
           querySnapshot.forEach(doc => {
-            console.log("Review =>", doc.data());
             let review = {};
             review["user_name"] = doc.data().user_name;
             review["user_id"] = doc.data().user_id;
             review["rating"] = doc.data().rating;
             review["review_text"] = doc.data().review;
-            review["date"] = doc.data().date_reviewed.toDate().toDateString();
+            review["date"] = new Date(doc.data().date_reviewed * 1000).toDateString();
 
             this.reviewslist.push(review);
             this.summed_rating += review["rating"];
@@ -252,22 +249,17 @@ export default {
         .get()
         .then((querySnapshot) => {
           querySnapshot.forEach(doc => { //vacancy = capacity - capacity of (reservations with datetimes > today - 20min AND today < reservation datetime + 30min AND status != "completed" and status != "no-show" and status != "cancelled")
-            var chosen_date = doc.data().date_reserved.toDate()
-            var today = new Date();
-            var max_time = this.addMinutes(chosen_date, 30);
-            var status = doc.data().status;
-            var date_condition = chosen_date >= this.addMinutes(today, -15) && today < max_time;
-            var status_condition = status == "confirmed"; // i.e. not completed, no-show or cancel
-            //console.log("reservation user ", doc.data().user_id, "\ntoday: ", today, " chosen_date: ", chosen_date, " max_time: ", max_time, "\nchosen_date >= today: ", chosen_date >= today, " chosen_date < max_time: ", chosen_date < max_time, " + status condition: ", status_condition);
+            var chosen_date = doc.data().date_reserved;
+            var today = Number((new Date().getTime() / 1000).toFixed(0));
+            var date_condition = chosen_date >= this.addMinutes(today, -20) && today < this.addMinutes(chosen_date, 30);
 
-            if (date_condition && status_condition) {
+            if (date_condition) {
               this.filledseats.one_seater += doc.data().seat_type == "one_seater";
               this.filledseats.two_seater += doc.data().seat_type == "two_seater";
               this.filledseats.three_seater += doc.data().seat_type == "three_seater";
               this.filledseats.four_seater += doc.data().seat_type == "four_seater";
               this.filledseats.five_seater += doc.data().seat_type == "five_seater";
             }
-            console.log("Filled Seats => ", this.filledseats)
           })
         })
       }
@@ -283,8 +275,8 @@ export default {
       } else {  
 
         // Ensure valid datetime
-        var chosen_date = new Date(this.reservation_datetime);
-        var today = new Date();
+        var chosen_date = new Date(this.reservation_datetime).getTime() / 1000;
+        var today = new Date().getTime() / 1000;
         var max_date = this.addDays(today, 7);
         if (chosen_date < today || chosen_date > max_date) {
           alert("Please choose a valid reservation date, in between today and one week from now");
@@ -293,8 +285,7 @@ export default {
           // Ensure seats are available during selected datetime
           db.collection("reservations") //I want the resevations where reservation datetime >= valid chosen date and reservation datetime < valid chosen date + 2.5h (give 2.5h leeway for eating)
           .where("date_reserved", ">=", chosen_date)
-          .where("date_reserved", "<", this.addMinutes(chosen_date, 150))
-          .where("status" == "confirmed")
+          .where("date_reserved", "<", max_date)
           .get()
           .then((querySnapshot) => {
             let seattype = this.seat_type_chosen.split(",")[0];
@@ -335,7 +326,6 @@ export default {
                 date_reserved: chosen_date,
                 pax: Number(this.seat_type_chosen.split(",")[1]),
                 seat_type: this.seat_type_chosen.split(",")[0],
-                status: "confirmed",
                 merchant_id: this.merchant_id,
                 user_id: this.user_id,
                 merchant_name: this.merchant_info.merchant_name,
@@ -346,21 +336,29 @@ export default {
           })
         }
       }
+      location.reload();
     },
 
     //Add a given number of days to a given datetime
     addDays: function(date, days) {
-      var result = new Date(date);
-      result.setDate(result.getDate() + days);
-      return result;
+      return date + days * 24 * 3600;
     },
 
     //Add a given number of minutes to a given datetime
     addMinutes: function(date, minutes) {
-      var result = new Date(date);
-      result.setTime(result.getTime() + minutes * 60000);
-      return result;
+      return date + minutes * 60;
     },
+
+    getUserName: function() {
+       db.collection("users")
+       .where("user_id", "==", this.user_id)
+       .get()
+       .then((querySnapshot) => {
+         querySnapshot.forEach(doc => {
+          this.user_name = doc.data().user_name;
+         })
+       })
+     }
   },
 
   computed: {
@@ -420,6 +418,7 @@ export default {
         console.log(user.uid);
         this.user_id = user.uid;
         this.fetchMerchantInfo();
+        this.getUserName();        
       } else {
         alert("Please sign in!");
       }
