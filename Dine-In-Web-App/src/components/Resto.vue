@@ -230,7 +230,7 @@ export default {
           //console.log("Review =>", doc.data());
           let review = {};
           
-          var user_name = this.getReviewersUsername(doc.data().user_id); // why is this not working?
+          var user_name = this.getUsernameFromId(doc.data().user_id); // why is this not working?
           review["user_name"] = user_name;
           review["rating"] = doc.data().rating;
           review["review_text"] = doc.data().review;
@@ -275,49 +275,74 @@ export default {
     //Validate reservation form and save data to firestore if valid
     checkReservationForm: function() {
       if (!this.seat_type_chosen) {
-        alert("Please tell us which seats you'd like")
+        alert("Please tell us which seats you'd like!")
       }
       if (!this.reservation_datetime) {
-        alert("Please tell us when you're coming")
-      } else {
-        //Ensure valid seat choice
-        
+        alert("Please tell us when you're coming!")
+      } else {  
 
-        //Ensure valid datetime
+        // Ensure valid datetime
         var chosen_date = new Date(this.reservation_datetime);
         var today = new Date();
-        var max_date = this.addDays(today, 14);
-
+        var max_date = this.addDays(today, 7);
         if (chosen_date < today || chosen_date > max_date) {
-          console.log("Max date: ", max_date);
-          alert("Please choose a valid reservation date, in between today and two weeks from now");
+          alert("Please choose a valid reservation date, in between today and one week from now");
         } else {
-          console.log("Chosen date and seat: ", chosen_date, " and ", this.seat_type_chosen.split(",")[0]);
-          console.log("Max date: ", max_date);
 
-          db.collection("users")
-          .where("user_id", "==", this.user_id)
+          // Ensure seats are available during selected datetime
+          db.collection("reservations") //I want the resevations where reservation datetime >= valid chosen date and reservation datetime < valid chosen date + 2.5h (give 2.5h leeway for eating)
+          .where("date_reserved", ">=", chosen_date)
+          .where("date_reserved", "<", this.addMinutes(chosen_date, 150))
+          .where("status" == "confirmed")
           .get()
           .then((querySnapshot) => {
-            querySnapshot.forEach(user => {
-              this.reserver_name = user.data().user_name;
-              console.log("reserver name 1: ", this.reserver_name);
+            let seattype = this.seat_type_chosen.split(",")[0];
+            let expectedFilledOne = 0;
+            let expectedFilledTwo = 0;
+            let expectedFilledThree = 0;
+            let expectedFilledFour = 0;
+            let expectedFilledFive = 0;
+            querySnapshot.forEach(doc => {
+              //within the timeframe of consideration (all confirmed reservations between chosen date and chosen date + 2.5h), calculate capacity per seat_type
+              if (seattype == "one_seater") {
+                expectedFilledOne += doc.data().seat_type == "one_seater";
+              } else if (seattype == "two_seater") {
+                expectedFilledTwo += doc.data().seat_type == "two_seater";
+              } else if (seattype == "three_seater") {
+                expectedFilledThree += doc.data().seat_type == "three_seater";
+              } else if (seattype == "four_seater") {
+                expectedFilledFour += doc.data().seat_type == "four_seater";
+              } else {
+                expectedFilledFive += doc.data().seat_type == "five_seater";
+              }
             })
-          });
+            if (seattype == "one_seater" && this.filledseats.one_seater + expectedFilledOne >= this.capacity.one_seater) {
+              alert("Sorry, we're expecting one-seaters to be filled during your chosen timing. Try a different date, time, or seating choice.")
+            } else if (seattype == "two_seater" && this.filledseats.two_seater + expectedFilledTwo >= this.capacity.two_seater) {
+              alert("Sorry, we're expecting two-seaters to be filled during your chosen timing. Try a different date, time, or seating choice.")
+            } else if (seattype == "three_seater" && this.filledseats.three_seater + expectedFilledThree >= this.capacity.three_seater) {
+              alert("Sorry, we're expecting three-seaters to be filled during your chosen timing. Try a different date, time, or seating choice.")
+            } else if (seattype == "four_seater" && this.filledseats.four_seater + expectedFilledFour >= this.capacity.four_seater) {
+              alert("Sorry, we're expecting four-seaters to be filled during your chosen timing. Try a different date, time, or seating choice.")
+            } else if (seattype == "five_seater" && this.filledseats.five_seater + expectedFilledFive >= this.capacity.five_seater) {
+              alert("Sorry, we're expecting five-seaters to be filled during your chosen timing. Try a different date, time, or seating choice.")
+            } else {
 
-          console.log("reserver name 2: ", this.reserver_name);
-          db.collection("reservations")
-          .add({
-            date_reserved: chosen_date,
-            pax: Number(this.seat_type_chosen.split(",")[1]),
-            seat_type: this.seat_type_chosen.split(",")[0],
-            status: "confirmed",
-            merchant_id: this.merchant_id,
-            user_id: this.user_id,
-            merchant_name: this.merchant_info.merchant_name,
-            user_name: this.reserver_name
-          });
-          alert("Reservation successful! Be there or be square :)");
+              // Reservation Successful!
+              db.collection("reservations")
+              .add({
+                date_reserved: chosen_date,
+                pax: Number(this.seat_type_chosen.split(",")[1]),
+                seat_type: this.seat_type_chosen.split(",")[0],
+                status: "confirmed",
+                merchant_id: this.merchant_id,
+                user_id: this.user_id,
+                merchant_name: this.merchant_info.merchant_name,
+                user_name: this.getUsernameFromId(this.user_id)
+              });
+              alert("Reservation successful! Be there or be square :)");
+            }
+          })
         }
       }
     },
@@ -337,8 +362,8 @@ export default {
     },
 
     //Pull the reviewer's username given user_id
-    getReviewersUsername: function(user_id) {
-      db.collection("users")
+    getUsernameFromId: function(user_id) {
+      db.collection("user")
       .where("user_id", "==", user_id)
       .get()
       .then((querySnapshot) => {
@@ -360,7 +385,7 @@ export default {
       return Number(this.capacity.one_seater + this.capacity.two_seater * 2 + this.capacity.three_seater * 3 + this.capacity.four_seater * 4 + this.capacity.five_seater * 5);
     },
 
-    //Calculate seat vacancies per seat type and in total
+    //Calculate seat vacancies per seat type and in total, in real time
     getOneSeaterVacancy: function() {
       return Number(this.capacity.one_seater - this.filledseats.one_seater);
     },
