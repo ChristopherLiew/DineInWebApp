@@ -24,7 +24,10 @@
         <a href="#" @click="logOut()">Log Out</a>
         </div>
       </div>
-      <div class="welcomepicture">
+      
+
+      <div v-if="data_loaded" class="content">
+        <div class="welcomepicture">
         <div
           class="info"
           :style="{
@@ -32,13 +35,10 @@
           }"
         >
           <h1 style="color:White">What shall we explore today?</h1>
+          <div class ="searcharea">
+            <search></search>
+          </div>
         </div>
-      </div>
-
-      <div v-if="data_loaded" class="content">
-        <br>
-        <div class ="searcharea">
-          <search></search>
         </div>
         <h1>Japanese Food</h1>
         <div class="row">
@@ -294,8 +294,13 @@ div.content {
     margin-bottom: 10px;
   }
 }
-..welcomepicture {
+.welcomepicture {
   height: auto;
+}
+
+.searcharea {
+  float: left;
+  color: red;
 }
 
 /* Style the counter cards */
