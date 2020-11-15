@@ -52,10 +52,10 @@
           <br/>
           <img v-if="profileInfo.imgURL != null && loaded == true" :src=profileInfo.imgURL alt="Profile Pic">
           <br>
-          <button @click="goToProfileDetails">Edit Profile</button>
+          <button class = "centering" @click="goToProfileDetails">Edit Profile</button>
           <br>
           <input type="file" id="profileupload" @change="inputImage" accept="image/*">
-          <p>Progress: {{uploadPct.toFixed()+"%"}}
+          <p class = "centering">Progress: {{uploadPct.toFixed()+"%"}}
           <progress id="progress" :value="uploadPct" max="100" ></progress>  </p>
         <div>
         
@@ -331,16 +331,11 @@ img {
     margin: 0 auto;
 }
 
-button {
-  
-  float: left;
 
+.centering {
+  float: left;
 }
 
-p {
-  float: left;
-
-}
 
 .profilecard {
   background-color: whitesmoke;
