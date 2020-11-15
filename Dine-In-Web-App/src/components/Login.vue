@@ -7,14 +7,15 @@
   <body>
     <div class="sidebar">
       <div class="icon">
-        <h2>Dinein</h2>
+        <h2><router-link to="/">DineIn</router-link></h2>
       </div>
-      <router-link to="/">Home</router-link>
-      <router-link to="/profile">Profile</router-link>
-      <router-link to="/map">Map</router-link>
-      <router-link to="/search">Search</router-link>
-      <router-link to="/login">Login</router-link>
-      <router-link to="/restaurant">Restaurant</router-link>
+        <router-link to="/">Home</router-link>
+        <router-link to="/profile">Profile</router-link>
+        <router-link to="/restaurant">Restaurant</router-link>
+        <router-link to="/signup">Sign Up</router-link>
+        <hr>
+        <router-link to="/login">Log In</router-link>
+        <a href="#" @click="logOut()">Log Out</a>
     </div>
 
     <div class="content">
@@ -25,19 +26,19 @@
       <input type="text" v-model="password" placeholder="Password">
       <br>
       <button @click="logInUser()">Log In</button>
-      <button @click="signUpUser()">Sign Up</button> <!-- Link to registration page to fill in details -->
+      <button @click="goToSignUp()">Sign Up</button> <!-- Link to registration page to fill in details -->
     </div>
   </body>
 
 </div>
 </template>
 <script>
-// Logging In:
-// 1) Key in email and password and submit
-// 2) At the same time keep the email and password updated by using v-model for the input fields 
-// 3) On hitting the submit button, trigger the logInUser function
+// TBD
+// 1) Add in check for user strikes, if strikes = 3, disable user
+// *https://firebase.google.com/docs/auth/admin/manage-users
 
 import firebase from '../firebase.js'
+const database = firebase.firestore();
 
 export default {
   data() {
@@ -47,18 +48,49 @@ export default {
     }
   },
   methods: {
-    // Test with logged in progile and check profile.vue also
+    // Test with logged in profile and check profile.vue also
     logInUser: function() {
-      firebase.auth().signInWithEmailAndPassword(this.email, this.password).catch(function(error) {
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      if (errorCode === 'auth/wrong-password') {
-            alert('Wrong password.');
-        } else {
-            alert(errorMessage);
-        }
-          console.log(error);
-      });
+      var vm = this;
+      var email = this.email // Trim white spaces
+      firebase.auth().signInWithEmailAndPassword(email.trim(), this.password).then(function() {
+        let uid = firebase.auth().currentUser.uid;
+        // Check user type
+        database.collection('user_type').where("user_id", "==", uid).get().then((querySnapShot) => {
+        querySnapShot.forEach(doc=> {
+          let user_type = doc.data().user_type;
+          if (user_type == "user") {
+            // Check if blacklist
+            database.collection('users').where("user_id", "==", uid).get().then((querySnapShot) => {
+            querySnapShot.forEach(doc=> {
+              let strikes = doc.data().strikes;
+              if (strikes >= 3) {
+                firebase.auth().signOut().then(function() {
+                  alert("Your account has been disabled!")
+                  }).catch(function(error) {
+                    console.log("Error:", error);
+                    });
+              } else {
+                alert("Welcome!")
+                vm.$router.push({name: 'profile'})
+              }
+          })
+          })
+          } else {
+            alert("Welcome!")
+            vm.$router.push({name: 'restbackend'})
+          }
+        })
+        })
+      }).catch(function(error) {
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          if (errorCode === 'auth/wrong-password') {
+                alert('Wrong password.');
+            } else {
+                alert(errorMessage);
+            }
+              console.log(error);
+          });
     },
     signUpUser: function() { 
       firebase.auth().createUserWithEmailAndPassword(this.email, this.password).catch(function(error) {
@@ -71,6 +103,18 @@ export default {
         }
           console.log(error);
       });
+    },
+    goToSignUp: function() {
+      this.$router.push({name: 'signup'});
+    },
+    logOut: function() {
+      let vm = this;
+      firebase.auth().signOut().then(function() {
+        alert("You have successfully logged out!")
+        vm.$router.push({name: 'home'})
+        }).catch(function(error) {
+          console.log("Error:", error);
+        });
     }
   },
   // Lifecycle Hooks 
