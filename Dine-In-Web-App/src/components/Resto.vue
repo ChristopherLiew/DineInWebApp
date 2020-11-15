@@ -30,7 +30,7 @@
         <p>Phone No: {{ merchant_info.contact }}</p>
         <p>Operating Hours: {{ merchant_info.opening_hours }} to {{ merchant_info.closing_hours }}</p>
         <div class ="searcharea">
-          <search></search>
+          
         </div>
       </div>
 
@@ -150,7 +150,7 @@
 
 <script>
 import firebase from '../firebase.js'
-import search from './SearchBar.vue'
+
 const db = firebase.firestore();
 
 export default {
@@ -208,7 +208,7 @@ export default {
     }
   },
   components: {
-    search
+   
     },
     watch: { // React to param id change in router path, wehre path is the same router path as current page
         '$route' () {
@@ -580,6 +580,8 @@ div.content {
   height: 4em;
   padding: 1em;
   margin: 1em 0;
+  width:40%;
+
 
   margin-right: 1.96em;
   -webkit-transition: margin 0.5s ease, box-shadow 0.5s ease; /* Safari */
