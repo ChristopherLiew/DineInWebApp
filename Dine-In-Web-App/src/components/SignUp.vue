@@ -18,30 +18,18 @@
       </div>
       <div class = "content">
         <h2>Create Account</h2>
-        <div class="signupcontainer">
-            <form class="card-panel" v-on:submit.prevent="signUpUser">
-                <label for="email">Email:</label>
-                <div class="field">
-                    <span><input type="email" name="email" v-model="email"></span>
-                </div>
-                <label for="password">Password:</label>
-                <div class="field"> 
-                    <span><input type="password" name="password" v-model="password"></span>
-                </div>
-                <label for="username">Username:</label>
-                <div class="field">
-                    <span><input type="text" name="username" v-model="username"></span>
-                </div>
-                <label for="lname">Account Type</label>
-                <select id="rating" name="rating" v-model.lazy="acc_type">
-                <option value=User>User</option>
-                <option value=Merchant>Merchant</option>
-                </select>
-                <input type="submit" value="Submit"/>
-            </form>
-            </div>
+        <h3>Please enter the following:</h3>
+        <input type="text" name="email" v-model="email" placeholder="Email Address">
+        <br>
+        <input type="text" name="password" v-model="password" placeholder="Password">
+        <br>
+        <input type="text" name="username" v-model="username" placeholder="Username">
+        <select id="rating" name="rating" v-model.lazy="acc_type">
+          <option value=User>User</option>
+          <option value=Merchant>Merchant</option>
+        </select>
+        <button class= "smallinteractbutton" @click="signUpUser">Log In</button>
         </div>
-
     </body>
   </div>
 </template>
