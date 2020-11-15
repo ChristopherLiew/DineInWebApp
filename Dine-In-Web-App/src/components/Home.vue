@@ -35,7 +35,7 @@
           }"
         >
           <h1 style="color:White">What shall we explore today?</h1>
-          <div class ="searcharea">
+          <div class ="searcharea" >
             <search></search>
           </div>
         </div>
@@ -306,8 +306,12 @@ div.content {
 }
 
 .searcharea {
-  float: left;
+  
   color: red;
+  display: grid;
+  place-items: center;
+  
+  
 }
 
 /* Style the counter cards */
