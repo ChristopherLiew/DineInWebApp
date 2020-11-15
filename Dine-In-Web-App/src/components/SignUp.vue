@@ -231,32 +231,5 @@ div.content {
   }
 }
 
-.signupcontainer {
-  border: 2px solid #ccc;
-  background-color: #eee;
-  padding: 5px;
-  border-radius: 10px 10px 10px 10px;
-  margin-top: 10px;
-  height:30%;
-  width: 20%;
-  margin: auto;
 
-}
-
-.register {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 30%;
-  height: 20%;
-}
-
-input {
-    width: 100%;
-}
-span {
-    display: block;
-    overflow: hidden;
-    padding-right:10px;
-}
 </style>
