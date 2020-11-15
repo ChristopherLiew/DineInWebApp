@@ -95,8 +95,10 @@ export default {
           });
     },
     logOut: function() {
+      let vm = this;
       firebase.auth().signOut().then(function() {
         alert("You have successfully logged out!")
+        vm.$router.push({name: 'home'})
         }).catch(function(error) {
           console.log("Error:", error);
         });

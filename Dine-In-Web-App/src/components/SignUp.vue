@@ -7,16 +7,14 @@
     <body>
       <div class="sidebar">
         <div class="icon">
-          <h2>Dinein</h2>
+          <h2><router-link to="/">DineIn</router-link></h2>
         </div>
         <router-link to="/">Home</router-link>
         <router-link to="/profile">Profile</router-link>
-        <router-link to="/login">Login</router-link>
         <router-link to="/restaurant">Restaurant</router-link>
-        <router-link to="/restdetails">Merchant Profile</router-link>
-        <router-link to="/restbackend">Merchant Backend</router-link>
         <router-link to="/signup">Sign Up</router-link>
-        <a href="#" @click="logOut()">Log Out</a>
+        <hr>
+        <router-link to="/login">Log In</router-link>
       </div>
       <div class = "content">
         <h2>Create Account</h2>
@@ -120,8 +118,10 @@ export default {
       });
     },
     logOut: function() {
+      let vm = this;
       firebase.auth().signOut().then(function() {
         alert("You have successfully logged out!")
+        vm.$router.push({name: 'home'})
         }).catch(function(error) {
           console.log("Error:", error);
         });

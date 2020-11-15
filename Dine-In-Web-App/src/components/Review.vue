@@ -7,15 +7,13 @@
     <body>
       <div class="sidebar">
         <div class="icon">
-          <h2>Dinein</h2>
+          <h2><router-link to="/">DineIn</router-link></h2>
         </div>
         <router-link to="/">Home</router-link>
         <router-link to="/profile">Profile</router-link>
-        <router-link to="/login">Login</router-link>
         <router-link to="/restaurant">Restaurant</router-link>
-        <router-link to="/restdetails">Merchant Profile</router-link>
-        <router-link to="/restbackend">Merchant Backend</router-link>
         <router-link to="/signup">Sign Up</router-link>
+        <hr>
         <a href="#" @click="logOut()">Log Out</a>
       </div>
       <div class = "content">
@@ -62,7 +60,6 @@
 // 1) Get review matching user_id and merchant_id (merchant_id and user_id has to be passed via router to this component)
 // 2) Update doc if review exists else create new review
 import firebase from '../firebase.js'
-import { Timestamp } from '../firebase.js'
 const database = firebase.firestore();
 
 export default {
@@ -113,7 +110,7 @@ export default {
       console.log(new Date());
       this.review_data.merchant_id = this.merchant_id;
       this.review_data.user_id = this.user_id;
-      this.review_data.date_reviewed = Timestamp.fromDate(new Date());
+      this.review_data.date_reviewed = new Date().getTime() / 1000
       // TBD add date reviewed
         database.collection('reviews').doc(this.user_id + Math.floor(Math.random() * 100001)).set(this.review_data)
         .then(function() {
@@ -137,8 +134,10 @@ export default {
        })
      },
      logOut: function() {
+      let vm = this;
       firebase.auth().signOut().then(function() {
         alert("You have successfully logged out!")
+        vm.$router.push({name: 'home'})
         }).catch(function(error) {
           console.log("Error:", error);
         });

@@ -7,15 +7,14 @@
   <body>
     <div class="sidebar">
       <div class="icon">
-        <h2>Dinein</h2>
+        <h2><router-link to="/">DineIn</router-link></h2>
       </div>
         <router-link to="/">Home</router-link>
         <router-link to="/profile">Profile</router-link>
-        <router-link to="/login">Login</router-link>
         <router-link to="/restaurant">Restaurant</router-link>
-        <router-link to="/restdetails">Merchant Profile</router-link>
-        <router-link to="/restbackend">Merchant Backend</router-link>
         <router-link to="/signup">Sign Up</router-link>
+        <hr>
+        <router-link to="/login">Log In</router-link>
         <a href="#" @click="logOut()">Log Out</a>
     </div>
 
@@ -51,7 +50,9 @@ export default {
   methods: {
     // Test with logged in profile and check profile.vue also
     logInUser: function() {
-      firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(function() {
+      var vm = this;
+      var email = this.email // Trim white spaces
+      firebase.auth().signInWithEmailAndPassword(email.trim(), this.password).then(function() {
         let uid = firebase.auth().currentUser.uid;
         // Check user type
         database.collection('user_type').where("user_id", "==", uid).get().then((querySnapShot) => {
@@ -70,9 +71,17 @@ export default {
                     });
               } else {
                 alert("Welcome!")
+                vm.$router.push({name: 'profile'})
               }
           })
-          }).catch(function(error) {
+          })
+          } else {
+            alert("Welcome!")
+            vm.$router.push({name: 'restbackend'})
+          }
+        })
+        })
+      }).catch(function(error) {
           var errorCode = error.code;
           var errorMessage = error.message;
           if (errorCode === 'auth/wrong-password') {
@@ -82,12 +91,6 @@ export default {
             }
               console.log(error);
           });
-          } else {
-            alert("Welcome!")
-          }
-        })
-        })
-      })
     },
     signUpUser: function() { 
       firebase.auth().createUserWithEmailAndPassword(this.email, this.password).catch(function(error) {
@@ -105,8 +108,10 @@ export default {
       this.$router.push({name: 'signup'});
     },
     logOut: function() {
+      let vm = this;
       firebase.auth().signOut().then(function() {
         alert("You have successfully logged out!")
+        vm.$router.push({name: 'home'})
         }).catch(function(error) {
           console.log("Error:", error);
         });

@@ -7,15 +7,13 @@
   <body>
     <div class="sidebar">
       <div class="icon">
-        <h2>Dinein</h2>
+        <h2><router-link to="/">DineIn</router-link></h2>
       </div>
         <router-link to="/">Home</router-link>
         <router-link to="/profile">Profile</router-link>
-        <router-link to="/login">Login</router-link>
         <router-link to="/restaurant">Restaurant</router-link>
-        <router-link to="/restdetails">Merchant Profile</router-link>
-        <router-link to="/restbackend">Merchant Backend</router-link>
         <router-link to="/signup">Sign Up</router-link>
+        <hr>
         <a href="#" @click="logOut()">Log Out</a>
     </div>
 
@@ -31,7 +29,6 @@
             <th>Date</th>
             <th>Pax</th>
             <th>Cancel Reservation</th>
-            <th>Leave a Review</th>
             </tr>
           </thead>
             <tbody>
@@ -41,7 +38,6 @@
                 <td>{{ reservation.datetime }}</td> <!-- Format nicely in DOW/ DATE/ TIME -->
                 <td>{{ reservation.pax }}</td>
                 <td><button @click="cancelReservation(reservation.reservation_id)">Cancel</button></td>
-                <td><button @click="goToReview(reservation.merchant_id)">Review</button></td> <!-- Go to review form -->
               </tr>
             </tbody>
           </table>
@@ -50,6 +46,7 @@
         <div class="profilecard">
           <h2 v-if="this.loaded == true">Profile of</h2> 
           <h2>{{profileInfo.name.first_name}} {{profileInfo.name.last_name}}</h2>
+          <button @click="goToProfileDetails">Edit Profile</button>
           <img v-if="profileInfo.imgURL != null && loaded == true" :src=profileInfo.imgURL alt="Profile Pic">
           <br>
           <br>
@@ -78,7 +75,6 @@
             <th>Restaurant</th>
             <th>Date</th>
             <th>Pax</th>
-            <th>Cancel Reservation</th>
             <th>Leave a Review</th>
             </tr>
           </thead>
@@ -88,7 +84,6 @@
                 <td>{{ reservation.merchant_name }}</td> 
                 <td>{{ reservation.datetime }}</td> <!-- Format nicely in DOW/ DATE/ TIME -->
                 <td>{{ reservation.pax }}</td>
-                <td><button @click="cancelReservation(reservation.reservation_id)">Cancel</button></td>
                 <td><button @click="goToReview(reservation.merchant_id)">Review</button></td> <!-- Go to review form -->
               </tr>
             </tbody>
@@ -153,10 +148,10 @@ export default {
               console.log("Error getting documents: ", error);
             })
           },
-          getPastUserRes: function() {
+    getPastUserRes: function() {
               database.collection('reservations').get().then((querySnapShot) => {
               querySnapShot.forEach(doc=> {
-                if (doc.data().user_id == this.user_id && doc.data().date_reserved < new Date().getTime / 1000) {
+                if (doc.data().user_id == this.user_id && doc.data().date_reserved < new Date().getTime / 1000 + 3600) { // Account for dinein time approx 60 mins
                   let reservation = {};
                   reservation.reservation_id = doc.id;
                   reservation.merchant_name = doc.data().merchant_name;
@@ -234,10 +229,14 @@ export default {
       console.log("Going to Review Page")
       this.$router.push({name:'review', params:{user_id: this.user_id, merchant_id: merchant_id}});
     },
+    goToProfileDetails: function() {
+      this.$router.push({name: 'userdetails'})
+    },
     logOut: function() {
+      let vm = this;
       firebase.auth().signOut().then(function() {
         alert("You have successfully logged out!")
-        this.$router.push({name: 'home'})
+        vm.$router.push({name: 'home'})
         }).catch(function(error) {
           console.log("Error:", error);
         });

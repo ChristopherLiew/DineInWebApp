@@ -9,13 +9,10 @@
         <div class="icon">
           <h2>Dinein</h2>
         </div>
-        <router-link to="/">Home</router-link>
-        <router-link to="/profile">Profile</router-link>
-        <router-link to="/login">Login</router-link>
-        <router-link to="/restaurant">Restaurant</router-link>
-        <router-link to="/restdetails">Merchant Profile</router-link>
-        <router-link to="/restbackend">Merchant Backend</router-link>
+        <router-link to="/restbackend">Restaurant Management</router-link>
+        <router-link to="/restdetails">Restaurant Profile</router-link>
         <router-link to="/signup">Sign Up</router-link>
+        <hr>
         <a href="#" @click="logOut()">Log Out</a>
       </div>
 
@@ -270,9 +267,10 @@ export default {
     },
     // Logout
       logOut: function() {
+      let vm = this;
       firebase.auth().signOut().then(function() {
         alert("You have successfully logged out!")
-        this.$router.push({name: 'home'})
+        vm.$router.push({name: 'home'})
         }).catch(function(error) {
           console.log("Error:", error);
         });

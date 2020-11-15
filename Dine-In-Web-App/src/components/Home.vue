@@ -9,16 +9,19 @@
         <div class="icon" :style="{
             'background-image': 'url(https://firebasestorage.googleapis.com/v0/b/dineinwebapp.appspot.com/o/Site%20Images%2Fmain_logo.png?alt=media&token=024c04f1-2b1a-4e35-9651-da1aa5a17fbd)',
           }">
-          <h2>DineIn</h2>
+          <h2><router-link to="/">DineIn</router-link></h2>
         </div>
         <router-link to="/">Home</router-link>
         <router-link to="/profile">Profile</router-link>
-        <router-link to="/login">Login</router-link>
         <router-link to="/restaurant">Restaurant</router-link>
-        <router-link to="/restdetails">Merchant Profile</router-link>
-        <router-link to="/restbackend">Merchant Backend</router-link>
         <router-link to="/signup">Sign Up</router-link>
+        <hr>
+        <div v-if="user_id == null">
+        <router-link to="/login">Log In</router-link>
+        </div>
+        <div v-if="user_id">
         <a href="#" @click="logOut()">Log Out</a>
+        </div>
       </div>
       <div class="welcomepicture">
         <div
@@ -108,8 +111,6 @@
 <script>
 import firebase from '../firebase.js';
 import search from './SearchBar.vue';
-const database = firebase.firestore();
-const storage = firebase.storage();
 
 export default {
   components: {
@@ -120,70 +121,13 @@ export default {
       merchantInfo: {
         imgURL: null
       },
-      merchant_id: 1, // Should be passed as a prop from Login Page. Upon Log In, Auth should return user_id and update parent before passing to profile
+      user_id: null, // Should be passed as a prop from Login Page. Upon Log In, Auth should return user_id and update parent before passing to profile
       loaded: false, // Triggered when data has sucessfully been pulled after Vue app is mounted
       uploadPct: 0,
       imageData: null,
     }
   },
   methods: {
-    // 1) Pull profile information from Firebase
-    fetchMerchant: function() {
-      database.collection('merchants').where("merchant_id", "==", this.merchant_id).get().then((querySnapShot) => {
-        querySnapShot.forEach(doc=>{
-          console.log("Merchant data =>", doc.data());
-          // Document ID
-          this.doc_id = doc.id;
-          // Merchant Profile Data
-          this.merchantInfo.merchant_name = doc.data().merchant_name;
-          this.merchantInfo.address = doc.data().address;
-          this.merchantInfo.merchant_rating = doc.data().merchant_rating;
-          // Operating Info 
-          this.merchantInfo.opening_hours = doc.data().opening_hours;
-          this.merchantInfo.closing_hours = doc.data().closing_hours;
-          // Profile Image URL
-          this.merchantInfo.carousel_imgURL = doc.data().carousel_imgURL;
-          // Data loaded sucessfully
-          this.loaded = true;
-        })
-      }).catch(function(error) {
-        console.log("Error getting documents: ", error);
-    });
-    },
-    // THIS SECTION SHOULD EVENTUALLY GO INTO RESTAURANT BACKEND !!!
-    updateMerchantProfile: function() {
-      database.collection('merchants').doc(this.doc_id).update(
-        this.merchantInfo
-        ).then(function() {
-          console.log("Merchant information successfully updated!")
-        }).catch(function(error) {
-          console.log("Error updating Merchant information: ", error);
-        })
-    },
-    setMerchantImage: function() {
-        let uploadTask = storage.ref(`${this.imageData.name}`).put(this.imageData);
-        uploadTask.on('state_changed', 
-        snapshot => {
-          this.uploadPct = (snapshot.bytesTransferred/snapshot.totalBytes)*100;
-        },
-        error => {
-          console.log("Error uploading Merchant picture ", error);
-        },
-        () => {
-          this.uploadPct = 100;
-          uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-            this.merchantInfo.carousel_imgURL = downloadURL; // Profile Info has image URL and can directly pull with img tag
-            this.updateProfile(); // Call on update profile to update downloadURL
-            console.log("New Merchant image available at: ", downloadURL);
-          })
-        }
-      )
-    },
-    inputImage(event) {
-      this.uploadValue=0;
-      this.picture=null;
-      this.imageData = event.target.files[0];
-    },
     goToLogin: function() {
       this.$router.push({name: "login"});
     },
@@ -197,12 +141,20 @@ export default {
           console.log("Error:", error);
         });
     }
-  },
+},
   // Lifecycle Hooks 
   created() {
-    this.fetchMerchant()
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.user_id = user.uid;
+        console.log("Getting signed in user")
+      } else {
+       console.log("Can't get signed in user")
+      }
+    });
   }
 }
+
 </script>
 
 <style>

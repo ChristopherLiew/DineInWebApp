@@ -1,6 +1,5 @@
 import Home from './components/Home.vue'
 import Profile from './components/Profile.vue'
-import Map from './components/Map.vue'
 import RestDetails from './components/RestDetails.vue'
 import UserDetails from './components/UserDetails.vue'
 import SignUp from './components/SignUp.vue'
@@ -19,17 +18,18 @@ export default[
     {
         name: "profile",
         path:'/profile',
-        component: Profile
-    },
-    {
-        name: 'map',
-        path:'/map',
-        component: Map
+        component: Profile,
+        meta: {
+            requiresAuth: true
+        }
     },
     {
         name: 'restdetails',
         path:'/restdetails',
-        component: RestDetails
+        component: RestDetails,
+        meta: {
+            requiresAuth: true
+        }
     },
     {
         name: 'signup',
@@ -54,16 +54,25 @@ export default[
     {
         name: 'restaurant',
         path:'/restaurant/:id',
-        component: Resto
+        component: Resto,
+        meta: {
+            requiresAuth: true
+        }
     },
     {
         name: 'restbackend',
         path:'/restbackend',
-        component: RestBackend
+        component: RestBackend,
+        meta:{
+            requiresAuth: true
+        }
     },
     {
         name: 'userdetails',
         path: '/userdetails',
-        component: UserDetails
+        component: UserDetails,
+        meta: {
+            requiresAuth: true
+        }
     }
 ]

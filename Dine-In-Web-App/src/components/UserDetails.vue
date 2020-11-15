@@ -7,15 +7,13 @@
     <body>
       <div class="sidebar">
         <div class="icon">
-          <h2>Dinein</h2>
+          <h2><router-link to="/">DineIn</router-link></h2>
         </div>
         <router-link to="/">Home</router-link>
         <router-link to="/profile">Profile</router-link>
-        <router-link to="/login">Login</router-link>
         <router-link to="/restaurant">Restaurant</router-link>
-        <router-link to="/restdetails">Merchant Profile</router-link>
-        <router-link to="/restbackend">Merchant Backend</router-link>
         <router-link to="/signup">Sign Up</router-link>
+        <hr>
         <a href="#" @click="logOut()">Log Out</a>
       </div>
       <div class = "content">
@@ -102,10 +100,13 @@ export default {
           console.log("Error updating profile information: ", error);
         });
         alert("Your user profile has been updated successfully!");
+        this.$router.push({name: "profile"})
       },
       logOut: function() {
+      let vm = this;
       firebase.auth().signOut().then(function() {
         alert("You have successfully logged out!")
+        vm.$router.push({name: 'home'})
         }).catch(function(error) {
           console.log("Error:", error);
         });
