@@ -104,10 +104,10 @@
 
           <div class="row">
             <!-- Table of Reviews -->
-            <div class="ex3" id="reviews_table">
+            <div class="ex3">
               <div class="testimonials" v-for="review in reviewslist" :key="review.number">
-                <div>
-                  <p>{{ review.user_name }} rated {{ review.rating }}/5 stars.</p>
+                <div class ="textwrap">
+                  <p >{{ review.user_name }} rated {{ review.rating }}/5 stars.</p>
                   <p>{{ review.date }}</p>
                   <p>{{ review.review_text }}</p>
                 </div>
@@ -123,11 +123,13 @@
               <h1>Reserve</h1>
               <img :src="merchant_info.image" alt="Exterior image of Restaurant"><br><br>
               <label for="reservation">Reservation Date and Time </label>
-              <input type="datetime-local" id="reservation" name="reservation" v-model="reservation_datetime"/>
+               <br/>
+              <input type="datetime-local" id="reservation" name="reservation" v-model="reservation_datetime">
               <br/>
               <br/>
 
               <label for="seats">Desired seat types</label>
+              <br/>
               <select id="seats" name="seats" v-model="seat_type_chosen">
                 <option value="one_seater,1">One-seater</option>
                 <option value="two_seater,2">Two-seater</option>
@@ -509,15 +511,14 @@ table {
 }
 
 div.ex3 {
-  width: auto;
-  height: 410px;
-  overflow: auto;
+  
+  height: 50px;
+ 
 }
 
-div.tablescroll {
-  height: 300px;
-  overflow: auto;
-}
+
+
+
 body {
   margin: 0;
   font-family: "Lato", sans-serif;
@@ -545,7 +546,7 @@ body {
   margin: 0;
   padding: 0;
   width: 200px;
-  background-color: #f1f1f1;
+  background-color: #FFA07A;
   position: fixed;
   height: 100%;
   overflow: auto;
@@ -559,19 +560,19 @@ body {
 }
 
 .sidebar a.active {
-  background-color: #4caf50;
+  background-color:#ffa07a;
   color: white;
 }
 
 .sidebar a:hover:not(.active) {
-  background-color: #555;
-  color: white;
+  background-color: #ffa07a;
+  color: #ffa07a;
 }
 
 div.content {
   margin-left: 200px;
   padding: 1px 16px;
-  height: auto;
+  height: 200px;
   background-image: linear-gradient(rgb(78, 223, 78), rgb(85, 199, 228));
 }
 
@@ -628,7 +629,7 @@ div.content {
   border-radius: 10px;
   padding: 5px;
   margin: 7px 0;
-  width: 115%;
+  
 }
 
 /* Clear floats after containers */
@@ -648,7 +649,10 @@ div.content {
 /* Increase the font-size of a span element */
 .testimonials span {
   font-size: 20px;
+
 }
+
+
 
 .* {
   box-sizing: border-box;
