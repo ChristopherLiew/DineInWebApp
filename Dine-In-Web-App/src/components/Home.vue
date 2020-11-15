@@ -34,7 +34,7 @@
         </div>
       </div>
 
-      <div class="content">
+      <div v-if="data_loaded" class="content">
         <br>
         <div class ="searcharea">
           <search></search>
@@ -44,12 +44,11 @@
           <div class="displaycard">
             <img
                 class="card-img-top"
-                src="https://placekitten.com/g/100/100"
+                src=this.carousel_one[0].imgURL.interior
                 style="border-radius: 0.6rem; height:175px; width: 175px;"
               />
-            <h3>Name of Restaurant</h3>
-            <h3>link</h3>
-
+            <h3>{{carousel_one[0].merchant_name}}</h3>
+            <router-link :to="{ name: 'restaurant', params: { id: this.carousel_one[0].merchant_id }}">Link</router-link>
           </div>
           <div class="displaycard">
             <img
@@ -111,6 +110,7 @@
 <script>
 import firebase from '../firebase.js';
 import search from './SearchBar.vue';
+const database = firebase.firestore();
 
 export default {
   components: {
@@ -121,13 +121,39 @@ export default {
       merchantInfo: {
         imgURL: null
       },
-      user_id: null, // Should be passed as a prop from Login Page. Upon Log In, Auth should return user_id and update parent before passing to profile
-      loaded: false, // Triggered when data has sucessfully been pulled after Vue app is mounted
+      carousel_one: null,
+      carousel_two: null,
+      carousel_three: null,
+      user_id: null, 
+      loaded: false, 
       uploadPct: 0,
       imageData: null,
+      data_loaded: false
     }
   },
   methods: {
+    getCarouselData: function(cuisine) {
+      let carousel_data = [];
+      database.collection('merchants').where("cuisine", "==", cuisine).get().then((querySnapshot) => {
+        let merchant = {
+          merchant_id: null,
+          merchant_name: null,
+          imgURL: {
+            'interior': null,
+            'exterior': null,
+            'food': null
+          }
+        }
+        querySnapshot.forEach(doc => {
+          merchant.merchant_id = doc.data().merchant_id; // For route params/ link
+          merchant.merchant_name = doc.data().merchant_name;
+          merchant.imgURL = doc.data().imgURL; // All interior, exterior and food images
+          carousel_data.push(merchant);
+        })
+      })
+      this.data_loaded = true;
+      return carousel_data;
+    },
     goToLogin: function() {
       this.$router.push({name: "login"});
     },
@@ -152,6 +178,7 @@ export default {
        console.log("Can't get signed in user")
       }
     });
+    this.carousel_one = this.getCarouselData('french');
   }
 }
 
