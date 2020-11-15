@@ -7,6 +7,7 @@ import Review from './components/Review.vue'
 import SearchBar from './components/SearchBar.vue'
 import Login from './components/Login.vue'
 import Resto from './components/Resto.vue'
+import RestoMerch from './components/RestoMerch.vue'
 import RestBackend from './components/RestBackend.vue'
 
 export default[
@@ -55,6 +56,14 @@ export default[
         name: 'restaurant',
         path:'/restaurant/:id',
         component: Resto,
+        meta: {
+            requiresAuth: true
+        }
+    },
+    {
+        name: 'restaurantmerch',
+        path: 'restaurantmerch/:id',
+        component: RestoMerch,
         meta: {
             requiresAuth: true
         }

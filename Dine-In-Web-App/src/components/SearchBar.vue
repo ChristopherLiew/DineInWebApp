@@ -43,7 +43,9 @@ export default {
     getSelection: function(selection) {      
       console.log(selection.name + ' has been selected');
       if (selection.name != undefined) {
-        this.$router.push({name: 'restaurant', params: {id: selection.id}})
+        this.$router.push({name: 'restaurant', params: {id: selection.id}}).catch(function(error) {
+          console.log("navigating within the resto component: " + error);
+        })
       }
     },
     filteredMerchants: function(search) { // Filter options array based on search

@@ -13,13 +13,14 @@
         </div>
         <router-link to="/">Home</router-link>
         <router-link to="/profile">Profile</router-link>
-        <router-link to="/restaurant">Restaurant</router-link>
+        <router-link :to="{ name: 'restaurant', params: {id: '4czuiVI8sNQKcPRMVRgk0ahTKzc2'}}">Restaurant</router-link>
+        <div v-if="user_id == null">
         <router-link to="/signup">Sign Up</router-link>
         <hr>
-        <div v-if="user_id == null">
         <router-link to="/login">Log In</router-link>
         </div>
         <div v-if="user_id">
+        <hr>
         <a href="#" @click="logOut()">Log Out</a>
         </div>
       </div>
@@ -161,11 +162,14 @@ export default {
       this.$router.push({name: "signup"});
     },
     logOut: function() {
+      let vm = this;
       firebase.auth().signOut().then(function() {
         alert("You have successfully logged out!")
+        console.log("logging out!")
         }).catch(function(error) {
           console.log("Error:", error);
         });
+        vm.$router.push({name: 'home'})
     }
 },
   // Lifecycle Hooks 
@@ -174,8 +178,6 @@ export default {
       if (user) {
         this.user_id = user.uid;
         console.log("Getting signed in user")
-      } else {
-       console.log("Can't get signed in user")
       }
     });
     this.carousel_one = this.getCarouselData('french');

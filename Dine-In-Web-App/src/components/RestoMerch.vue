@@ -9,9 +9,9 @@
       <div class="icon">
         <h2>DineIn</h2>
       </div>
-      <router-link to="/">Home</router-link>
-        <router-link to="/profile">Profile</router-link>
-        <router-link :to="{ name: 'restaurant', params: {id: '4czuiVI8sNQKcPRMVRgk0ahTKzc2'}}">Restaurant</router-link>
+        <router-link :to="{ name: 'restaurantmerch', params: {id: this.merchant_id}}">My Restaurant</router-link>
+        <router-link to="/restbackend">Restaurant Management</router-link>
+        <router-link to="/restdetails">Restaurant Profile</router-link>
         <hr>
         <div v-if="user_id == null">
         <router-link to="/login">Log In</router-link>
@@ -29,9 +29,6 @@
         <p>Address: {{ merchant_info.address }}</p>
         <p>Phone No: {{ merchant_info.contact }}</p>
         <p>Operating Hours: {{ merchant_info.opening_hours }} to {{ merchant_info.closing_hours }}</p>
-        <div class ="searcharea">
-          <search></search>
-        </div>
       </div>
 
       <div class="row">
@@ -118,29 +115,7 @@
         
         <!-- Reservation Form -->
         <div class="column right">
-          <div class="forms">
-            <form @submit.prevent="checkReservationForm">
-              <h1>Reserve</h1>
               <img :src="merchant_info.image" alt="Exterior image of Restaurant"><br><br>
-              <label for="reservation">Reservation Date and Time </label>
-              <input type="datetime-local" id="reservation" name="reservation" v-model="reservation_datetime"/>
-              <br/>
-              <br/>
-
-              <label for="seats">Desired seat types</label>
-              <select id="seats" name="seats" v-model="seat_type_chosen">
-                <option value="one_seater,1">One-seater</option>
-                <option value="two_seater,2">Two-seater</option>
-                <option value="three_seater,3">Three-seater</option>
-                <option value="four_seater,4">Four-seater</option>
-                <option value="five_seater,5">Five-seater</option>
-              </select>
-              <br/>
-              <br/>
-
-              <input type="submit" value="Submit"/>
-            </form>
-          </div>
         </div>
       </div>
     </div>
@@ -150,7 +125,6 @@
 
 <script>
 import firebase from '../firebase.js'
-import search from './SearchBar.vue'
 const db = firebase.firestore();
 
 export default {
@@ -207,14 +181,6 @@ export default {
       closing_hours_millisec: null
     }
   },
-  components: {
-    search
-    },
-    watch: { // React to param id change in router path, wehre path is the same router path as current page
-        '$route' () {
-            location.reload();
-        }
-    },
   methods: {  
 
     //Get merchant information from firestore, then update all merchant-related info
@@ -402,6 +368,7 @@ export default {
       firebase.auth().signOut().then(function() {
         alert("You have successfully logged out!")
         console.log("logging out!")
+        
         }).catch(function(error) {
           console.log("Error:", error);
         });

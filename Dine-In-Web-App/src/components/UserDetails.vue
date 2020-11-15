@@ -12,7 +12,6 @@
         <router-link to="/">Home</router-link>
         <router-link to="/profile">Profile</router-link>
         <router-link to="/restaurant">Restaurant</router-link>
-        <router-link to="/signup">Sign Up</router-link>
         <hr>
         <a href="#" @click="logOut()">Log Out</a>
       </div>
@@ -106,10 +105,11 @@ export default {
       let vm = this;
       firebase.auth().signOut().then(function() {
         alert("You have successfully logged out!")
-        vm.$router.push({name: 'home'})
+        console.log("logging out!")
         }).catch(function(error) {
           console.log("Error:", error);
         });
+        vm.$router.push({name: 'home'})
     }
     },
     created() {

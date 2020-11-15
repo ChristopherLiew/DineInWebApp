@@ -9,9 +9,9 @@
       <div class="icon">
         <h2>Dinein</h2>
       </div>
+        <router-link :to="{ name: 'restaurantmerch', params: {id: this.merchant_id}}">My Restaurant</router-link>
         <router-link to="/restbackend">Restaurant Management</router-link>
         <router-link to="/restdetails">Restaurant Profile</router-link>
-        <router-link to="/signup">Sign Up</router-link>
         <hr>
         <a href="#" @click="logOut()">Log Out</a>
     </div>
@@ -268,10 +268,11 @@ export default {
       let vm = this;
       firebase.auth().signOut().then(function() {
         alert("You have successfully logged out!")
-        vm.$router.push({name: 'home'})
+        console.log("logging out!")
         }).catch(function(error) {
           console.log("Error:", error);
         });
+        vm.$router.push({name: 'home'})
     }
   },
   computed: {
