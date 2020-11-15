@@ -162,14 +162,13 @@ export default {
       this.$router.push({name: "signup"});
     },
     logOut: function() {
-      let vm = this;
       firebase.auth().signOut().then(function() {
         alert("You have successfully logged out!")
         console.log("logging out!")
         }).catch(function(error) {
           console.log("Error:", error);
         });
-        vm.$router.push({name: 'home'})
+        location.reload();
     }
 },
   // Lifecycle Hooks 

@@ -78,7 +78,7 @@
             </tr>
           </thead>
             <tbody>
-              <tr v-for="(reservation ,i) in user_reservations" :key="i">
+              <tr v-for="(reservation ,i) in past_reservations" :key="i">
                 <th scope="row">{{i + 1}}</th>  
                 <td>{{ reservation.merchant_name }}</td> 
                 <td>{{ reservation.datetime }}</td> <!-- Format nicely in DOW/ DATE/ TIME -->
@@ -129,9 +129,13 @@ export default {
   },
   methods: {
     getUserRes: function() {
+      console.log("Getting upcoming")
               database.collection('reservations').get().then((querySnapShot) => {
               querySnapShot.forEach(doc=> {
-                if (doc.data().user_id == this.user_id && doc.data().date_reserved >= new Date().getTime / 1000) {
+                console.log("Doc id:" + doc.id)
+                console.log("Date reserved: " + doc.data().date_reserved);
+                console.log("Date now: " + new Date().getTime()/1000)
+                if (doc.data().user_id == this.user_id && doc.data().date_reserved > new Date().getTime()/1000) {
                   let reservation = {};
                   reservation.reservation_id = doc.id;
                   reservation.merchant_name = doc.data().merchant_name;
@@ -148,9 +152,10 @@ export default {
             })
           },
     getPastUserRes: function() {
+      console.log("Getting past")
               database.collection('reservations').get().then((querySnapShot) => {
               querySnapShot.forEach(doc=> {
-                if (doc.data().user_id == this.user_id && doc.data().date_reserved < new Date().getTime / 1000 + 3600) { // Account for dinein time approx 60 mins
+                if (doc.data().user_id == this.user_id && (doc.data().date_reserved < (new Date().getTime() / 1000 )+ 3600)) { // Account for dinein time approx 60 mins
                   let reservation = {};
                   reservation.reservation_id = doc.id;
                   reservation.merchant_name = doc.data().merchant_name;
@@ -249,11 +254,12 @@ export default {
         this.user_id = user.uid;
         console.log("Getting signed in user")
         this.fetchProfile();
-        this.getUserRes();
-        this.getPastUserRes();
+        if (this.user_id) {
+          this.getUserRes();
+          this.getPastUserRes();
+        }
       }
     });
-    
   }
 }
 </script>

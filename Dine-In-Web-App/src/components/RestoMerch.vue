@@ -151,6 +151,13 @@ export default {
         four_seater: null,
         five_seater: null      
       },
+      walkins: {
+        one_seater: null,
+        two_seater: null,
+        three_seater: null,
+        four_seater: null,
+        five_seater: null,
+      },
       capacity: {
         one_seater: null,
         two_seater: null,
@@ -208,6 +215,12 @@ export default {
             this.capacity.three_seater = doc.data().capacity.three_seater;
             this.capacity.four_seater = doc.data().capacity.four_seater;
             this.capacity.five_seater = doc.data().capacity.five_seater;
+            //Walk Ins
+            this.filledseats.one_seater += doc.data().walk_ins.one_seater;
+            this.filledseats.two_seater += doc.data().walk_ins.two_seater;
+            this.filledseats.three_seater += doc.data().walk_ins.three_seater;
+            this.filledseats.four_seater += doc.data().walk_ins.four_seater;
+            this.filledseats.five_seater += doc.data().walk_ins.five_seater;
           })
         })
 
@@ -244,9 +257,9 @@ export default {
           querySnapshot.forEach(doc => { //vacancy = capacity - capacity of (reservations with datetimes > today - 20min AND today < reservation datetime + 30min AND status != "completed" and status != "no-show" and status != "cancelled")
             var chosen_date = doc.data().date_reserved;
             var today = Number((new Date().getTime() / 1000).toFixed(0));
-            var date_condition = chosen_date >= this.addMinutes(today, -20) && today < this.addMinutes(chosen_date, 30);
-
-            if (date_condition) {
+            var upcoming = chosen_date >= this.addMinutes(today, -20) && chosen_date <= today;
+            var ongoing = chosen_date >= today && chosen_date <= this.addMinutes(today, 40);
+            if (upcoming || ongoing) {
               this.filledseats.one_seater += doc.data().seat_type == "one_seater";
               this.filledseats.two_seater += doc.data().seat_type == "two_seater";
               this.filledseats.three_seater += doc.data().seat_type == "three_seater";

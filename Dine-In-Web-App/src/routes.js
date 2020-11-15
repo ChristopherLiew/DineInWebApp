@@ -62,7 +62,7 @@ export default[
     },
     {
         name: 'restaurantmerch',
-        path: 'restaurantmerch/:id',
+        path: '/restaurantmerch/:id',
         component: RestoMerch,
         meta: {
             requiresAuth: true

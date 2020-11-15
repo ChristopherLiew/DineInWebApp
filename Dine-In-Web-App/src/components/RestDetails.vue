@@ -94,20 +94,6 @@
                   </div>
                   <img v-if="merchant_data.imgURL.food != null && loaded == true" :src=merchant_data.imgURL.food alt="Food Pic">
                 <br>
-                <label for="covidmeasures">COVID measures:</label>
-                <hr>
-                <br>
-                <label for="covidmeasures">Contact Tracing</label>
-                <input type="checkbox" id="contacttracing" name="contacttracing" value=True v-model="merchant_data.safety_measures.contact_trace">
-                <label for="covidmeasures">Masks Required</label>              
-                <input type="checkbox" id="masks" name="masks" value=True v-model="merchant_data.safety_measures.masks">
-                <br>
-                <label for="covidmeasures">Safe Distancing</label>
-                <input type="checkbox" id="safedistancing" name="safedistancing" value=True v-model="merchant_data.safety_measures.safe_distance">
-                <label for="covidmeasures">Temperature Screening</label>
-                <input type="checkbox" id="temperaturescreening" name="temperaturescreening" value=True v-model="merchant_data.safety_measures.temp_screening">
-                <br>
-                <br>
                 <label for="cuisine">Cuisine</label>
                 <select id="cuisine" name="cuisine" v-model="merchant_data.cuisine">
                 <option value="japanese">Japanese</option>
@@ -166,12 +152,6 @@ export default {
             four_seater: null,
             five_seater: null      
           },
-          safety_measures: {
-            contact_trace: false,
-            masks: false,
-            safe_distance: false,
-            temp_screening: false
-          },
           cuisine: 'french',
           description: '',
 
@@ -199,10 +179,12 @@ export default {
                   } else {
                     this.merchant_data = doc.data();
                     // Handle UNIXTIME for operating hours
-                    let opening = new Date(this.merchant_data.operating_hours.opening * 1000);
+                    let opening = new Date(this.merchant_data.operating_hours.opening * 1000)
+                    opening.setTime(opening.getTime() + opening.getTimezoneOffset()*60*1000); // milliseconds
                     var opening_min = opening.getMinutes() < 10 ? '0' + opening.getMinutes() : opening.getMinutes();
                     let opening_formatted = opening.getHours() + ":" + opening_min;
                     let closing = new Date(this.merchant_data.operating_hours.closing * 1000);
+                    closing.setTime(closing.getTime() + closing.getTimezoneOffset()*60*1000);
                     var closing_min = closing.getMinutes() < 10 ? '0' + closing.getMinutes() : closing.getMinutes();
                     let closing_formatted = closing.getHours() + ":" + closing_min
                     this.merchant_data.operating_hours.opening = opening_formatted;
@@ -223,8 +205,11 @@ export default {
         this.merchant_data.capacity.total_seats = this.merchant_data.capacity.five_seater + this.merchant_data.capacity.four_seater + this.merchant_data.capacity.three_seater + this.merchant_data.capacity.two_seater + this.merchant_data.capacity.one_seater;
         this.merchant_data.vacancy = this.merchant_data.capacity;
         // Set 1970/01/01 as 
-        this.merchant_data.operating_hours.opening = Math.round(new Date("1970/01/01 " + this.merchant_data.operating_hours.opening + ":00").getTime()/1000);
-        this.merchant_data.operating_hours.closing = Math.round(new Date("1970/01/01 " + this.merchant_data.operating_hours.closing + ":00").getTime()/1000);
+        Date.prototype.getUTCTime = function(){ return this.getTime()-(this.getTimezoneOffset()*60000);};
+        this.merchant_data.operating_hours.opening = Math.round(new Date("1970/01/01 " + this.merchant_data.operating_hours.opening + ":00").getUTCTime()/1000);
+        console.log(this.merchant_data.operating_hours.opening);
+        this.merchant_data.operating_hours.closing = Math.round(new Date("1970/01/01 " + this.merchant_data.operating_hours.closing + ":00").getUTCTime()/1000);
+        console.log(this.merchant_data.operating_hours.closing);
         this.merchant_data.status = "registered";
         database.collection('merchants').doc(this.doc_id).update(this.merchant_data).then(function() {
           console.log("Updated!")
