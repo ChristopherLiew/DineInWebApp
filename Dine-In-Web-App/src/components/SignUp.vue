@@ -28,7 +28,7 @@
           <option value=User>User</option>
           <option value=Merchant>Merchant</option>
         </select>
-        <button class= "smallinteractbutton" @click="signUpUser">Log In</button>
+        <button class= "smallinteractbutton" @click="signUpUser">Sign Up</button>
         </div>
     </body>
   </div>

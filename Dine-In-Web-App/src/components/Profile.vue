@@ -1,4 +1,5 @@
 <template>
+<!DOCTYPE html>
 <div>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -49,18 +50,16 @@
           <img v-if="profileInfo.imgURL != null && loaded == true" :src=profileInfo.imgURL alt="Profile Pic">
           <br>
           <br>
-      <div>
+          <input type="file" id="profileupload" @change="inputImage" accept="image/*">
         <div>
-          <input type="file" @change="inputImage" accept="image/*">
-        </div>
         <div>
           <p>Progress: {{uploadPct.toFixed()+"%"}}
           <progress id="progress" :value="uploadPct" max="100" ></progress>  </p>
         </div>
-          <div v-if="imageData!=null">
-            <button @click="setProfileImage">Upload</button>
-          </div>
+        <div v-if="imageData!=null">
+          <button @click="setProfileImage">Upload</button>
         </div>
+       </div>
         </div>
       </div>
       <!-- Get past reservations -->
@@ -302,9 +301,14 @@ div.content {
   background-image: linear-gradient( rgb(78, 223, 78), rgb(85, 199, 228));
 }
 
+.profileupload {
+  text-align: center !important;
+}
+
 .profilearea {
   width: 30%;
   float: right;
+  text-align: center;
 }
 
 .pastreservations {
@@ -321,10 +325,11 @@ img {
 .profilecard {
   background-color: whitesmoke;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  padding: 14px 20px;
   border-radius: 10px 10px 10px 10px;
   max-width: 300px;
   margin: auto;
-  text-align: center;
+  text-align: center ;
 }
 
 .styled-table {

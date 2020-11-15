@@ -9,7 +9,7 @@
         <div class="icon" :style="{
             'background-image': 'url(https://firebasestorage.googleapis.com/v0/b/dineinwebapp.appspot.com/o/Site%20Images%2Fmain_logo.png?alt=media&token=024c04f1-2b1a-4e35-9651-da1aa5a17fbd)',
           }">
-          <h2><router-link to="/">DineIn</router-link></h2>
+          <h2 id="icon"><router-link to="/">DineIn</router-link></h2>
         </div>
         <router-link to="/">Home</router-link>
         <router-link to="/profile">Profile</router-link>
@@ -46,7 +46,7 @@
             <img
                 class="card-img-top"
                 src=this.carousel_one[0].imgURL.interior
-                style="border-radius: 0.6rem; height:175px; width: 175px;"
+                style="border-radius: 0.6rem; max-height:100%; max-width: 100%;"
               />
             <h3>{{carousel_one[0].merchant_name}}</h3>
             <router-link :to="{ name: 'restaurant', params: { id: this.carousel_one[0].merchant_id }}">Link</router-link>
@@ -210,6 +210,11 @@ body {
 
 .icon {
   text-align: center;
+  font-family:"Luminari"
+}
+
+h2 {
+  
 }
 
 .sidebar {
@@ -296,6 +301,8 @@ div.content {
 }
 .welcomepicture {
   height: auto;
+  left-margin: auto;
+  right-margin: auto;
 }
 
 .searcharea {
