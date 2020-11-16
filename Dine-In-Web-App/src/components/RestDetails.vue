@@ -9,7 +9,7 @@
         <div class="icon">
           <h2>Dinein</h2>
         </div>
-        <router-link :to="{ name: 'restaurantmerch', params: {id: this.merchant_id}}">My Restaurant</router-link>
+        <router-link :to="{name: 'restaurantmerch', params: {id: this.merchant_id}}">My Restaurant</router-link>
         <router-link to="/restbackend">Restaurant Management</router-link>
         <router-link to="/restdetails">Restaurant Profile</router-link>
         <hr>
@@ -96,6 +96,7 @@
                 <br>
                 <label for="cuisine">Cuisine</label>
                 <select id="cuisine" name="cuisine" v-model="merchant_data.cuisine">
+                <option value="western">Western</option>
                 <option value="japanese">Japanese</option>
                 <option value="chinese">Chinese</option>
                 <option value="korean">Korean</option>
@@ -122,7 +123,7 @@ const database = firebase.firestore();
 const storage = firebase.storage();
 
 export default {
-  data() {
+    data() {
       return {  
         data_loaded: false,
         merchant_id: '' , // Test
@@ -142,32 +143,43 @@ export default {
             four_seater: 0,
             three_seater: 0,
             two_seater: 0,
+            one_seater: 0
+          },
+          walk_ins: {
             one_seater: 0,
-            total_seats: 0
+            two_seater: 0,
+            three_seater: 0,
+            four_seater: 0,
+            five_seater: 0      
           },
-          filledseats: {
-            one_seater: null,
-            two_seater: null,
-            three_seater: null,
-            four_seater: null,
-            five_seater: null      
-          },
-          cuisine: 'french',
+          cuisine: 'western',
           description: '',
-
           imgURL: {
             interior: '',
             exterior: '',
             food: ''
-          }
+          },
+        safety: {
+        masks: false,
+        contact_trace: false,
+        temp_screen: false,
+        safe_distance: false
+        }
         },
         loaded: false, // Triggered when data has sucessfully been pulled after Vue app is mounted
         uploadPct1: 0,
         uploadPct2: 0,
         uploadPct3: 0,
-        imageData: null
+        imageData: null,
+        update: false
       }
     },
+    watch: {
+    update: function() {
+      this.update = false;
+      location.reload();
+    }
+  },
     methods: {
       fetchResProfile: function() {
         console.log("Pulling restaurant data")
@@ -202,23 +214,19 @@ export default {
         this.merchant_data.capacity.three_seater = parseInt(this.merchant_data.capacity.three_seater);
         this.merchant_data.capacity.two_seater = parseInt(this.merchant_data.capacity.two_seater);
         this.merchant_data.capacity.one_seater = parseInt(this.merchant_data.capacity.one_seater);
-        this.merchant_data.capacity.total_seats = this.merchant_data.capacity.five_seater + this.merchant_data.capacity.four_seater + this.merchant_data.capacity.three_seater + this.merchant_data.capacity.two_seater + this.merchant_data.capacity.one_seater;
-        this.merchant_data.vacancy = this.merchant_data.capacity;
         // Set 1970/01/01 as 
         Date.prototype.getUTCTime = function(){ return this.getTime()-(this.getTimezoneOffset()*60000);};
         this.merchant_data.operating_hours.opening = Math.round(new Date("1970/01/01 " + this.merchant_data.operating_hours.opening + ":00").getUTCTime()/1000);
-        console.log(this.merchant_data.operating_hours.opening);
         this.merchant_data.operating_hours.closing = Math.round(new Date("1970/01/01 " + this.merchant_data.operating_hours.closing + ":00").getUTCTime()/1000);
-        console.log(this.merchant_data.operating_hours.closing);
         this.merchant_data.status = "registered";
         database.collection('merchants').doc(this.doc_id).update(this.merchant_data).then(function() {
           console.log("Updated!")
           alert("Your merchant profile has been updated successfully!");
-          location.reload();
           })
         .catch(function(error) {
           console.log("Error updating profile information: ", error);
         });
+       this.$router.push({name: 'restaurantmerch', params: {id: this.merchant_id}})
       },
       // 3) Set Rest Image 
     setRestImage: function(img_type) { // interior, exterior & food

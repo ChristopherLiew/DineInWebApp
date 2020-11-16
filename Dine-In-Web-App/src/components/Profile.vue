@@ -12,7 +12,6 @@
       </div>
         <router-link to="/">Home</router-link>
         <router-link to="/profile">Profile</router-link>
-        <router-link :to="{ name: 'restaurant', params: {id: '4czuiVI8sNQKcPRMVRgk0ahTKzc2'}}">Restaurant</router-link>
         <hr>
         <a href="#" @click="logOut()">Log Out</a>
     </div>
@@ -150,10 +149,12 @@ export default {
                   let reservation_date = new Date(doc.data().date_reserved * 1000).toDateString()
                   let reservation_time = new Date(doc.data().date_reserved * 1000).toLocaleTimeString('en-SG', {timeZone: 'Asia/Singapore', hour: 'numeric', minute: 'numeric', hour12: true}); 
                   reservation.datetime = reservation_date + " " + reservation_time;
+                  reservation.unixtime = doc.data().date_reserved
                   reservation.pax = doc.data().pax;
                   this.user_reservations.push(reservation);
                 }
               })
+              this.user_reservations = this.user_reservations.sort(function(a, b) {return b.unixtime - a.unixtime;});
             }).catch(function(error) {
               console.log("Error getting documents: ", error);
             })
@@ -170,10 +171,12 @@ export default {
                   let reservation_date = new Date(doc.data().date_reserved * 1000).toDateString()
                   let reservation_time = new Date(doc.data().date_reserved * 1000).toLocaleTimeString('en-SG', {timeZone: 'Asia/Singapore', hour: 'numeric', minute: 'numeric', hour12: true}); 
                   reservation.datetime = reservation_date + " " + reservation_time;
+                  reservation.unixtime = doc.data().date_reserved;
                   reservation.pax = doc.data().pax;
                   this.past_reservations.push(reservation);
                 }
               })
+              this.past_reservations = this.past_reservations.sort(function(a, b) {return b.unixtime - a.unixtime;});
             }).catch(function(error) {
               console.log("Error getting documents: ", error);
             })
