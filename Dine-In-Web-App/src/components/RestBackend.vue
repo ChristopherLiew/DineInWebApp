@@ -16,7 +16,7 @@
         <a href="#" @click="logOut()">Log Out</a>
     </div>
 
-      <div class="content">
+      <div class="content12345">
         <div class="form">
             <h2>Update the current number of Walk Ins</h2> <!--pass name over-->
             <div class="seatupdatearea">
@@ -352,7 +352,13 @@ body {
 }
 
 
-
+.content12345 {
+  margin-left: 200px;
+  padding: 1px 16px;
+  height: 2500px;
+  width: auto;
+  background-color:#FFE4E1;
+}
 
 
 .seatupdatearea {
