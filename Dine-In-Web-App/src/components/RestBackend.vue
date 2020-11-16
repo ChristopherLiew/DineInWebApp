@@ -430,7 +430,7 @@ th, td {
 tr:nth-child(even){background-color: #f2f2f2}
 
 th {
-  background-color: #36ac3a;
+  background-color: #838764;
   color: white;
 }
 
