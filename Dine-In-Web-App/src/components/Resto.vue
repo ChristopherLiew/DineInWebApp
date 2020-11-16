@@ -54,18 +54,35 @@
               </div>
 
               <!-- Safety Measures Card -->
-              <div class="card">
-                <p>Contact Tracing: {{ getContactTrace }}%</p>
-              </div>
-              <div class="card">
-                <p>Compulsory Masks: {{ getMasks }}%</p>
-              </div>
-              <div class="card">
-                <p>Safe Distancing: {{ getSafeDistance }}%</p>
-              </div>
-              <div class="card">
-                <p>Temperature Screening: {{ getTempScreen }}%</p>
-              </div>
+              <div class = "row">
+                <div style="width: 50%; float:left">
+                <div class="cardsodd">
+                  <p class="percentage"> {{ getContactTrace }}% <p>
+                  <p>Contact Tracing</p>
+                </div>
+                </div>
+                <div style="width: 50%; float:right">
+                <div class="cardseven">
+                  <p class="percentage"> {{ getMasks }}% <p>
+                  <p>Compulsory Masks</p>
+                </div>
+                </div>
+              
+                <div style="width: 50%; float:left">
+                <div class="cardseven">
+                  <p class="percentage"> {{ getSafeDistance }}% <p>
+                  <p>Safe Distancing</p>
+                </div>
+                </div>
+                <div style="width: 50%; float:right">
+                <div class="cardsodd">
+                  <p class="percentage"> {{ getTempScreen }}% <p>
+                  <p>Temperature Screening</p>
+                </div>
+                </div>
+              
+             
+            </div>
             </div>
         
             <div class="column right1">
@@ -721,6 +738,26 @@ body {
   text-align: center;
   background-color: #444;
   color: white;
+}
+
+.cardsodd {
+  box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.2);
+  padding: 4px;
+  text-align: center;
+  background-color: #e1edff;
+  color: black;
+  width: 100%;
+  height:135px;
+}
+
+.cardseven {
+  box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.2);
+  padding: 4px;
+  text-align: center;
+  background-color: #e4e1ff;
+  color: black;
+  width: 100%;
+  height:135px;
 }
 
 table {
