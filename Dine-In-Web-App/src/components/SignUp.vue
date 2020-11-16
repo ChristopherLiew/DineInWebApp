@@ -34,8 +34,8 @@
                 </div>
                 <label for="lname">Account Type</label>
                 <select id="rating" name="rating" v-model.lazy="acc_type">
-                <option value=User>User</option>
-                <option value=Merchant>Merchant</option>
+                <option value=user>User</option>
+                <option value=merchant>Merchant</option>
                 </select>
                 <input type="submit" value="Submit"/>
             </form>
@@ -57,7 +57,7 @@ export default {
       email: '',
       username: '',
       password: '',
-      acc_type: 'User'
+      acc_type: 'user'
     }
   },
   methods: {
@@ -69,18 +69,18 @@ export default {
 
         // Create new user type ref in user_type reference
           let user_type = {};
-          user_type.user_id = uid;
+          user_type.uid = uid;
           console.log(uid);
           console.log(vm.acc_type);
           user_type.user_type = vm.acc_type;
           database.collection('user_type').doc(uid).set(user_type).then(function() {
-          console.log("user successfully written to users type collection!");
+          console.log("user successfully written to user_type collection!");
           })
         .catch(function(error) {
           console.error("Error writing new user to user type collection: ", error);
           });
 
-        if (vm.acc_type == 'User') {
+        if (vm.acc_type == 'user') {
           new_user.user_id = uid;
           new_user.email = vm.email;
           new_user.user_name = vm.username;
