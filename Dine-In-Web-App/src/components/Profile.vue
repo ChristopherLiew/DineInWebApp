@@ -346,7 +346,7 @@ img {
   height: 800px;
   
 }
-table  { display:inline-block;overflow-y:hidden;}
+
 
 
 .styled-table {
