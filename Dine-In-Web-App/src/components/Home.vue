@@ -9,7 +9,7 @@
         <div class="icon" :style="{
             'background-image': 'url(https://firebasestorage.googleapis.com/v0/b/dineinwebapp.appspot.com/o/Site%20Images%2Fmain_logo.png?alt=media&token=024c04f1-2b1a-4e35-9651-da1aa5a17fbd)',
           }">
-          <h2><router-link to="/">DineIn</router-link></h2>
+          <h2 id="icon"><router-link to="/">DineIn</router-link></h2>
         </div>
         <router-link to="/">Home</router-link>
         <router-link to="/profile">Profile</router-link>
@@ -24,7 +24,10 @@
         <a href="#" @click="logOut()">Log Out</a>
         </div>
       </div>
-      <div class="welcomepicture">
+      
+
+      <div v-if="data_loaded" class="content">
+        <div class="welcomepicture">
         <div
           class="info"
           :style="{
@@ -32,13 +35,10 @@
           }"
         >
           <h1 style="color:White">What shall we explore today?</h1>
+          <div class ="searcharea" >
+            <search></search>
+          </div>
         </div>
-      </div>
-    
-      <div v-if="data_loaded" class="content">
-        <br>
-        <div class ="searcharea">
-          <search></search>
         </div>
         <h1>Indian Food</h1>
         <div class="row">
@@ -179,6 +179,11 @@ body {
 
 .icon {
   text-align: center;
+  font-family:"Luminari"
+}
+
+h2 {
+  
 }
 
 .sidebar {
@@ -199,18 +204,22 @@ body {
 }
 
 .sidebar a.active {
-  background-color: #4caf50;
+  background-color: #F4AB2E;
   color: white;
 }
 
 .sidebar a:hover:not(.active) {
-  background-color: #555;
+  background-color: #F4AB2E;
   color: white;
 }
 
 div.content {
-  height: auto;
-  background-image: linear-gradient(rgb(78, 223, 78), rgb(85, 199, 228));
+
+  margin-left: 200px;
+  padding: 1px 16px;
+  height: 1300px;
+  background-color:#E8D496;
+  
 }
 
 .stati:hover {
@@ -263,8 +272,19 @@ div.content {
     margin-bottom: 10px;
   }
 }
-..welcomepicture {
+.welcomepicture {
   height: auto;
+  left-margin: auto;
+  right-margin: auto;
+}
+
+.searcharea {
+  
+  color: red;
+  display: grid;
+  place-items: center;
+  
+  
 }
 
 /* Style the counter cards */
@@ -282,6 +302,7 @@ div.content {
   overflow-x: scroll;
   overflow-y: hidden;
   white-space: nowrap;
+  word-wrap:break-word;
 }
 
 ::-webkit-scrollbar {

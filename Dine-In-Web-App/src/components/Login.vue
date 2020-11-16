@@ -24,8 +24,8 @@
       <br>
       <input type="text" v-model="password" placeholder="Password">
       <br>
-      <button @click="logInUser()">Log In</button>
-      <button @click="goToSignUp()">Sign Up</button> <!-- Link to registration page to fill in details -->
+      <button class= "smallinteractbutton" @click="logInUser()">Log In</button>
+      <button class= "smallinteractbutton" @click="goToSignUp()">Sign Up</button> <!-- Link to registration page to fill in details -->
     </div>
   </body>
 
@@ -131,38 +131,26 @@ body {
   text-align: center;
 }
 
-.sidebar {
-  margin: 0;
-  padding: 0;
-  width: 200px;
-  background-color: #f1f1f1;
-  position: fixed;
-  height: 100%;
-  overflow: auto;
-}
 
-.sidebar a {
-  display: block;
-  color: black;
-  padding: 16px;
-  text-decoration: none;
-}
- 
-.sidebar a.active {
-  background-color: #4CAF50;
-  color: white;
-}
 
-.sidebar a:hover:not(.active) {
-  background-color: #555;
-  color: white;
-}
-
+/* background colour */
 div.content {
   margin-left: 200px;
   padding: 1px 16px;
-  height: 1000px;
-  background-image: linear-gradient( rgb(78, 223, 78), rgb(85, 199, 228));
+  
+  
+}
+
+/* login and signup buttons */
+.smallinteractbutton {
+    width: 10%;
+    background-color: #4caf50;
+    color: white;
+    padding: 14px 20px;
+    margin-right: 8px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
 </style>

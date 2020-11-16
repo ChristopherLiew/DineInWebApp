@@ -18,30 +18,18 @@
       </div>
       <div class = "content">
         <h2>Create Account</h2>
-        <div class="signupcontainer">
-            <form class="card-panel" v-on:submit.prevent="signUpUser">
-                <label for="email">Email:</label>
-                <div class="field">
-                    <span><input type="email" name="email" v-model="email"></span>
-                </div>
-                <label for="password">Password:</label>
-                <div class="field"> 
-                    <span><input type="password" name="password" v-model="password"></span>
-                </div>
-                <label for="username">Username:</label>
-                <div class="field">
-                    <span><input type="text" name="username" v-model="username"></span>
-                </div>
-                <label for="lname">Account Type</label>
-                <select id="rating" name="rating" v-model.lazy="acc_type">
-                <option value=user>User</option>
-                <option value=merchant>Merchant</option>
-                </select>
-                <input type="submit" value="Submit"/>
-            </form>
-            </div>
+        <h3>Please enter the following:</h3>
+        <input type="text" name="email" v-model="email" placeholder="Email Address">
+        <br>
+        <input type="text" name="password" v-model="password" placeholder="Password">
+        <br>
+        <input type="text" name="username" v-model="username" placeholder="Username">
+        <select id="rating" name="rating" v-model.lazy="acc_type">
+          <option value=User>User</option>
+          <option value=Merchant>Merchant</option>
+        </select>
+        <button class= "smallinteractbutton" @click="signUpUser">Sign Up</button>
         </div>
-
     </body>
   </div>
 </template>
@@ -157,37 +145,8 @@ body {
   text-align: center;
 }
 
-.sidebar {
-  margin: 0;
-  padding: 0;
-  width: 200px;
-  background-color: #f1f1f1;
-  position: fixed;
-  height: 100%;
-  overflow: auto;
-}
 
-.sidebar a {
-  display: block;
-  color: black;
-  padding: 16px;
-  text-decoration: none;
-}
 
-.sidebar a.active {
-  background-color: #4caf50;
-  color: white;
-}
-
-.sidebar a:hover:not(.active) {
-  background-color: #555;
-  color: white;
-}
-
-div.content {
-  /*height: auto;*/
-  background-image: linear-gradient(rgb(78, 223, 78), rgb(85, 199, 228));
-}
 
 .stati:hover {
   -moz-box-shadow: 0px 0.4em 0.5em rgb(0, 0, 0, 0.8);
@@ -243,32 +202,5 @@ div.content {
   }
 }
 
-.signupcontainer {
-  border: 2px solid #ccc;
-  background-color: #eee;
-  padding: 5px;
-  border-radius: 10px 10px 10px 10px;
-  margin-top: 10px;
-  height:30%;
-  width: 20%;
-  margin: auto;
 
-}
-
-.register {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 30%;
-  height: 20%;
-}
-
-input {
-    width: 100%;
-}
-span {
-    display: block;
-    overflow: hidden;
-    padding-right:10px;
-}
 </style>

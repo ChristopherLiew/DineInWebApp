@@ -1,4 +1,5 @@
 <template>
+<!DOCTYPE html>
 <div>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,11 +16,13 @@
         <hr>
         <a href="#" @click="logOut()">Log Out</a>
     </div>
+    
 
     <div class="content">
       <!-- Can only review past reservations -->
-      <h2>Upcoming Reservations</h2>
+     
       <div class="pastreservations">
+        <h1 style = "text-align: center">Upcoming Reservations</h1>
           <table class="styled-table">
           <thead>
             <tr>
@@ -45,28 +48,29 @@
         <div class="profilecard">
           <h2 v-if="this.loaded == true">Profile of</h2> 
           <h2>{{profileInfo.name.first_name}} {{profileInfo.name.last_name}}</h2>
-          <button @click="goToProfileDetails">Edit Profile</button>
+          
+          <br/>
           <img v-if="profileInfo.imgURL != null && loaded == true" :src=profileInfo.imgURL alt="Profile Pic">
           <br>
+          <button class = "centering" @click="goToProfileDetails">Edit Profile</button>
           <br>
-      <div>
-        <div>
-          <input type="file" @change="inputImage" accept="image/*">
-        </div>
-        <div>
-          <p>Progress: {{uploadPct.toFixed()+"%"}}
+          <input type="file" id="profileupload" @change="inputImage" accept="image/*">
+          <p class = "centering">Progress: {{uploadPct.toFixed()+"%"}}
           <progress id="progress" :value="uploadPct" max="100" ></progress>  </p>
+        <div>
+        
+        <div v-if="imageData!=null">
+          <button @click="setProfileImage">Upload</button>
         </div>
-          <div v-if="imageData!=null">
-            <button @click="setProfileImage">Upload</button>
-          </div>
-        </div>
+       </div>
         </div>
       </div>
       <!-- Get past reservations -->
       <br>
-      <h2>Past Reservations</h2>
+      
+      <br/>
       <div class="pastreservations">
+      <h1 style = "text-align: center">Past Reservations</h1>
           <table class="styled-table">
           <thead>
             <tr>
@@ -267,6 +271,7 @@ export default {
 <style>
 body {
   margin: 0;
+
   font-family: "Lato", sans-serif;
 }
 
@@ -274,63 +279,49 @@ body {
   text-align: center;
 }
 
-.sidebar {
-  margin: 0;
-  padding: 0;
-  width: 200px;
-  background-color: #f1f1f1;
-  position: fixed;
-  height: 100%;
-  overflow: auto;
-}
 
-.sidebar a {
-  display: block;
-  color: black;
-  padding: 16px;
-  text-decoration: none;
-}
- 
-.sidebar a.active {
-  background-color: #4CAF50;
-  color: white;
-}
 
-.sidebar a:hover:not(.active) {
-  background-color: #555;
-  color: white;
-}
 
-div.content {
-  margin-left: 200px;
-  padding: 1px 16px;
-  height: 1000px;
-  background-image: linear-gradient( rgb(78, 223, 78), rgb(85, 199, 228));
+.profileupload {
+  text-align: center !important;
 }
 
 .profilearea {
   width: 30%;
   float: right;
+  text-align: center;
+  margin-top: 50px;
 }
 
 .pastreservations {
   width: 70%;
   float: left;
   /*background-color: blue;*/
+  margin-top:30px;
 }
 
 img {
-    width: 300px;
-    height: auto;
+    width:400px;
+    margin: 0 auto;
 }
+
+
+.centering {
+  float: left;
+}
+
+
+
 
 .profilecard {
   background-color: whitesmoke;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  padding: 14px 20px;
   border-radius: 10px 10px 10px 10px;
-  max-width: 300px;
+  max-width: 400px;
   margin: auto;
-  text-align: center;
+  height: 800px;
+  
 }
 
 .styled-table {
