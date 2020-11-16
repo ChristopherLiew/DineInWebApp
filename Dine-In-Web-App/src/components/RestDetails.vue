@@ -17,7 +17,7 @@
       </div>
 
       <div class = "content">
-          <h2>Restaurant Information</h2>
+          <h1 style = "text-align:center">Restaurant Information</h1>
         <div class="container">
             <form v-if="data_loaded" v-on:submit.prevent="updateResProfile">
                 <label for="restaurantname">Name of Restaurant</label>
@@ -365,6 +365,8 @@ body {
   border-radius: 5px;
   background-color: #f2f2f2;
   padding: 20px;
+  width:50%;
+  margin:auto;
 }
 
 input[type=text], select, textarea {
