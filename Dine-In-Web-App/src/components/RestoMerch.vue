@@ -559,33 +559,7 @@ body {
   color: white;
 }
 
-.testimonials {
-  border: 2px solid #ccc;
-  background-color: #eee;
-  border-radius: 10px;
-  padding: 5px;
-  margin: 7px 0;
-  width: 115%;
-}
 
-/* Clear floats after containers */
-.testimonials::after {
-  content: "";
-  clear: both;
-  display: table;
-}
-
-/* Float images inside the container to the left. Add a right margin, and style the image as a circle */
-.testimonials img {
-  float: left;
-  width: 100%;
-  border-radius: 50%;
-}
-
-/* Increase the font-size of a span element */
-.testimonials span {
-  font-size: 20px;
-}
 
 .* {
   box-sizing: border-box;

@@ -102,14 +102,14 @@
             </div>
           </div>
 
-          <div class="row">
+          <div class="row1">
             <!-- Table of Reviews -->
             <div class="ex3" id="reviews_table">
               <div class="testimonials" v-for="review in reviewslist" :key="review.number">
                 <div>
-                  <p>{{ review.user_name }} rated {{ review.rating }}/5 stars.</p>
-                  <p>{{ review.date }}</p>
-                  <p>{{ review.review_text }}</p>
+                  <p class="textwrap">{{ review.user_name }} rated {{ review.rating }}/5 stars.</p>
+                  <p class="textwrap">{{ review.date }}</p>
+                  <p class="textwrap">{{ review.review_text }}</p>
                 </div>
               </div>
             </div>
@@ -505,6 +505,15 @@ export default {
   clear: both;
 }
 
+.row1 {
+  
+  overflow-y: hidden;
+  white-space: normal;
+  word-wrap:break-word;
+}
+
+
+
 table {
   overflow: auto;
   height: 200px;
@@ -602,7 +611,7 @@ body {
   border-radius: 10px;
   padding: 5px;
   margin: 7px 0;
-  width: 115%;
+  width: 100%;
 }
 
 /* Clear floats after containers */
@@ -622,6 +631,12 @@ body {
 /* Increase the font-size of a span element */
 .testimonials span {
   font-size: 20px;
+  
+
+}
+
+.textwrap {
+  
 }
 
 .* {

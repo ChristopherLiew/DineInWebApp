@@ -248,7 +248,7 @@ div.content {
 
   margin-left: 200px;
   padding: 1px 16px;
-  height: 2000px;
+  height: 1300px;
   background-color:#E8D496;
   
 }
@@ -333,6 +333,7 @@ div.content {
   overflow-x: scroll;
   overflow-y: hidden;
   white-space: nowrap;
+  word-wrap:break-word;
 }
 
 ::-webkit-scrollbar {
