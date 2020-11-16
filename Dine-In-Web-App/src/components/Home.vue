@@ -41,7 +41,7 @@
         </div>
         <h1>Indian Food</h1>
         <div class="row">
-        <div v-for="merchant in carousel_one" :key="merchant.merchant_id">
+        <div class="displaycard" v-for="merchant in carousel_one" :key="merchant.merchant_id">
           <!-- Change this.carousel_one = this.getCarouselData('indian');-->
           <div class="displaycard">
             <img :src="merchant.imgURL.food" alt="merchant.merchant_name" class="frontpic">
@@ -52,7 +52,7 @@
         </div>
         <h1>Chinese Food</h1>
         <div class="row">
-        <div v-for="merchant in carousel_two" :key="merchant.merchant_id">
+        <div class="displaycard" v-for="merchant in carousel_two" :key="merchant.merchant_id">
           <!-- Change to carousel_two and add this.carousel_two = this.getCarouselData('chinese');-->
           <div class="displaycard">
             <img :src="merchant.imgURL.food" alt="merchant.merchant_name" class="frontpic">
@@ -63,7 +63,7 @@
         </div>
         <h1>Malay Food</h1>
         <div class="row">
-        <div v-for="merchant in carousel_three" :key="merchant.merchant_id"> 
+        <div class="displaycard" v-for="merchant in carousel_three" :key="merchant.merchant_id"> 
           <!-- Change to carousel_three and add this.carousel_three = this.getCarouselData('malay');-->
           <div class="displaycard">
             <img :src="merchant.imgURL.food" alt="merchant.merchant_name" class="frontpic">
@@ -298,9 +298,9 @@ div.content {
 
 .row {
   overflow-x: scroll;
-  overflow-y: hidden;
+ 
   white-space: nowrap;
-  word-wrap:break-word;
+  
 }
 
 ::-webkit-scrollbar {

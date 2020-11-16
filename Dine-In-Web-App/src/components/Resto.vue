@@ -651,7 +651,7 @@ div.content {
   margin-left: 200px;
   padding: 1px 16px;
   height: auto;
-  background-image: linear-gradient(rgb(78, 223, 78), rgb(85, 199, 228));
+ 
 }
 
 .stati {
