@@ -51,18 +51,35 @@
               </div>
 
               <!-- Safety Measures Card -->
-              <div class="card">
-                <p>Contact Tracing: {{ getContactTrace }}%</p>
-              </div>
-              <div class="card">
-                <p>Compulsory Masks: {{ getMasks }}%</p>
-              </div>
-              <div class="card">
-                <p>Safe Distancing: {{ getSafeDistance }}%</p>
-              </div>
-              <div class="card">
-                <p>Temperature Screening: {{ getTempScreen }}%</p>
-              </div>
+              <div class = "row">
+                <div style="width: 50%; float:left">
+                <div class="cardsodd">
+                  <p class="percentage"> {{ getContactTrace }}% <p>
+                  <p>Contact Tracing</p>
+                </div>
+                </div>
+                <div style="width: 50%; float:right">
+                <div class="cardseven">
+                  <p class="percentage"> {{ getMasks }}% <p>
+                  <p>Compulsory Masks</p>
+                </div>
+                </div>
+              
+                <div style="width: 50%; float:left">
+                <div class="cardseven">
+                  <p class="percentage"> {{ getSafeDistance }}% <p>
+                  <p>Safe Distancing</p>
+                </div>
+                </div>
+                <div style="width: 50%; float:right">
+                <div class="cardsodd">
+                  <p class="percentage"> {{ getTempScreen }}% <p>
+                  <p>Temperature Screening</p>
+                </div>
+                </div>
+              
+             
+            </div>
             </div>
         
             <div class="column right1">
@@ -80,24 +97,45 @@
                 </div>
               </div>
 
-              <!-- Detailed Seats Card -->
-              <div class="card">
-                <p>One-seaters: {{ getOneSeaterVacancy }}/{{ capacity.one_seater }}</p>
+              <div class = "row">
+                <div style="width: 50%; float:left">
+                <div class="cardsodd1">
+                  <p class="percentage"> {{ getOneSeaterVacancy }}/{{ capacity.one_seater }} <p>
+                  <p>One-seaters</p>
+                </div>
+                </div>
+                <div style="width: 50%; float:right">
+                <div class="cardseven1">
+                  <p class="percentage"> {{ getTwoSeaterVacancy }}/{{ capacity.two_seater }}<p>
+                  <p>Two-seaters</p>
+                </div>
+                </div>
+              
+                <div style="width: 30%; float:left">
+                <div class="cardseven1">
+                  <p class="percentage"> {{ getThreeSeaterVacancy }}/{{ capacity.three_seater }} <p>
+                  <p>Three-seaters</p>
+                </div>
+                </div>
+                <div style="width: 40%; float:right">
+                <div class="cardseven1">
+                  <p class="percentage"> {{ getFourSeaterVacancy }}/{{ capacity.four_seater }} <p>
+                  <p>Four-seaters</p>
+                </div>
+                </div>
+                <div style="width: 30%; float:right">
+                <div class="cardsodd1">
+                  <p class="percentage"> {{ getFiveSeaterVacancy }}/{{ capacity.five_seater }} <p>
+                  <p>Five-seaters</p>
+                </div>
+                </div>
               </div>
-              <div class="card">
-                <p>Two-seaters: {{ getTwoSeaterVacancy }}/{{ capacity.two_seater }}</p>
-              </div>
-              <div class="card">
-                <p>Three-seaters: {{ getThreeSeaterVacancy }}/{{ capacity.three_seater }}</p>
-              </div>
-              <div class="card">
-                <p>Four-seaters: {{ getFourSeaterVacancy }}/{{ capacity.four_seater }}</p>
-              </div>
-              <div class="card">
-                <p>Five-seaters: {{ getFiveSeaterVacancy }}/{{ capacity.five_seater }}</p>
-              </div>
+              
+             
             </div>
-          </div>
+            </div>
+
+          
 
           <div class="row">
             <!-- Table of Reviews -->
@@ -115,7 +153,10 @@
         
         <!-- Reservation Form -->
         <div class="column right">
-              <img :src="merchant_info.image" alt="Exterior image of Restaurant"><br><br>
+            <div class = "container2">
+            <h2 style="text-align:center"> Galleries </h2>
+              <img :src="merchant_info.image" alt="Exterior image of Restaurant" class= "centerimg"><br><br>
+            </div>
         </div>
       </div>
     </div>
@@ -455,6 +496,22 @@ export default {
 </script>
 
 <style>
+.container2 {
+ 
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+  
+  margin:auto;
+
+}
+
+.centerimg {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
 .column {
   float: left;
   padding: 10px;
@@ -503,6 +560,26 @@ body {
   font-family: "Lato", sans-serif;
 }
 
+.cardseven1 {
+  box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.2);
+  padding: 4px;
+  text-align: center;
+  background-color:  #A3EB98;
+  color: black;
+  width: 100%;
+  height:135px;
+
+}
+.cardsodd1 {
+  box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.2);
+  padding: 4px;
+  text-align: center;
+  background-color:  #CEF7B5;
+  color: black;
+  width: 100%;
+  height:135px;
+
+}
 
 .iconDetails {
   float: left;
@@ -603,8 +680,9 @@ body {
   box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.2);
   padding: 4px;
   text-align: center;
-  background-color: #444;
-  color: white;
+  background-color: #FFF9D8;
+  color: black;
+  font-size: 16px;
 }
 
 table {

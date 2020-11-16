@@ -214,7 +214,7 @@ div.content {
 
   margin-left: 200px;
   padding: 1px 16px;
-  height: 1200px;
+  height: 1600px;
   width: auto;
   background-color:#FFE4E1;
   

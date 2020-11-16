@@ -362,10 +362,10 @@ body {
 }
 
 .vacancies {
-  padding: 5px;
+  padding: 2px;
   text-align: center;
   background-color: white;
-  width: 10rem;
+  width: 14rem;
   display: inline-block;
   margin: 2rem;
   border-radius: 10px 10px 10px 10px;
@@ -397,9 +397,12 @@ body {
   display: block;
   margin-left: auto;
   margin-right: auto;
-  width: 30%;
-  height: 40%;
-  background-color: rgba(26, 182, 26, 0.829);
+  width: 100%;
+  height:50px;
+  border-color: #FFF3E1;
+  
+  
+  background-color:#FFF3E1;
 }
 
 .updatebutton:active {
