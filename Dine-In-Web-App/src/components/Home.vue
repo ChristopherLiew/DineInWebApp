@@ -235,18 +235,22 @@ h2 {
 }
 
 .sidebar a.active {
-  background-color: #4caf50;
+  background-color: #F4AB2E;
   color: white;
 }
 
 .sidebar a:hover:not(.active) {
-  background-color: #555;
+  background-color: #F4AB2E;
   color: white;
 }
 
 div.content {
-  height: auto;
-  background-image: linear-gradient(rgb(78, 223, 78), rgb(85, 199, 228));
+
+  margin-left: 200px;
+  padding: 1px 16px;
+  height: 2000px;
+  background-color:#E8D496;
+  
 }
 
 .stati:hover {

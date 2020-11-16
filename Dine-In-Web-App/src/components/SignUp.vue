@@ -145,37 +145,8 @@ body {
   text-align: center;
 }
 
-.sidebar {
-  margin: 0;
-  padding: 0;
-  width: 200px;
-  background-color: #f1f1f1;
-  position: fixed;
-  height: 100%;
-  overflow: auto;
-}
 
-.sidebar a {
-  display: block;
-  color: black;
-  padding: 16px;
-  text-decoration: none;
-}
 
-.sidebar a.active {
-  background-color: #4caf50;
-  color: white;
-}
-
-.sidebar a:hover:not(.active) {
-  background-color: #555;
-  color: white;
-}
-
-div.content {
-  /*height: auto;*/
-  background-image: linear-gradient(rgb(78, 223, 78), rgb(85, 199, 228));
-}
 
 .stati:hover {
   -moz-box-shadow: 0px 0.4em 0.5em rgb(0, 0, 0, 0.8);

@@ -172,19 +172,16 @@ body {
 }
 
 .sidebar a.active {
-  background-color: #4caf50;
+  background-color: green;
   color: white;
 }
 
 .sidebar a:hover:not(.active) {
-  background-color: #555;
+  background-color: green;
   color: white;
 }
 
-div.content {
-  /*height: auto;*/
-  background-image: linear-gradient(rgb(78, 223, 78), rgb(85, 199, 228));
-}
+
 
 .stati:hover {
   -moz-box-shadow: 0px 0.4em 0.5em rgb(0, 0, 0, 0.8);
