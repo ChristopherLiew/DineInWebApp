@@ -37,14 +37,14 @@
             <div class="column left1">
               
               <!-- Overall Rating Card -->
-              <div class="stati turquoise">
-                <div style="display: inline-block">
+              <div class="stati turquoise" style="width:40%">
+                <div>
                   <b>{{ getOverallRating }}/5</b>
                   <span>Overall Rating</span>
                 </div>
               </div>
-              <div class="stati turquoise">
-                <div style="display: inline-block">
+              <div class="stati turquoise" style="width:40%">
+                <div>
                   <b>{{ getSafetyScore }}%</b>
                   <span>Safety Adherence</span>
                 </div>
@@ -84,13 +84,13 @@
         
             <div class="column right1">
 
-              <div class="stati turquoise">
+              <div class="stati turquoise"  style="width:40%">
                 <div style="display: inline-block">
                   <b>{{ num_reviewers }}</b>
                   <span>No. of Reviewers</span>
                 </div>
               </div>
-              <div class="stati turquoise">
+              <div class="stati turquoise"  style="width:40%">
                 <div style="display: inline-block">
                   <b>{{ getTotalSeatVacancy }}/{{ getTotalSeatCapacity }}</b>
                   <span>Seats Available Now</span>
