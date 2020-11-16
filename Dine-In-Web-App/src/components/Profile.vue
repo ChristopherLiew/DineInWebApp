@@ -334,7 +334,7 @@ img {
 }
 
 .styled-table thead tr {
-    background-color: #009879;
+    background-color: white;
     color: #ffffff;
     text-align: left;
 }
@@ -349,12 +349,13 @@ img {
 }
 
 .styled-table tbody tr:nth-of-type(even) {
-    background-color: #f3f3f3;
+    background-color:#FFF3E1;
 }
 
-.styled-table tbody tr:last-of-type {
-    border-bottom: 2px solid #009879;
+.styled-table tbody tr:nth-of-type(odd) {
+    background-color:#FFFFFF;
 }
+
 
 .styled-table tbody tr.active-row {
     font-weight: bold;

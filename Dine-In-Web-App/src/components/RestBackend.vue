@@ -456,10 +456,10 @@ th, td {
   padding: 8px;
 }
 
-tr:nth-child(even){background-color: #f2f2f2}
+tr:nth-child(even){background-color: #FFF3E1}
 
 th {
-  background-color: #838764;
+  background-color:#B26F68;
   color: white;
 }
 
