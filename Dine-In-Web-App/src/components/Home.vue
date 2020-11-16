@@ -204,12 +204,12 @@ h2 {
 }
 
 .sidebar a.active {
-  background-color: #F4AB2E;
+  background-color: #D9A59F;
   color: white;
 }
 
 .sidebar a:hover:not(.active) {
-  background-color: #F4AB2E;
+  background-color: #D9A59F;
   color: white;
 }
 
@@ -218,7 +218,7 @@ div.content {
   margin-left: 200px;
   padding: 1px 16px;
   height: 1300px;
-  background-color:#FFA101;
+  background-color:#FFE4E1;
   
 }
 
