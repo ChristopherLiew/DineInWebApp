@@ -54,18 +54,35 @@
               </div>
 
               <!-- Safety Measures Card -->
-              <div class="card">
-                <p>Contact Tracing: {{ getContactTrace }}%</p>
-              </div>
-              <div class="card">
-                <p>Compulsory Masks: {{ getMasks }}%</p>
-              </div>
-              <div class="card">
-                <p>Safe Distancing: {{ getSafeDistance }}%</p>
-              </div>
-              <div class="card">
-                <p>Temperature Screening: {{ getTempScreen }}%</p>
-              </div>
+              <div class = "row">
+                <div style="width: 50%; float:left">
+                <div class="cardsodd">
+                  <p class="percentage"> {{ getContactTrace }}% <p>
+                  <p>Contact Tracing</p>
+                </div>
+                </div>
+                <div style="width: 50%; float:right">
+                <div class="cardseven">
+                  <p class="percentage"> {{ getMasks }}% <p>
+                  <p>Compulsory Masks</p>
+                </div>
+                </div>
+              
+                <div style="width: 50%; float:left">
+                <div class="cardseven">
+                  <p class="percentage"> {{ getSafeDistance }}% <p>
+                  <p>Safe Distancing</p>
+                </div>
+                </div>
+                <div style="width: 50%; float:right">
+                <div class="cardsodd">
+                  <p class="percentage"> {{ getTempScreen }}% <p>
+                  <p>Temperature Screening</p>
+                </div>
+                </div>
+              
+             
+            </div>
             </div>
         
             <div class="column right1">
@@ -107,9 +124,21 @@
             <div class="ex3" id="reviews_table">
               <div class="testimonials" v-for="review in reviewslist" :key="review.number">
                 <div>
-                  <p>{{ review.user_name }} rated {{ review.rating }}/5 stars.</p>
-                  <p>{{ review.date }}</p>
-                  <p>{{ review.review_text }}</p>
+                  <div class = "row">
+                  <div class = "div1">
+                    <p class="headerid">{{ review.user_name }}</p>
+                    <p> Ratings: {{ review.rating }} out of 5 stars.</p>
+                  </div>
+                  <div class = "div2">
+                     <p style="font-weight:bold">{{ review.date }}</p>
+                  </div>
+                  
+                  </div>
+                  
+                  <hr>
+                 
+              
+                  <p class="textwrap">{{ review.review_text }}</p>
                 </div>
               </div>
             </div>
@@ -534,6 +563,25 @@ export default {
   display: table;
   clear: both;
 }
+.headerid {
+  font-size: 25px;
+  font-weight: bold;
+
+}
+.row1 {
+  
+  overflow-y: hidden;
+  white-space: normal;
+  word-wrap:break-word;
+}
+
+.div1 {
+    float: left;
+}
+
+.div2 {
+    float:right;
+}
 
 table {
   overflow: auto;
@@ -656,9 +704,9 @@ div.content {
   border: 2px solid #ccc;
   background-color: #eee;
   border-radius: 10px;
-  padding: 5px;
+  padding: 20px;
   margin: 7px 0;
-  width: 115%;
+  width: 95%;
 }
 
 /* Clear floats after containers */
@@ -678,6 +726,7 @@ div.content {
 /* Increase the font-size of a span element */
 .testimonials span {
   font-size: 20px;
+ 
 }
 
 .* {
@@ -713,6 +762,26 @@ div.content {
   color: white;
 }
 
+.cardsodd {
+  box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.2);
+  padding: 4px;
+  text-align: center;
+  background-color: #e1edff;
+  color: black;
+  width: 100%;
+  height:135px;
+}
+
+.cardseven {
+  box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.2);
+  padding: 4px;
+  text-align: center;
+  background-color: #e4e1ff;
+  color: black;
+  width: 100%;
+  height:135px;
+}
+
 table {
   border-collapse: collapse;
   width: 100%;
@@ -746,7 +815,7 @@ select {
 
 input[type="submit"] {
   width: 100%;
-  background-color: #4caf50;
+  background-color: #D9A59F;
   color: white;
   padding: 14px 20px;
   margin: 8px 0;
