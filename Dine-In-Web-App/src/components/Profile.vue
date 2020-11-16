@@ -334,7 +334,7 @@ img {
 }
 
 .styled-table thead tr {
-    background-color: #009879;
+    background-color: white;
     color: #ffffff;
     text-align: left;
 }
@@ -349,7 +349,7 @@ img {
 }
 
 .styled-table tbody tr:nth-of-type(even) {
-    background-color: #f3f3f3;
+    background-color: #B26F68;
 }
 
 .styled-table tbody tr:last-of-type {
