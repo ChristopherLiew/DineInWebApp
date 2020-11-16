@@ -118,7 +118,7 @@
         
         <!-- Reservation Form -->
         <div class="column right">
-          <div class="forms">
+          <div v-if="data_loaded" class="forms">
             <form @submit.prevent="checkReservationForm">
               <h1>Reserve</h1>
               <img :src="merchant_info.image" alt="Exterior image of Restaurant"><br><br>
@@ -158,6 +158,7 @@ const db = firebase.firestore();
 export default {
   data() {
     return {
+      data_loaded: false,
       //Authenticated user
       user_id: null,
       user_name: null,
@@ -178,6 +179,13 @@ export default {
         three_seater: null,
         four_seater: null,
         five_seater: null      
+      },
+      walkins: {
+        one_seater: null,
+        two_seater: null,
+        three_seater: null,
+        four_seater: null,
+        five_seater: null,
       },
       capacity: {
         one_seater: null,
@@ -206,7 +214,8 @@ export default {
       summed_tempscreen: null,
       //Operating hours in milliseconds
       opening_hours_millisec: null,
-      closing_hours_millisec: null
+      closing_hours_millisec: null,
+      update: false
     }
   },
   components: {
@@ -215,10 +224,13 @@ export default {
     watch: { // React to param id change in router path, wehre path is the same router path as current page
         '$route' () {
             location.reload();
+        },
+        update: function() {
+          this.update = true;
+          location.reload();
         }
     },
   methods: {  
-
     //Get merchant information from firestore, then update all merchant-related info
     fetchMerchantInfo: function() {
       if (this.merchant_id) {
@@ -231,8 +243,12 @@ export default {
             this.merchant_info.merchant_name = doc.data().merchant_name;
             this.merchant_info.address = doc.data().address;
             this.merchant_info.contact = doc.data().contact;
-            this.merchant_info.opening_hours = new Date(doc.data().operating_hours.opening * 1000).toLocaleTimeString('en-SG', {timeZone: 'Asia/Singapore', hour: 'numeric', minute: 'numeric', hour12: true});
-            this.merchant_info.closing_hours = new Date(doc.data().operating_hours.closing * 1000).toLocaleTimeString('en-SG', {timeZone: 'Asia/Singapore', hour: 'numeric', minute: 'numeric', hour12: true});
+            let opening = new Date(doc.data().operating_hours.opening * 1000)
+            opening.setTime(opening.getTime() + opening.getTimezoneOffset()*60*1000);
+            let closing = new Date(doc.data().operating_hours.closing * 1000);
+            closing.setTime(closing.getTime() + closing.getTimezoneOffset()*60*1000);
+            this.merchant_info.opening_hours = new Date(opening).toLocaleTimeString('en-SG', {timeZone: 'Asia/Singapore', hour: 'numeric', minute: 'numeric', hour12: true});
+            this.merchant_info.closing_hours = new Date(closing).toLocaleTimeString('en-SG', {timeZone: 'Asia/Singapore', hour: 'numeric', minute: 'numeric', hour12: true});
             this.opening_hours_millisec = doc.data().operating_hours.opening * 1000;
             this.closing_hours_millisec = doc.data().operating_hours.closing * 1000;
             this.merchant_info.image = doc.data().imgURL.exterior;
@@ -244,6 +260,12 @@ export default {
             this.capacity.three_seater = doc.data().capacity.three_seater;
             this.capacity.four_seater = doc.data().capacity.four_seater;
             this.capacity.five_seater = doc.data().capacity.five_seater;
+            //Walk Ins
+            this.filledseats.one_seater += doc.data().walk_ins.one_seater;
+            this.filledseats.two_seater += doc.data().walk_ins.two_seater;
+            this.filledseats.three_seater += doc.data().walk_ins.three_seater;
+            this.filledseats.four_seater += doc.data().walk_ins.four_seater;
+            this.filledseats.five_seater += doc.data().walk_ins.five_seater;
           })
         })
 
@@ -272,17 +294,21 @@ export default {
           })
         })
 
-        //Update vacancy per seat type
+        //Update vacancy per seat type 
         db.collection("reservations")
         .where("merchant_id", "==", this.merchant_id)
         .get()
         .then((querySnapshot) => {
-          querySnapshot.forEach(doc => { //vacancy = capacity - capacity of (reservations with datetimes > today - 20min AND today < reservation datetime + 30min AND status != "completed" and status != "no-show" and status != "cancelled")
-            var chosen_date = doc.data().date_reserved;
-            var today = Number((new Date().getTime() / 1000).toFixed(0));
-            var date_condition = chosen_date >= this.addMinutes(today, -20) && today < this.addMinutes(chosen_date, 30);
-
-            if (date_condition) {
+          querySnapshot.forEach(doc => { //vacancy = capacity - capacity of (reservations with datetimes > today - 20min AND today < reservation datetime + 30min AND status != "completed" and status != "no-show" and status != "cancelled")          
+            var chosen_date = doc.data().date_reserved; //seconds
+            console.log("chosen_date", chosen_date);
+            var today = Number((new Date().getTime() / 1000).toFixed(0)); // seconds, local time
+            console.log("today", today);
+            var upcoming = chosen_date >= this.addMinutes(today, -20) && chosen_date <= today;
+            console.log("upcoming: ", upcoming);
+            var ongoing = chosen_date >= today && chosen_date <= this.addMinutes(today, 40);
+            console.log("ongoing: ", ongoing);
+            if (upcoming || ongoing) {
               this.filledseats.one_seater += doc.data().seat_type == "one_seater";
               this.filledseats.two_seater += doc.data().seat_type == "two_seater";
               this.filledseats.three_seater += doc.data().seat_type == "three_seater";
@@ -296,7 +322,6 @@ export default {
 
     //Validate reservation form and save data to firestore if valid
     checkReservationForm: function() {
-
       // Ensure all fields filled in
       if (!this.seat_type_chosen) {
         alert("Please tell us which seats you'd like!")
@@ -304,21 +329,25 @@ export default {
       if (!this.reservation_datetime) {
         alert("Please tell us when you're coming!")
       } else {  
-
       // Ensure valid datetime: 7 day window
       var chosen_date = new Date(this.reservation_datetime).getTime() / 1000;
+      console.log(chosen_date);
       var today = new Date().getTime() / 1000;
       var max_date = this.addDays(today, 7);
       if (chosen_date < today || chosen_date > max_date) {
         alert("Please choose a valid reservation date, in between today and one week from now");
       } else {
-
         // Ensure valid datetime: Within operating hours
-        var chosendate_midnight = Number((new Date(new Date(this.reservation_datetime).setHours(0,0,0,0)).getTime() / 1000).toFixed(0))
+        var chosendate_midnight = Number(new Date(new Date(this.reservation_datetime).setHours(0,0,0,0)).getTime()); 
+        //console.log("midnight: ", chosendate_midnight); // midnight of chosen date
         var opening = this.opening_hours_millisec + chosendate_midnight;
-        var closing = this.closing_hours_millisec + chosendate_midnight;
-        var beyond_operatinghours = chosen_date <= opening || chosen_date >= closing;
-        console.log("beyond? ", beyond_operatinghours);
+        //console.log("opening: ", opening);
+        var closing = Number(this.closing_hours_millisec) + chosendate_midnight;
+        //console.log("closing: "+ closing);
+        let chosen_d = new Date(this.reservation_datetime).getTime()
+        //console.log(chosen_d);
+        var beyond_operatinghours = chosen_d <= opening || chosen_date >= closing;
+        //console.log("beyond? ", beyond_operatinghours);
         if (beyond_operatinghours) {
           alert("Please choose a timing within the restaurant's operating hours! :) The shop owners are human, and require rest.")
         } else {
@@ -360,7 +389,7 @@ export default {
           } else if (seattype == "five_seater" && this.filledseats.five_seater + expectedFilledFive >= this.capacity.five_seater) {
             alert("Sorry, we're expecting five-seaters to be filled during your chosen timing. Try a different date, time, or seating choice.")
           } else {
-
+            let vm = this;
             // Reservation Successful!
             db.collection("reservations")
             .add({
@@ -371,12 +400,13 @@ export default {
               user_id: this.user_id,
               merchant_name: this.merchant_info.merchant_name,
               user_name: this.user_name
-            });
-            alert("Reservation successful! Be there or be square :)");
-          }
-        })
-      }}}
-      location.reload();
+            }).then(function () {
+              alert("Reservation successful! Be there or be square")
+              vm.update = true})}
+          })
+        }
+        }
+      }
     },
 
     //Add a given number of days to a given datetime
@@ -469,7 +499,8 @@ export default {
         this.user_id = user.uid;
         this.merchant_id = this.$route.params.id;
         this.fetchMerchantInfo();
-        this.getUserName();        
+        this.getUserName();   
+        this.data_loaded = true;     
       }
     })
   }

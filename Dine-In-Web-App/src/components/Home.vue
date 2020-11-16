@@ -40,69 +40,39 @@
           </div>
         </div>
         </div>
-        <h1>Japanese Food</h1>
+        <h1>Indian Food</h1>
         <div class="row">
+        <div v-for="merchant in carousel_one" :key="merchant.merchant_id">
+          <!-- Change this.carousel_one = this.getCarouselData('indian');-->
           <div class="displaycard">
-            <img
-                class="card-img-top"
-                src=this.carousel_one[0].imgURL.interior
-                style="border-radius: 0.6rem; max-height:100%; max-width: 100%;"
-              />
+            <img :src="merchant.imgURL.interior" alt="merchant.merchant_name">
             <h3>{{carousel_one[0].merchant_name}}</h3>
-            <router-link :to="{ name: 'restaurant', params: { id: this.carousel_one[0].merchant_id }}">Link</router-link>
+            <router-link :to="{ name: 'restaurant', params: { id: merchant.merchant_id }}">Link</router-link>
           </div>
-          <div class="displaycard">
-            <img
-                class="card-img-top"
-                src="https://placekitten.com/g/100/100"
-                style="border-radius: 0.6rem; height:175px; width: 175px;"
-              />
-            <h3>Name of Restaurant</h3>
-            <h3>link</h3>
-
-          </div>
-          <div class="displaycard">
-            <img
-                class="card-img-top"
-                src="https://placekitten.com/g/100/100"
-                style="border-radius: 0.6rem; height:175px; width: 175px;"
-              />
-            <h3>Name of Restaurant</h3>
-            <h3>link</h3>
-
-          </div>
-          <div class="displaycard">
-            <img
-                class="card-img-top"
-                src="https://placekitten.com/g/100/100"
-                style="border-radius: 0.6rem; height:175px; width: 175px;"
-              />
-            <h3>Name of Restaurant</h3>
-            <h3>link</h3>
-
-          </div>
-          <div class="displaycard">
-            <img
-                class="card-img-top"
-                src="https://placekitten.com/g/100/100"
-                style="border-radius: 0.6rem; height:175px; width: 175px;"
-              />
-            <h3>Name of Restaurant</h3>
-            <h3>link</h3>
-
-          </div>
-          <div class="displaycard">
-            <img
-                class="card-img-top"
-                src="https://placekitten.com/g/100/100"
-                style="border-radius: 0.6rem; height:175px; width: 175px;"
-              />
-            <h3>Name of Restaurant</h3>
-            <h3>link</h3>
-
           </div>
         </div>
-        <h1>Japanese Food</h1>
+        <h1>Chinese Food</h1>
+        <div class="row">
+        <div v-for="merchant in carousel_one" :key="merchant.merchant_id">
+          <!-- Change to carousel_two and add this.carousel_two = this.getCarouselData('chinese');-->
+          <div class="displaycard">
+            <img :src="merchant.imgURL.interior" alt="merchant.merchant_name">
+            <h3>{{carousel_one[0].merchant_name}}</h3>
+            <router-link :to="{ name: 'restaurant', params: { id: merchant.merchant_id }}">Link</router-link>
+          </div>
+          </div>
+        </div>
+        <h1>Malay Food</h1>
+        <div class="row">
+        <div v-for="merchant in carousel_one" :key="merchant.merchant_id"> 
+          <!-- Change to carousel_three and add this.carousel_three = this.getCarouselData('malay');-->
+          <div class="displaycard">
+            <img :src="merchant.imgURL.interior" alt="merchant.merchant_name">
+            <h3>{{carousel_one[0].merchant_name}}</h3>
+            <router-link :to="{ name: 'restaurant', params: { id: merchant.merchant_id }}">Link</router-link>
+          </div>
+          </div>
+        </div>
       </div>
     </body>
   </div>
@@ -162,14 +132,13 @@ export default {
       this.$router.push({name: "signup"});
     },
     logOut: function() {
-      let vm = this;
       firebase.auth().signOut().then(function() {
         alert("You have successfully logged out!")
         console.log("logging out!")
         }).catch(function(error) {
           console.log("Error:", error);
         });
-        vm.$router.push({name: 'home'})
+        location.reload();
     }
 },
   // Lifecycle Hooks 
