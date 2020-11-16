@@ -490,6 +490,7 @@ body {
   font-family: "Lato", sans-serif;
 }
 
+
 .iconDetails {
   float: left;
   height: 70px;

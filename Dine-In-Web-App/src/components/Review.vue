@@ -281,6 +281,7 @@ input[type=submit] {
   clear: both;
 }
 
+
 .registerrestaurant {
   float: left;
 }
