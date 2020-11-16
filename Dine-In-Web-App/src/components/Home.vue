@@ -44,7 +44,7 @@
       <div v-if="data_loaded" class="content">
         <br>
         
-        <h1>Indian Food</h1>
+        <h1>Western Food</h1>
         <div class="row">
         <div class="displaycard" v-for="merchant in carousel_one" :key="merchant.merchant_id">
           <!-- Change this.carousel_one = this.getCarouselData('indian');-->
@@ -55,7 +55,7 @@
           </div>
           </div>
         </div>
-        <h1>Chinese Food</h1>
+        <h1>Indian Food</h1>
         <div class="row">
         <div class="displaycard" v-for="merchant in carousel_two" :key="merchant.merchant_id">
           <!-- Change to carousel_two and add this.carousel_two = this.getCarouselData('chinese');-->

@@ -213,6 +213,7 @@ export default {
         }).catch(function(error) {
           console.log("Error updating profile information: ", error);
         })
+        location.reload()
     },
     // 3) Set Profile Image 
     setProfileImage: function() {
