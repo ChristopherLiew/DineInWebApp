@@ -45,9 +45,9 @@
         <div v-for="merchant in carousel_one" :key="merchant.merchant_id">
           <!-- Change this.carousel_one = this.getCarouselData('indian');-->
           <div class="displaycard">
-            <img :src="merchant.imgURL.interior" alt="merchant.merchant_name">
-            <h3>{{carousel_one[0].merchant_name}}</h3>
-            <router-link :to="{ name: 'restaurant', params: { id: merchant.merchant_id }}">Link</router-link>
+            <img :src="merchant.imgURL.interior" alt="merchant.merchant_name" class="frontpic">
+            <br>
+            <router-link :to="{ name: 'restaurant', params: { id: merchant.merchant_id }}">{{carousel_one[0].merchant_name}}</router-link>
           </div>
           </div>
         </div>
@@ -56,9 +56,9 @@
         <div v-for="merchant in carousel_one" :key="merchant.merchant_id">
           <!-- Change to carousel_two and add this.carousel_two = this.getCarouselData('chinese');-->
           <div class="displaycard">
-            <img :src="merchant.imgURL.interior" alt="merchant.merchant_name">
-            <h3>{{carousel_one[0].merchant_name}}</h3>
-            <router-link :to="{ name: 'restaurant', params: { id: merchant.merchant_id }}">Link</router-link>
+            <img :src="merchant.imgURL.interior" alt="merchant.merchant_name" class="frontpic">
+            <br>
+            <router-link :to="{ name: 'restaurant', params: { id: merchant.merchant_id }}">{{carousel_one[0].merchant_name}}</router-link>
           </div>
           </div>
         </div>
@@ -67,9 +67,9 @@
         <div v-for="merchant in carousel_one" :key="merchant.merchant_id"> 
           <!-- Change to carousel_three and add this.carousel_three = this.getCarouselData('malay');-->
           <div class="displaycard">
-            <img :src="merchant.imgURL.interior" alt="merchant.merchant_name">
-            <h3>{{carousel_one[0].merchant_name}}</h3>
-            <router-link :to="{ name: 'restaurant', params: { id: merchant.merchant_id }}">Link</router-link>
+            <img :src="merchant.imgURL.interior" alt="merchant.merchant_name" class="frontpic">
+            <br>
+            <router-link :to="{ name: 'restaurant', params: { id: merchant.merchant_id }}">{{carousel_one[0].merchant_name}}</router-link>
           </div>
           </div>
         </div>
@@ -179,12 +179,10 @@ body {
 
 .icon {
   text-align: center;
-  font-family:"Luminari"
-}
-
-h2 {
+  font-family:"Luminari";
   
 }
+
 
 .sidebar {
   margin: 0;
@@ -217,7 +215,8 @@ div.content {
 
   margin-left: 200px;
   padding: 1px 16px;
-  height: 1300px;
+  height: 1200px;
+  width: auto;
   background-color:#FFE4E1;
   
 }
@@ -274,28 +273,28 @@ div.content {
 }
 .welcomepicture {
   height: auto;
-  left-margin: auto;
-  right-margin: auto;
+  
 }
 
 .searcharea {
-  
-  color: red;
   display: grid;
   place-items: center;
-  
-  
 }
 
 /* Style the counter cards */
 .displaycard {
-  padding: 5px;
+  padding: 14px 20px;
   text-align: center;
   display: inline-block;
-  width: 250px;
+  width: auto;
   border-radius: 10px 10px 10px 10px;
   background-color: whitesmoke;
   margin: 1rem;
+}
+
+.frontpic {
+  width:400px;
+  height:300px;
 }
 
 .row {

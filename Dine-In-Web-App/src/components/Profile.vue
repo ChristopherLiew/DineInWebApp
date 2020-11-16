@@ -46,16 +46,19 @@
       </div>
       <div class="profilearea">
         <div class="profilecard">
-          <h2 v-if="this.loaded == true">Profile of</h2> 
-          <h2>{{profileInfo.name.first_name}} {{profileInfo.name.last_name}}</h2>
-          
+          <h1 v-if="this.loaded == true">Profile of</h1> 
+          <h1>{{profileInfo.name.first_name}} {{profileInfo.name.last_name}}</h1>
+          <hr>
           <br/>
           <img v-if="profileInfo.imgURL != null && loaded == true" :src=profileInfo.imgURL alt="Profile Pic">
           <br>
+          
           <button class = "centering" @click="goToProfileDetails">Edit Profile</button>
-          <br>
+          <br/>
+          <br/>
+          
           <input type="file" id="profileupload" @change="inputImage" accept="image/*">
-          <p class = "centering">Progress: {{uploadPct.toFixed()+"%"}}
+          <p class = "centering2">Progress: {{uploadPct.toFixed()+"%"}}
           <progress id="progress" :value="uploadPct" max="100" ></progress>  </p>
         <div>
         
@@ -284,6 +287,7 @@ body {
 
 .profileupload {
   text-align: center !important;
+  
 }
 
 .profilearea {
@@ -307,9 +311,28 @@ img {
 
 
 .centering {
-  float: left;
+  
+  background-color:#D9A59F;
+  width:100%;
+  border-color:#D9A59F;
+  height:50px;
+  text-align:left;
+  vertical-align:middle;
+  display:table-cell;
+  
 }
 
+.centering2 {
+  
+  
+  width:100%;
+  
+  height:50px;
+  text-align:left;
+  vertical-align:middle;
+  display:table-cell;
+  
+}
 
 
 
