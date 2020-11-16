@@ -153,7 +153,10 @@
         
         <!-- Reservation Form -->
         <div class="column right">
-              <img :src="merchant_info.image" alt="Exterior image of Restaurant"><br><br>
+            <div class = "container2">
+            <h2 style="text-align:center"> Galleries </h2>
+              <img :src="merchant_info.image" alt="Exterior image of Restaurant" class= "centerimg"><br><br>
+            </div>
         </div>
       </div>
     </div>
@@ -493,6 +496,22 @@ export default {
 </script>
 
 <style>
+.container2 {
+ 
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+  
+  margin:auto;
+
+}
+
+.centerimg {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
 .column {
   float: left;
   padding: 10px;
