@@ -218,7 +218,7 @@ div.content {
   margin-left: 200px;
   padding: 1px 16px;
   height: 1300px;
-  background-color:#E8D496;
+  background-color:#FFA101;
   
 }
 
