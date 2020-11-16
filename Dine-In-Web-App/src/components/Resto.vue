@@ -11,6 +11,9 @@
       </div>
       <router-link to="/">Home</router-link>
         <router-link to="/profile">Profile</router-link>
+        <div>
+        <a href="https://dontgojsonwaterfalldashboard.herokuapp.com/">Covid19</a>
+        </div>
         <hr>
         <div v-if="user_id == null">
         <router-link to="/login">Log In</router-link>

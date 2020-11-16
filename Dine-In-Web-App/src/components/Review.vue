@@ -11,11 +11,14 @@
         </div>
         <router-link to="/">Home</router-link>
         <router-link to="/profile">Profile</router-link>
+        <div>
+        <a href="https://dontgojsonwaterfalldashboard.herokuapp.com/">Covid19</a>
+        </div>
         <hr>
         <a href="#" @click="logOut()">Log Out</a>
       </div>
-      <div class = "content">
-          <h2>Review</h2>
+      <div class = "content432">
+          <h2 style="text-align:center">Review</h2>
         <div class="container">
             <form action="/action_page.php">
                 <label for="fname"><strong>You are writing a review for:</strong></label>
@@ -185,7 +188,14 @@ body {
   color: white;
 }
 
-
+div.content432 {
+margin-left: 200px;
+  padding: 1px 16px;
+  height: 2500px;
+  width: auto;
+  background-color:#FFE4E1;
+  
+}
 
 .stati:hover {
   -moz-box-shadow: 0px 0.4em 0.5em rgb(0, 0, 0, 0.8);

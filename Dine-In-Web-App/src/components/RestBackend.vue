@@ -12,6 +12,9 @@
         <router-link :to="{ name: 'restaurantmerch', params: {id: this.merchant_id}}">My Restaurant</router-link>
         <router-link to="/restbackend">Restaurant Manager</router-link>
         <router-link to="/restdetails">Restaurant</router-link>
+        <div>
+        <a href="https://dontgojsonwaterfalldashboard.herokuapp.com/">Covid19</a>
+        </div>
         <hr>
         <a href="#" @click="logOut()">Log Out</a>
     </div>

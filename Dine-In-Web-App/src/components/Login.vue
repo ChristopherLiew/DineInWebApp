@@ -12,8 +12,11 @@
         <router-link to="/">Home</router-link>
         <router-link to="/profile">Profile</router-link>
         <router-link to="/signup">Sign Up</router-link>
+        <a href="https://dontgojsonwaterfalldashboard.herokuapp.com/">Covid19</a>
         <hr>
-        <router-link to="/login">Log In</router-link>
+        <div>
+        <a href="https://dontgojsonwaterfalldashboard.herokuapp.com/">Covid19</a>
+        </div>
     </div>
 
     <div class="content12">

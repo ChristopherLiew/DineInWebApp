@@ -12,6 +12,9 @@
       </div>
         <router-link to="/">Home</router-link>
         <router-link to="/profile">Profile</router-link>
+        <div>
+        <a href="https://dontgojsonwaterfalldashboard.herokuapp.com/">Covid19</a>
+        </div>
         <hr>
         <a href="#" @click="logOut()">Log Out</a>
     </div>
