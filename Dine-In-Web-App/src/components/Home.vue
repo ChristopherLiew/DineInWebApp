@@ -31,14 +31,15 @@
           }"
         >
           <h1 style="color:White">What shall we explore today?</h1>
+          <div class ="searcharea">
+          <search></search>
+          </div>
         </div>
       </div>
     
       <div v-if="data_loaded" class="content">
         <br>
-        <div class ="searcharea">
-          <search></search>
-        </div>
+        
         <h1>Indian Food</h1>
         <div class="row">
         <div class="displaycard" v-for="merchant in carousel_one" :key="merchant.merchant_id">
