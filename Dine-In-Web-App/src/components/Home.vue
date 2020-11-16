@@ -51,7 +51,7 @@
           <div class="displaycard">
             <img :src="merchant.imgURL.food" alt="merchant.merchant_name" class="frontpic">
             <br>
-            <router-link :to="{ name: 'restaurant', params: { id: merchant.merchant_id }}">{{carousel_one[0].merchant_name}}</router-link>
+            <router-link :to="{ name: 'restaurant', params: { id: merchant.merchant_id }}">{{merchant.merchant_name}}</router-link>
           </div>
           </div>
         </div>
@@ -62,7 +62,7 @@
           <div class="displaycard">
             <img :src="merchant.imgURL.food" alt="merchant.merchant_name" class="frontpic">
             <br>
-            <router-link :to="{ name: 'restaurant', params: { id: merchant.merchant_id }}">{{carousel_one[0].merchant_name}}</router-link>
+            <router-link :to="{ name: 'restaurant', params: { id: merchant.merchant_id }}">{{merchant.merchant_name}}</router-link>
           </div>
           </div>
         </div>
@@ -73,7 +73,7 @@
           <div class="displaycard">
             <img :src="merchant.imgURL.food" alt="merchant.merchant_name" class="frontpic">
             <br>
-            <router-link :to="{ name: 'restaurant', params: { id: merchant.merchant_id }}">{{carousel_one[0].merchant_name}}</router-link>
+            <router-link :to="{ name: 'restaurant', params: { id: merchant.merchant_id }}">{{merchant.merchant_name}}</router-link>
           </div>
           </div>
         </div>

@@ -158,13 +158,7 @@ export default {
             interior: '',
             exterior: '',
             food: ''
-          },
-        safety: {
-        masks: false,
-        contact_trace: false,
-        temp_screen: false,
-        safe_distance: false
-        }
+          }
         },
         loaded: false, // Triggered when data has sucessfully been pulled after Vue app is mounted
         uploadPct1: 0,
