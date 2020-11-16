@@ -16,7 +16,7 @@
         <router-link to="/login">Log In</router-link>
     </div>
 
-    <div class="content">
+    <div class="content12">
       <h2>Login Page</h2>
       <h3>Please enter the following:</h3>
       <input type="text" v-model="email" placeholder="Email Address">
@@ -137,6 +137,14 @@ div.content {
   padding: 1px 16px;
   
   
+}
+
+.content12 {
+  margin-left: 200px;
+  padding: 1px 16px;
+  height: 2500px;
+  width: auto;
+  background-color:#FFE4E1;
 }
 
 /* login and signup buttons */

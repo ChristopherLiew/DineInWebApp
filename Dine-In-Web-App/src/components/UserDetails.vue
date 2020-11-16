@@ -15,7 +15,7 @@
         <hr>
         <a href="#" @click="logOut()">Log Out</a>
       </div>
-      <div class = "content">
+      <div class = "content1234">
         <h2>User Information</h2>
         <div v-if="data_loaded" class="container">
             <form v-on:submit.prevent="updateUserProfile">
@@ -267,5 +267,12 @@ span {
     display: block;
     overflow: hidden;
     padding-right:10px;
+}
+.content1234 {
+  margin-left: 200px;
+  padding: 1px 16px;
+  height: 2500px;
+  width: auto;
+  background-color:#FFE4E1;
 }
 </style>

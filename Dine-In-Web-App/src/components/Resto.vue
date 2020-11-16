@@ -22,7 +22,7 @@
 
     <div class="content">
       <!-- Restaurant Info Card -->
-      <div class="headerbar" :style="{'background-image': 'url(https://vuejs.org/images/logo.png)',}">
+      <div class="headerbar">
         <h1>{{ merchant_info.merchant_name }}</h1>
         <p>{{ merchant_info.description }}</p>
         <p>Address: {{ merchant_info.address }}</p>
@@ -39,13 +39,13 @@
             <div class="column left1">
               
               <!-- Overall Rating Card -->
-              <div class="stati turquoise">
+              <div class="stati turquoise"  style="width:40%">
                 <div style="display: inline-block">
                   <b>{{ getOverallRating }}/5</b>
                   <span>Overall Rating</span>
                 </div>
               </div>
-              <div class="stati turquoise">
+              <div class="stati turquoise"  style="width:40%">
                 <div style="display: inline-block">
                   <b>{{ getSafetyScore }}%</b>
                   <span>Safety Adherence</span>
@@ -86,13 +86,13 @@
         
             <div class="column right1">
 
-              <div class="stati turquoise">
+              <div class="stati turquoise"  style="width:40%">
                 <div style="display: inline-block">
                   <b>{{ num_reviewers }}</b>
                   <span>No. of Reviewers</span>
                 </div>
               </div>
-              <div class="stati turquoise">
+              <div class="stati turquoise"  style="width:40%">
                 <div style="display: inline-block">
                   <b>{{ getTotalSeatVacancy }}/{{ getTotalSeatCapacity }}</b>
                   <span>Seats Available Now</span>
@@ -151,11 +151,13 @@
               <h1>Reserve</h1>
               <img :src="merchant_info.image" alt="Exterior image of Restaurant"><br><br>
               <label for="reservation">Reservation Date and Time </label>
-              <input type="datetime-local" id="reservation" name="reservation" v-model="reservation_datetime"/>
+              <br/>
+              <input type="datetime-local"  name="reservation" v-model="reservation_datetime"/>
               <br/>
               <br/>
 
-              <label for="seats">Desired seat types</label>
+              <label   for="seats">Desired seat types</label>
+              <br/>
               <select id="seats" name="seats" v-model="seat_type_chosen">
                 <option value="one_seater,1">One-seater</option>
                 <option value="two_seater,2">Two-seater</option>
@@ -573,6 +575,12 @@ export default {
   white-space: normal;
   word-wrap:break-word;
 }
+
+.textwrap {
+  white-space: normal;
+  word-wrap: break-word;
+}
+
 
 .div1 {
     float: left;

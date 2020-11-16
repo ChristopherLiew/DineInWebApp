@@ -17,7 +17,7 @@
     </div>
     
 
-    <div class="content">
+    <div class="contentss">
       <!-- Can only review past reservations -->
      
       <div class="pastreservations">
@@ -285,6 +285,16 @@ body {
   text-align: center;
 }
 
+div.contentss {
+  
+  margin-left: 200px;
+  padding: 1px 16px;
+  height: 2500px;
+  width: auto;
+  background-color:#FFE4E1;
+  
+
+}
 
 
 

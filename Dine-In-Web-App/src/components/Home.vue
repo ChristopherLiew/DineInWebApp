@@ -2,19 +2,23 @@
   <div>
     <head>
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link href='https://fonts.googleapis.com/css?family=Sofia' rel='stylesheet'>
     </head>
-
+   
     <body>
       <div class="sidebar">
         <div class="icon" :style="{
             'background-image': 'url(https://firebasestorage.googleapis.com/v0/b/dineinwebapp.appspot.com/o/Site%20Images%2Fmain_logo.png?alt=media&token=024c04f1-2b1a-4e35-9651-da1aa5a17fbd)',
           }">
-          <h2><router-link to="/">DineIn</router-link></h2>
+          <h2 div = "fancyfont"><router-link to="/">DineIn</router-link></h2>
         </div>
         <router-link to="/">Home</router-link>
         <router-link to="/profile">Profile</router-link>
         <div v-if="user_id == null">
         <router-link to="/signup">Sign Up</router-link>
+        <div>
+        <a href="https://dontgojsonwaterfalldashboard.herokuapp.com/">Covid19</a>
+        </div>
         <hr>
         <router-link to="/login">Log In</router-link>
         </div>
@@ -210,12 +214,17 @@ body {
   background-color: #D9A59F;
   color: white;
 }
+.fancyfont {
+  
+  font-family: 'Alex Brush';
+  font-size: 22px;
+}
 
 div.content {
 
   margin-left: 200px;
   padding: 1px 16px;
-  height: 1600px;
+  height: 2500px;
   width: auto;
   background-color:#FFE4E1;
   

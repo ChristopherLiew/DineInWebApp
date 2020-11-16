@@ -15,7 +15,7 @@
         <hr>
         <router-link to="/login">Log In</router-link>
       </div>
-      <div class = "content">
+      <div class = "content123">
         <h2>Create Account</h2>
         <h3>Please enter the following:</h3>
         <input type="text" name="email" v-model="email" placeholder="Email Address">
@@ -199,6 +199,14 @@ body {
     display: block;
     margin-bottom: 10px;
   }
+}
+
+.content123 {
+  margin-left: 200px;
+  padding: 1px 16px;
+  height: 2500px;
+  width: auto;
+  background-color:#FFE4E1;
 }
 
 
