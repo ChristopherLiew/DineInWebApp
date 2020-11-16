@@ -12,7 +12,6 @@
       </div>
         <router-link to="/">Home</router-link>
         <router-link to="/profile">Profile</router-link>
-        <router-link :to="{ name: 'restaurant', params: {id: '4czuiVI8sNQKcPRMVRgk0ahTKzc2'}}">Restaurant</router-link>
         <hr>
         <a href="#" @click="logOut()">Log Out</a>
     </div>

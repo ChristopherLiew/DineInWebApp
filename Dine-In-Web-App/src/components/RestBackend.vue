@@ -77,7 +77,7 @@
             </div>
             
             <br>
-            <h2>Upcoming Reservations</h2>
+            <h2>My Reservations</h2>
             <div class="reservationlist">
                 <table>
                     <thead>
