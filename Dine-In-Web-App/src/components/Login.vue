@@ -32,9 +32,6 @@
 </div>
 </template>
 <script>
-// TBD
-// 1) Add in check for user strikes, if strikes = 3, disable user
-// *https://firebase.google.com/docs/auth/admin/manage-users
 
 import firebase from '../firebase.js'
 const database = firebase.firestore();
@@ -49,12 +46,14 @@ export default {
   methods: {
     // Test with logged in profile and check profile.vue also
     logInUser: function() {
+      console.log("in login function!")
       var vm = this;
       var email = this.email // Trim white spaces
       firebase.auth().signInWithEmailAndPassword(email.trim(), this.password).then(function() {
         let uid = firebase.auth().currentUser.uid;
+        console.log("User id: " + uid)
         // Check user type
-        database.collection('user_type').where("user_id", "==", uid).get().then((querySnapShot) => {
+        database.collection('user_type').where("uid", "==", uid).get().then((querySnapShot) => {
         querySnapShot.forEach(doc=> {
           let user_type = doc.data().user_type;
           if (user_type == "user") {

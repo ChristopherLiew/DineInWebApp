@@ -25,8 +25,8 @@
         <br>
         <input type="text" name="username" v-model="username" placeholder="Username">
         <select id="rating" name="rating" v-model.lazy="acc_type">
-          <option value=User>User</option>
-          <option value=Merchant>Merchant</option>
+          <option value=user>User</option>
+          <option value=merchant>Merchant</option>
         </select>
         <button class= "smallinteractbutton" @click="signUpUser">Sign Up</button>
         </div>
