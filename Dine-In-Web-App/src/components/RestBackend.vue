@@ -360,10 +360,10 @@ body {
 }
 
 .vacancies {
-  padding: 5px;
+  padding: 2px;
   text-align: center;
   background-color: white;
-  width: 10rem;
+  width: 14rem;
   display: inline-block;
   margin: 2rem;
   border-radius: 10px 10px 10px 10px;
