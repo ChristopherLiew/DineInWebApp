@@ -349,12 +349,13 @@ img {
 }
 
 .styled-table tbody tr:nth-of-type(even) {
-    background-color: #B26F68;
+    background-color:#FFF3E1;
 }
 
-.styled-table tbody tr:last-of-type {
-    border-bottom: 2px solid #009879;
+.styled-table tbody tr:nth-of-type(odd) {
+    background-color:#FFFFFF;
 }
+
 
 .styled-table tbody tr.active-row {
     font-weight: bold;

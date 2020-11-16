@@ -107,8 +107,20 @@
             <div class="ex3" id="reviews_table">
               <div class="testimonials" v-for="review in reviewslist" :key="review.number">
                 <div>
-                  <p class="textwrap">{{ review.user_name }} rated {{ review.rating }}/5 stars.</p>
-                  <p class="textwrap">{{ review.date }}</p>
+                  <div class = "row">
+                  <div class = "div1">
+                    <p class="headerid">{{ review.user_name }}</p>
+                    <p> Ratings: {{ review.rating }} out of 5 stars.</p>
+                  </div>
+                  <div class = "div2">
+                     <p style="font-weight:bold">{{ review.date }}</p>
+                  </div>
+                  
+                  </div>
+                  
+                  <hr>
+                 
+              
                   <p class="textwrap">{{ review.review_text }}</p>
                 </div>
               </div>
@@ -535,7 +547,11 @@ export default {
   display: table;
   clear: both;
 }
+.headerid {
+  font-size: 25px;
+  font-weight: bold;
 
+}
 .row1 {
   
   overflow-y: hidden;
@@ -543,7 +559,13 @@ export default {
   word-wrap:break-word;
 }
 
+.div1 {
+    float: left;
+}
 
+.div2 {
+    float:right;
+}
 
 table {
   overflow: auto;
@@ -640,9 +662,9 @@ body {
   border: 2px solid #ccc;
   background-color: #eee;
   border-radius: 10px;
-  padding: 5px;
+  padding: 20px;
   margin: 7px 0;
-  width: 100%;
+  width: 95%;
 }
 
 /* Clear floats after containers */
@@ -666,9 +688,7 @@ body {
 
 }
 
-.textwrap {
-  
-}
+
 
 .* {
   box-sizing: border-box;
