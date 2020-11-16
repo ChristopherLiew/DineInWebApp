@@ -9,7 +9,7 @@
         <div class="icon" :style="{
             'background-image': 'url(https://firebasestorage.googleapis.com/v0/b/dineinwebapp.appspot.com/o/Site%20Images%2Fmain_logo.png?alt=media&token=024c04f1-2b1a-4e35-9651-da1aa5a17fbd)',
           }">
-          <h2 id="icon"><router-link to="/">DineIn</router-link></h2>
+          <h2><router-link to="/">DineIn</router-link></h2>
         </div>
         <router-link to="/">Home</router-link>
         <router-link to="/profile">Profile</router-link>
@@ -24,10 +24,7 @@
         <a href="#" @click="logOut()">Log Out</a>
         </div>
       </div>
-      
-
-      <div v-if="data_loaded" class="content">
-        <div class="welcomepicture">
+      <div class="welcomepicture">
         <div
           class="info"
           :style="{
@@ -35,40 +32,43 @@
           }"
         >
           <h1 style="color:White">What shall we explore today?</h1>
-          <div class ="searcharea" >
-            <search></search>
-          </div>
         </div>
+      </div>
+    
+      <div v-if="data_loaded" class="content">
+        <br>
+        <div class ="searcharea">
+          <search></search>
         </div>
         <h1>Indian Food</h1>
         <div class="row">
         <div v-for="merchant in carousel_one" :key="merchant.merchant_id">
           <!-- Change this.carousel_one = this.getCarouselData('indian');-->
           <div class="displaycard">
-            <img :src="merchant.imgURL.interior" alt="merchant.merchant_name">
-            <h3>{{carousel_one[0].merchant_name}}</h3>
+            <img :src="merchant.imgURL.interior" alt="merchant.merchant_nameD">
+            <h3>{{merchant.merchant_name}}</h3>
             <router-link :to="{ name: 'restaurant', params: { id: merchant.merchant_id }}">Link</router-link>
           </div>
           </div>
         </div>
         <h1>Chinese Food</h1>
         <div class="row">
-        <div v-for="merchant in carousel_one" :key="merchant.merchant_id">
+        <div v-for="merchant in carousel_two" :key="merchant.merchant_id">
           <!-- Change to carousel_two and add this.carousel_two = this.getCarouselData('chinese');-->
           <div class="displaycard">
             <img :src="merchant.imgURL.interior" alt="merchant.merchant_name">
-            <h3>{{carousel_one[0].merchant_name}}</h3>
+            <h3>{{merchant.merchant_name}}</h3>
             <router-link :to="{ name: 'restaurant', params: { id: merchant.merchant_id }}">Link</router-link>
           </div>
           </div>
         </div>
         <h1>Malay Food</h1>
         <div class="row">
-        <div v-for="merchant in carousel_one" :key="merchant.merchant_id"> 
+        <div v-for="merchant in carousel_three" :key="merchant.merchant_id"> 
           <!-- Change to carousel_three and add this.carousel_three = this.getCarouselData('malay');-->
           <div class="displaycard">
             <img :src="merchant.imgURL.interior" alt="merchant.merchant_name">
-            <h3>{{carousel_one[0].merchant_name}}</h3>
+            <h3>{{merchant.merchant_name}}</h3>
             <router-link :to="{ name: 'restaurant', params: { id: merchant.merchant_id }}">Link</router-link>
           </div>
           </div>
@@ -149,7 +149,9 @@ export default {
         console.log("Getting signed in user")
       }
     });
-    this.carousel_one = this.getCarouselData('french');
+    this.carousel_one = this.getCarouselData('western');
+    this.carousel_two = this.getCarouselData('indian');
+    this.carousel_three = this.getCarouselData('malay');
   }
 }
 
@@ -180,10 +182,6 @@ body {
 .icon {
   text-align: center;
   font-family:"Luminari"
-}
-
-h2 {
-  
 }
 
 .sidebar {

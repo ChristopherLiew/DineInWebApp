@@ -30,7 +30,7 @@
         <p>Phone No: {{ merchant_info.contact }}</p>
         <p>Operating Hours: {{ merchant_info.opening_hours }} to {{ merchant_info.closing_hours }}</p>
         <div class ="searcharea">
-          
+          <search></search>
         </div>
       </div>
 
@@ -102,14 +102,14 @@
             </div>
           </div>
 
-          <div class="row1">
+          <div class="row">
             <!-- Table of Reviews -->
             <div class="ex3" id="reviews_table">
               <div class="testimonials" v-for="review in reviewslist" :key="review.number">
                 <div>
-                  <p class="textwrap">{{ review.user_name }} rated {{ review.rating }}/5 stars.</p>
-                  <p class="textwrap">{{ review.date }}</p>
-                  <p class="textwrap">{{ review.review_text }}</p>
+                  <p>{{ review.user_name }} rated {{ review.rating }}/5 stars.</p>
+                  <p>{{ review.date }}</p>
+                  <p>{{ review.review_text }}</p>
                 </div>
               </div>
             </div>
@@ -123,14 +123,12 @@
               <h1>Reserve</h1>
               <img :src="merchant_info.image" alt="Exterior image of Restaurant"><br><br>
               <label for="reservation">Reservation Date and Time </label>
-               <br/>
-              <input type="datetime-local" id="reservation" name="reservation" v-model="reservation_datetime"  size="1">
+              <input type="datetime-local" id="reservation" name="reservation" v-model="reservation_datetime"/>
               <br/>
               <br/>
 
               <label for="seats">Desired seat types</label>
-              <br/>
-              <select id="seats" name="seats" v-model="seat_type_chosen" size = "1">
+              <select id="seats" name="seats" v-model="seat_type_chosen">
                 <option value="one_seater,1">One-seater</option>
                 <option value="two_seater,2">Two-seater</option>
                 <option value="three_seater,3">Three-seater</option>
@@ -152,7 +150,7 @@
 
 <script>
 import firebase from '../firebase.js'
-
+import search from './SearchBar.vue'
 const db = firebase.firestore();
 
 export default {
@@ -219,7 +217,7 @@ export default {
     }
   },
   components: {
-   
+    search
     },
     watch: { // React to param id change in router path, wehre path is the same router path as current page
         '$route' () {
@@ -301,13 +299,9 @@ export default {
         .then((querySnapshot) => {
           querySnapshot.forEach(doc => { //vacancy = capacity - capacity of (reservations with datetimes > today - 20min AND today < reservation datetime + 30min AND status != "completed" and status != "no-show" and status != "cancelled")          
             var chosen_date = doc.data().date_reserved; //seconds
-            console.log("chosen_date", chosen_date);
             var today = Number((new Date().getTime() / 1000).toFixed(0)); // seconds, local time
-            console.log("today", today);
             var upcoming = chosen_date >= this.addMinutes(today, -20) && chosen_date <= today;
-            console.log("upcoming: ", upcoming);
             var ongoing = chosen_date >= today && chosen_date <= this.addMinutes(today, 40);
-            console.log("ongoing: ", ongoing);
             if (upcoming || ongoing) {
               this.filledseats.one_seater += doc.data().seat_type == "one_seater";
               this.filledseats.two_seater += doc.data().seat_type == "two_seater";
@@ -444,7 +438,12 @@ export default {
   computed: {
     //Calculate overall rating out of 5
     getOverallRating: function() {
+      let rating = Number(this.summed_rating / this.num_reviewers).toFixed(1);
+      if (rating == null) {
+        return "No Rating"
+      } else {
       return Number(this.summed_rating / this.num_reviewers).toFixed(1);
+      }
     },
 
     //Calculate sum of seat capacities possible
@@ -536,15 +535,6 @@ export default {
   clear: both;
 }
 
-.row1 {
-  
-  overflow-y: hidden;
-  white-space: normal;
-  word-wrap:break-word;
-}
-
-
-
 table {
   overflow: auto;
   height: 200px;
@@ -555,8 +545,6 @@ div.ex3 {
   height: 410px;
   overflow: auto;
 }
-
-
 
 div.tablescroll {
   height: 300px;
@@ -585,17 +573,45 @@ body {
   text-align: center;
 }
 
+.sidebar {
+  margin: 0;
+  padding: 0;
+  width: 200px;
+  background-color: #f1f1f1;
+  position: fixed;
+  height: 100%;
+  overflow: auto;
+}
 
+.sidebar a {
+  display: block;
+  color: black;
+  padding: 16px;
+  text-decoration: none;
+}
 
+.sidebar a.active {
+  background-color: #4caf50;
+  color: white;
+}
 
+.sidebar a:hover:not(.active) {
+  background-color: #555;
+  color: white;
+}
+
+div.content {
+  margin-left: 200px;
+  padding: 1px 16px;
+  height: auto;
+  background-image: linear-gradient(rgb(78, 223, 78), rgb(85, 199, 228));
+}
 
 .stati {
   background: #fff;
   height: 4em;
   padding: 1em;
   margin: 1em 0;
-  width:40%;
-
 
   margin-right: 1.96em;
   -webkit-transition: margin 0.5s ease, box-shadow 0.5s ease; /* Safari */
@@ -642,7 +658,7 @@ body {
   border-radius: 10px;
   padding: 5px;
   margin: 7px 0;
-  width: 100%;
+  width: 115%;
 }
 
 /* Clear floats after containers */
@@ -662,12 +678,6 @@ body {
 /* Increase the font-size of a span element */
 .testimonials span {
   font-size: 20px;
-  
-
-}
-
-.textwrap {
-  
 }
 
 .* {
